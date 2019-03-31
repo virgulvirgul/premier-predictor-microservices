@@ -37,3 +37,18 @@ func MessageFromGrpc(req *chat.SendRequest) Message {
 		DateTime: t,
 	}
 }
+
+func MessageToGrpcMessage(msg Message) (*chat.Message, error) {
+	t, err := ptypes.TimestampProto(msg.DateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	return &chat.Message{
+		MessageId: msg.Id,
+		SenderId: msg.SenderId,
+		Type: chat.Message_MESSAGE,
+		Text:     msg.Text,
+		DateTime: t,
+	}, nil
+}

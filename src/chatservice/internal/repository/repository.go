@@ -1,3 +1,5 @@
+//go:generate mockgen -destination=./mocks/mock_repository.go -package=chatmocks github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/repository Repository
+
 package chat
 
 import (

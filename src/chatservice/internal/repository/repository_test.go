@@ -148,7 +148,7 @@ func Test_Repository(t *testing.T) {
 			Drop(context.Background())
 	}
 
-	t.Run("SaveMessage", func(t *testing.T) {
+	t.Run("SendMessage", func(t *testing.T) {
 		t.Run("returns error if message id is not valid", func(t *testing.T) {
 			msg := model.Message{
 				Id: "Invalid objectId",

@@ -15,18 +15,6 @@ type chatServiceServer struct {
 	msg     map[string]map[string]chan Message
 }
 
-func (c *chatServiceServer) CreateChat(ctx context.Context, req *AddRequest) (*empty.Empty, error) {
-	panic("implement me")
-}
-
-func (c *chatServiceServer) JoinChat(ctx context.Context, req *AddRequest) (*empty.Empty, error) {
-	panic("implement me")
-}
-
-func (c *chatServiceServer) LeaveChat(ctx context.Context, req *AddRequest) (*empty.Empty, error) {
-	panic("implement me")
-}
-
 func NewChatServiceServer(service chat.Service) (*chatServiceServer, error) {
 	log.Print("Registered chatServiceServer handler")
 
@@ -36,27 +24,69 @@ func NewChatServiceServer(service chat.Service) (*chatServiceServer, error) {
 	}, nil
 }
 
+func (c *chatServiceServer) CreateChat(ctx context.Context, req *AddRequest) (*empty.Empty, error) {
+	return &empty.Empty{}, c.service.CreateChat(req.ChatId, req.UserId)
+}
+
+func (c *chatServiceServer) JoinChat(ctx context.Context, req *AddRequest) (*empty.Empty, error) {
+	return &empty.Empty{}, c.service.JoinChat(req.ChatId, req.UserId)
+}
+
+func (c *chatServiceServer) LeaveChat(ctx context.Context, req *AddRequest) (*empty.Empty, error) {
+	return &empty.Empty{}, c.service.LeaveChat(req.ChatId, req.UserId)
+}
+
 func (c *chatServiceServer) GetLatestMessages(ctx context.Context, req *LatestMessagesRequest) (*MessageList, error) {
-	panic("implement me")
+	messages, err := c.service.GetLatestMessages(req.ChatId)
+	if err != nil {
+		return  nil, err
+	}
+
+	return c.toMessageList(messages)
 }
 
 func (c *chatServiceServer) GetPreviousMessages(ctx context.Context, req *PreviousMessagesRequest) (*MessageList, error) {
-	panic("implement me")
+	messages, err := c.service.GetPreviousMessages(req.ChatId, req.CurrentMessageId)
+	if err != nil {
+		return  nil, err
+	}
+
+	return c.toMessageList(messages)
+}
+
+func (c * chatServiceServer) toMessageList(messages []model.Message) (*MessageList, error) {
+	var m []*Message
+	for i := range messages {
+		msg, err := model.MessageToGrpcMessage(messages[i])
+		if err != nil {
+			return nil, err
+		}
+
+		m = append(m, msg)
+	}
+
+	return &MessageList{
+		Messages: m,
+	}, nil
 }
 
 func (c *chatServiceServer) Send(ctx context.Context, req *SendRequest) (*empty.Empty, error) {
-	//Add to DB & update read receipt
-	//Send notifications
-	//_ := model.MessageFromGrpc(req)
+	msg := model.MessageFromGrpc(req)
+
+	id, err := c.service.SendMessage(msg)
+	if err != nil {
+		return nil, err
+	}
 
 	//Send to other clients
 	m := Message{
-		MessageId: "",//TODO - get from db insert
+		MessageId: id,
 		SenderId: req.UserId,
 		Type:     Message_MESSAGE,
 		Text:     req.Message,
 		DateTime: req.DateTime,
 	}
+
 	for u := range c.msg[req.ChatId] {
 		if u != req.UserId {
 			c.msg[req.ChatId][u] <- m
