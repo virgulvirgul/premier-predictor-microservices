@@ -1,0 +1,64 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.cshep4.premierpredictor.chat.gen";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+package chat;
+
+service ChatService {
+    rpc CreateChat (AddRequest) returns (google.protobuf.Empty) {}
+    rpc JoinChat (AddRequest) returns (google.protobuf.Empty) {}
+    rpc LeaveChat (AddRequest) returns (google.protobuf.Empty) {}
+    rpc GetLatestMessages (LatestMessagesRequest) returns (MessageList) {}
+    rpc GetPreviousMessages (PreviousMessagesRequest) returns (MessageList) {}
+    rpc Send (SendRequest) returns (google.protobuf.Empty) {}
+    rpc Subscribe (stream ReadReceipt) returns (stream Message) {}
+}
+
+message AddRequest {
+    string userId = 1;
+    string chatId = 2;
+}
+
+message LatestMessagesRequest {
+    string chatId = 1;
+}
+
+message PreviousMessagesRequest {
+    string chatId = 1;
+    int64 currentMessageId = 2;
+}
+
+message MessageList {
+    repeated Message messages = 1;
+}
+
+message SendRequest {
+    string message = 1;
+    string userId = 2;
+    string chatId = 3;
+    google.protobuf.Timestamp dateTime = 4;
+}
+
+message ReadReceipt {
+    string userId = 1;
+    string chatId = 2;
+    int64 messageId = 3;
+    google.protobuf.Timestamp dateTime = 4;
+}
+
+message Message {
+    enum MsgType {
+        READ = 0;
+        MESSAGE = 1;
+    }
+    string senderId = 1;
+    MsgType type = 2;
+    string text = 3;
+    google.protobuf.Timestamp dateTime = 4;
+}
+
+message SubscribeRequest {
+    string userId = 1;
+    string chatId = 2;
+}
