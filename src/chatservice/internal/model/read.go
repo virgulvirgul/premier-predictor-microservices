@@ -9,7 +9,7 @@ import (
 type ReadReceipt struct {
 	SenderId string
 	ChatId string
-	MessageId int64
+	MessageId string
 	DateTime time.Time
 }
 

@@ -7,22 +7,21 @@ import (
 )
 
 type Chat struct {
-	Id       string     `bson:"_id"`
-	Users    []ChatUser `bson:"users"`
-	Messages []Message  `bson:"messages"`
+	Id    string
+	Users []ChatUser
 }
 
 type ChatUser struct {
-	Id              string `bson:"id"`
-	LastReadMessage int64  `bson:"lastReadMessage"`
+	Id              string
+	LastReadMessage string
 }
 
 type Message struct {
-	Id       string    `bson:"id"`
-	SenderId string    `bson:"senderId"`
-	ChatId   string    `bson:"chatId"`
-	Text     string    `bson:"text"`
-	DateTime time.Time `bson:"dateTime"`
+	Id       string
+	SenderId string
+	ChatId   string
+	Text     string
+	DateTime time.Time
 }
 
 func MessageFromGrpc(req *chat.SendRequest) Message {

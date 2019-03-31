@@ -2,7 +2,11 @@ package chat
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/model"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -12,20 +16,30 @@ import (
 )
 
 const (
-	db         = "chat"
-	collection = "chat"
+	db               = "chat"
+	collection       = "chat"
 	collectionPrefix = "chat-"
 )
 
+var ErrChatNotFound = errors.New("chat not found")
+var ErrMessageAlreadyExists = errors.New("message already exists")
+
 type Repository interface {
-	SaveMessage() error
+	GetChatById(chatId string) (*model.Chat, error)
+	CreateChat(chatId, userId string) error
+	JoinChat(chatId, userId string) error
+	LeaveChat(chatId, userId string) error
+	GetLatestMessages(chatId string) ([]model.Message, error)
+	GetPreviousMessages(chatId, messageId string) ([]model.Message, error)
+	SaveReadReceipt(chatId, userId, messageId string) error
+	SaveMessage(message model.Message) (string, error)
 }
 
 type repository struct {
 	client *mongo.Client
 }
 
-func NewRepository() (Repository, error) {
+func NewRepository() (*repository, error) {
 	username := os.Getenv("MONGO_USERNAME")
 	password := os.Getenv("MONGO_PASSWORD")
 	port := os.Getenv("MONGO_PORT")
@@ -65,52 +79,235 @@ func NewRepository() (Repository, error) {
 }
 
 func (r *repository) ensureIndexes() error {
-	idxs := []struct {
-		name   string
-		field  string
-		unique bool
-	}{
-		{
-			name:   "users_idx",
-			field:  "users.id",
-			unique: false,
-		},
-	}
-
-	indexes := r.client.
+	_, err := r.client.
 		Database(db).
 		Collection(collection).
-		Indexes()
-
-	for _, i := range idxs {
-		_, err := indexes.CreateOne(
-			context.Background(),
-			mongo.IndexModel{
-				Keys: bsonx.Doc{
-					{Key: i.field, Value: bsonx.Int64(1)},
-				},
-				Options: options.Index().
-					SetName(i.name).
-					SetUnique(i.unique).
-					SetSparse(true).
-					SetBackground(true),
+		Indexes().CreateOne(
+		context.Background(),
+		mongo.IndexModel{
+			Keys: bsonx.Doc{
+				{Key: "users.id", Value: bsonx.Int64(1)},
 			},
-		)
+			Options: options.Index().
+				SetName("users_idx").
+				SetUnique(false).
+				SetSparse(true).
+				SetBackground(true),
+		},
+	)
 
-		if err != nil {
-			return err
-		}
+	if err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func (r *repository) getLeagueCollection(chatId string) string {
+func (r *repository) getChatCollection(chatId string) string {
 	return collectionPrefix + chatId
 }
 
-func (r *repository) SaveMessage() error {
-	panic("implement me")
+func (r *repository) GetChatById(chatId string) (*model.Chat, error) {
+	var c chatEntity
+
+	err := r.client.
+		Database(db).
+		Collection(collection).
+		FindOne(
+			context.Background(),
+			bson.M{
+				"_id": chatId,
+			},
+		).
+		Decode(&c)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, ErrChatNotFound
+		}
+
+		return nil, err
+	}
+
+	return toChat(c), nil
+}
+
+func (r *repository) CreateChat(chatId, userId string) error {
+	u := []chatUser{
+		{
+			Id: userId,
+		},
+	}
+
+	_, err := r.client.
+		Database(db).
+		Collection(collection).
+		InsertOne(
+			context.Background(),
+			bson.M{
+				"_id":   chatId,
+				"users": u,
+			},
+		)
+
+	return err
+}
+
+func (r *repository) JoinChat(chatId, userId string) error {
+	_, err := r.client.
+		Database(db).
+		Collection(collection).
+		UpdateOne(
+			context.Background(),
+			bson.M{
+				"_id": chatId,
+			},
+			bson.M{
+				"$push": bson.M{
+					"users": chatUser{
+						Id: userId,
+					},
+				},
+			},
+		)
+
+	return err
+}
+
+func (r *repository) LeaveChat(chatId, userId string) error {
+	_, err := r.client.
+		Database(db).
+		Collection(collection).
+		UpdateOne(
+			context.Background(),
+			bson.M{
+				"_id": chatId,
+			},
+			bson.M{
+				"$pull": bson.M{
+					"users": bson.M{
+						"id": userId,
+					},
+				},
+			},
+		)
+
+	return err
+}
+
+func (r *repository) GetLatestMessages(chatId string) ([]model.Message, error) {
+	return r.getMessages(chatId, bson.M{})
+}
+
+func (r *repository) GetPreviousMessages(chatId, messageId string) ([]model.Message, error) {
+	id, err := primitive.ObjectIDFromHex(messageId)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.getMessages(chatId, bson.M{
+		"_id" : bson.M{
+			"$lt": id,
+		},
+	})
+}
+
+func (r *repository) getMessages(chatId string, filter interface{}) ([]model.Message, error) {
+	ctx := context.Background()
+
+	limit := int64(50)
+	opts := &options.FindOptions{
+		Limit: &limit,
+		Sort: bson.D{
+			bson.E{"_id", -1},
+		},
+	}
+	cur, err := r.client.
+		Database(db).
+		Collection(r.getChatCollection(chatId)).
+		Find(
+			ctx,
+			filter,
+			opts,
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var messages []model.Message
+
+	defer cur.Close(ctx)
+	for cur.Next(ctx) {
+		var m message
+		err := cur.Decode(&m)
+		if err != nil {
+			return nil, err
+		}
+
+		messages = append(messages, *toMessage(m))
+	}
+
+	for i := len(messages)/2-1; i >= 0; i-- {
+		opp := len(messages)-1-i
+		messages[i], messages[opp] = messages[opp], messages[i]
+	}
+
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+
+	return messages, nil
+}
+
+func (r *repository) SaveReadReceipt(chatId, userId, messageId string) error {
+	id, err := primitive.ObjectIDFromHex(messageId)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
+		Database(db).
+		Collection(collection).
+		UpdateOne(
+			context.Background(),
+			bson.M{
+				"_id":      chatId,
+				"users.id": userId,
+			},
+			bson.M{
+				"$set": bson.M{
+					"users.$.lastReadMessage": id,
+				},
+			},
+		)
+
+	return err
+}
+
+func (r *repository) SaveMessage(message model.Message) (string, error) {
+	if message.Id != "" {
+		return "", ErrMessageAlreadyExists
+	}
+
+	msg, err := fromMessage(message)
+	if err != nil {
+		return "", err
+	}
+
+	_, err = r.client.
+		Database(db).
+		Collection(r.getChatCollection(message.ChatId)).
+		InsertOne(
+			context.Background(),
+			msg,
+		)
+
+	if err != nil {
+		return "", err
+	}
+
+	return msg.Id.Hex(), nil
 }
 
 func (r *repository) Ping() error {

@@ -26,7 +26,7 @@ message LatestMessagesRequest {
 
 message PreviousMessagesRequest {
     string chatId = 1;
-    int64 currentMessageId = 2;
+    string currentMessageId = 2;
 }
 
 message MessageList {
@@ -43,7 +43,7 @@ message SendRequest {
 message ReadReceipt {
     string userId = 1;
     string chatId = 2;
-    int64 messageId = 3;
+    string messageId = 3;
     google.protobuf.Timestamp dateTime = 4;
 }
 
@@ -52,13 +52,9 @@ message Message {
         READ = 0;
         MESSAGE = 1;
     }
-    string senderId = 1;
-    MsgType type = 2;
-    string text = 3;
-    google.protobuf.Timestamp dateTime = 4;
-}
-
-message SubscribeRequest {
-    string userId = 1;
-    string chatId = 2;
+    string messageId = 1;
+    string senderId = 2;
+    MsgType type = 3;
+    string text = 4;
+    google.protobuf.Timestamp dateTime = 5;
 }

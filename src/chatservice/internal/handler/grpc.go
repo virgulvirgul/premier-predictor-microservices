@@ -8,7 +8,6 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"io"
 	"log"
-	"strconv"
 )
 
 type chatServiceServer struct {
@@ -52,6 +51,7 @@ func (c *chatServiceServer) Send(ctx context.Context, req *SendRequest) (*empty.
 
 	//Send to other clients
 	m := Message{
+		MessageId: "",//TODO - get from db insert
 		SenderId: req.UserId,
 		Type:     Message_MESSAGE,
 		Text:     req.Message,
@@ -122,7 +122,7 @@ func (c *chatServiceServer) Subscribe(stream ChatService_SubscribeServer) error 
 		}
 
 		//If initialisation message then skip to next message
-		if readReceipt.MessageId == 0 {
+		if readReceipt.MessageId == "" {
 			continue
 		}
 
@@ -136,10 +136,10 @@ func (c *chatServiceServer) Subscribe(stream ChatService_SubscribeServer) error 
 
 		//Add send read receipt message for other users
 		m := Message{
-			SenderId: uId,
-			Type:     Message_READ,
-			Text:     strconv.FormatInt(readReceipt.MessageId, 10),
-			DateTime: readReceipt.DateTime,
+			MessageId: readReceipt.MessageId,
+			SenderId:  uId,
+			Type:      Message_READ,
+			DateTime:  readReceipt.DateTime,
 		}
 		for u := range c.msg[cId] {
 			if u != uId {
