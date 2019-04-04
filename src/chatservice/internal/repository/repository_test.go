@@ -22,7 +22,7 @@ func Test_Repository(t *testing.T) {
 	assert.NoError(t, err)
 	err = os.Setenv("MONGO_HOST", "localhost")
 	assert.NoError(t, err)
-	err = os.Setenv("MONGO_SCHEME", "MONGO_SCHEME")
+	err = os.Setenv("MONGO_SCHEME", "mongodb")
 	assert.NoError(t, err)
 
 	repository, err := NewRepository()

@@ -1,23 +1,39 @@
-#apiVersion: extensions/v1beta1
-#kind: Ingress
-#metadata:
-#  annotations:
-#    kubernetes.io/ingress.class: "nginx"
-#    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-#    nginx.ingress.kubernetes.io/secure-backends: "true"
-#    nginx.ingress.kubernetes.io/grpc-backend: "true"
-#    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-#  name: chat-ingress
-#  namespace: default
-#spec:
-#  rules:
-#  - host: chat.gyme.uk
-#    http:
-#      paths:
-#      - backend:
-#          serviceName: chatservice
-#          servicePort: 3000
-#---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/secure-backends: "true"
+    nginx.ingress.kubernetes.io/grpc-backend: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  name: chat-ingress
+  namespace: default
+spec:
+  rules:
+  - host: chat.gyme.uk
+    http:
+      paths:
+      - backend:
+          serviceName: chatservice
+          servicePort: 3000
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+  name: app-ingress
+  namespace: default
+spec:
+  rules:
+    - host: app.gyme.uk
+      http:
+        paths:
+          - backend:
+              serviceName: premierpredictor-service
+              servicePort: 8080
+---
 #apiVersion: extensions/v1beta1
 #kind: Ingress
 #metadata:
