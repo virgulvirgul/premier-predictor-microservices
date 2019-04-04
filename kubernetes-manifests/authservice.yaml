@@ -1,86 +1,86 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: authservice-app
-  namespace: default
-  labels:
-    k8s-app: authservice-app
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        k8s-app: authservice-app
-    spec:
-      terminationGracePeriodSeconds: 5
-      containers:
-        - name: authservice-app
-          image: authservice
-          ports:
-            - name: grpc
-              containerPort: 3002
-          env:
-            - name: PORT
-              value: "3002"
-            - name: HEALTH_PORT
-              value: "8082"
-            - name: RDS_HOSTNAME
-              valueFrom:
-                secretKeyRef:
-                  name: gyme-secrets
-                  key: dbHost
-            - name: RDS_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: gyme-secrets
-                  key: dbPort
-            - name: RDS_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: gyme-secrets
-                  key: dbUser
-            - name: RDS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: gyme-secrets
-                  key: dbPassword
-            - name: RDS_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: gyme-secrets
-                  key: db
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: gyme-secrets
-                  key: jwtSecret
-            - name: EMAIL_ADDR
-              value: "emailservice:3003"
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8082
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8082
-          resources:
-            requests:
-              cpu: 100m
-              memory: 64Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: authservice
-  namespace: default
-spec:
-  selector:
-    k8s-app: authservice-app
-  ports:
-    - port: 3002
-      targetPort: 3002
-      name: grpc
+#apiVersion: extensions/v1beta1
+#kind: Deployment
+#metadata:
+#  name: authservice-app
+#  namespace: default
+#  labels:
+#    k8s-app: authservice-app
+#spec:
+#  replicas: 1
+#  template:
+#    metadata:
+#      labels:
+#        k8s-app: authservice-app
+#    spec:
+#      terminationGracePeriodSeconds: 5
+#      containers:
+#        - name: authservice-app
+#          image: authservice
+#          ports:
+#            - name: grpc
+#              containerPort: 3002
+#          env:
+#            - name: PORT
+#              value: "3002"
+#            - name: HEALTH_PORT
+#              value: "8082"
+#            - name: RDS_HOSTNAME
+#              valueFrom:
+#                secretKeyRef:
+#                  name: gyme-secrets
+#                  key: dbHost
+#            - name: RDS_PORT
+#              valueFrom:
+#                secretKeyRef:
+#                  name: gyme-secrets
+#                  key: dbPort
+#            - name: RDS_USERNAME
+#              valueFrom:
+#                secretKeyRef:
+#                  name: gyme-secrets
+#                  key: dbUser
+#            - name: RDS_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: gyme-secrets
+#                  key: dbPassword
+#            - name: RDS_DATABASE
+#              valueFrom:
+#                secretKeyRef:
+#                  name: gyme-secrets
+#                  key: db
+#            - name: JWT_SECRET
+#              valueFrom:
+#                secretKeyRef:
+#                  name: gyme-secrets
+#                  key: jwtSecret
+#            - name: EMAIL_ADDR
+#              value: "emailservice:3003"
+#          readinessProbe:
+#            httpGet:
+#              path: /health
+#              port: 8082
+#          livenessProbe:
+#            httpGet:
+#              path: /health
+#              port: 8082
+#          resources:
+#            requests:
+#              cpu: 100m
+#              memory: 64Mi
+#            limits:
+#              cpu: 200m
+#              memory: 128Mi
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: authservice
+#  namespace: default
+#spec:
+#  selector:
+#    k8s-app: authservice-app
+#  ports:
+#    - port: 3002
+#      targetPort: 3002
+#      name: grpc

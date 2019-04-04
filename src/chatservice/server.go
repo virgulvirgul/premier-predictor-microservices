@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
 	"github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/handler"
 	chat2 "github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/repository"
@@ -10,7 +11,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"log"
-	"net"
 	"net/http"
 	"os"
 	"syscall"
@@ -52,24 +52,17 @@ func main() {
 }
 
 func startGrpcServer() *grpc.Server {
-	//cer, err := tls.LoadX509KeyPair("certs/tls.crt", "certs/tls.key")
-	//if err != nil {
-	//	log.Fatalf("Failed to load key pair: %v\n", err)
-	//}
-	//
-	//path := ":" + os.Getenv("PORT")
-	//config := &tls.Config{Certificates: []tls.Certificate{cer}}
-	//
-	//lis, err := tls.Listen("tcp", path, config)
-	//if err != nil {
-	//	log.Fatalf("Failed to listen: %v\n", err)
-	//}
+	cer, err := tls.LoadX509KeyPair("certs/fullchain.pem", "certs/privkey.pem")
+	if err != nil {
+		log.Fatalf("Failed to load key pair: %v\n", err)
+	}
 
 	path := ":" + os.Getenv("PORT")
+	config := &tls.Config{Certificates: []tls.Certificate{cer}}
 
-	lis, err := net.Listen("tcp", path)
+	lis, err := tls.Listen("tcp", path, config)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		log.Fatalf("Failed to listen: %v\n", err)
 	}
 
 	log.Printf("Listening on %s", path)

@@ -24,11 +24,6 @@
 #   go-tests = true
 #   unused-packages = true
 
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/ahl5esoft/golang-underscore"
-
 [[constraint]]
   branch = "master"
   name = "github.com/cshep4/premier-predictor-microservices"
