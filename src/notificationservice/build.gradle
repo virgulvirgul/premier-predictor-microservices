@@ -1,0 +1,109 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.1'
+    }
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'com.google.protobuf'
+apply plugin: 'application'
+apply plugin: 'io.spring.dependency-management'
+
+def grpcVersion = '1.10.0'
+
+mainClassName = 'com.cshep4.premierpredictor.notification.NotificationServiceApplication'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    google()
+    jcenter()
+}
+
+ext {
+    speed = project.hasProperty('speed') ? project.getProperty('speed') : false
+    offlineCompile = new File("$buildDir/output/lib")
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src-gen/main'
+            srcDir 'src/main/java'
+        }
+        proto {
+            srcDir 'protodefs'
+        }
+    }
+}
+
+dependencies {
+    if (speed) {
+        compile fileTree(dir: offlineCompile, include: '*.jar')
+    } else {
+        compile "io.grpc:grpc-netty:${grpcVersion}"
+        compile "io.grpc:grpc-protobuf:${grpcVersion}"
+        compile "io.grpc:grpc-stub:${grpcVersion}"
+
+        compile "org.springframework.boot:spring-boot-starter-web:1.5.3.RELEASE"
+        compile "org.springframework.boot:spring-boot-actuator:1.5.3.RELEASE"
+        compile "org.lognet:grpc-spring-boot-starter:2.0.4"
+
+        compile group: 'org.mongodb', name: 'mongodb-driver-sync', version: '3.10.1'
+        compile group: 'com.google.firebase', name: 'firebase-admin', version: '6.8.0'
+
+        compileOnly 'org.projectlombok:lombok:1.18.6'
+    }
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.6'
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.27.0'
+    testCompile group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0'
+}
+
+sourceCompatibility = 1.8
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.3.0'
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.5.0"
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    outputSubDir = ''
+                }
+            }
+            task.plugins {
+                grpc {
+                    outputSubDir = ''
+                }
+            }
+        }
+    }
+    generatedFilesBaseDir = "${projectDir}/src-gen/"
+}
+
+clean {
+    delete "${projectDir}/src-gen/"
+    protobuf
+}
+
+// This to cache dependencies during Docker image building. First build will take time.
+// Subsequent build will be incremental.
+task downloadRepos(type: Copy) {
+    from configurations.compile
+    into offlineCompile
+    from configurations.runtime
+    into offlineCompile
+}

@@ -1,5 +1,3 @@
-//go:generate mockgen -destination=./mocks/mock_repository.go -package=chatmocks github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/repository Repository
-
 package chat
 
 import (
@@ -26,17 +24,6 @@ const (
 var ErrChatNotFound = errors.New("chat not found")
 var ErrMessageAlreadyExists = errors.New("message already exists")
 
-type Repository interface {
-	GetChatById(chatId string) (*model.Chat, error)
-	CreateChat(chatId, userId string) error
-	JoinChat(chatId, userId string) error
-	LeaveChat(chatId, userId string) error
-	GetLatestMessages(chatId string) ([]model.Message, error)
-	GetPreviousMessages(chatId, messageId string) ([]model.Message, error)
-	SaveReadReceipt(chatId, userId, messageId string) error
-	SaveMessage(message model.Message) (string, error)
-}
-
 type repository struct {
 	client *mongo.Client
 }
@@ -54,7 +41,7 @@ func NewRepository() (*repository, error) {
 	if port != "" {
 		mongoUri = fmt.Sprintf("%s:%s", mongoUri, port)
 	}
-	mongoUri = fmt.Sprintf("%s/%s?retryWrites=true&connectTimeoutMS=500", mongoUri, os.Getenv("MONGO_DATABASE"))
+	mongoUri = fmt.Sprintf("%s/?retryWrites=true&connectTimeoutMS=500", mongoUri)
 
 	c, err := mongo.NewClient(options.Client().ApplyURI(mongoUri))
 	if err != nil {
@@ -262,8 +249,8 @@ func (r *repository) getMessages(chatId string, filter interface{}) ([]model.Mes
 	return messages, nil
 }
 
-func (r *repository) SaveReadReceipt(chatId, userId, messageId string) error {
-	id, err := primitive.ObjectIDFromHex(messageId)
+func (r *repository) SaveReadReceipt(readReceipt model.ReadReceipt) error {
+	id, err := primitive.ObjectIDFromHex(readReceipt.MessageId)
 	if err != nil {
 		return err
 	}
@@ -274,12 +261,13 @@ func (r *repository) SaveReadReceipt(chatId, userId, messageId string) error {
 		UpdateOne(
 			context.Background(),
 			bson.M{
-				"_id":      chatId,
-				"users.id": userId,
+				"_id":      readReceipt.ChatId,
+				"users.id": readReceipt.SenderId,
 			},
 			bson.M{
 				"$set": bson.M{
 					"users.$.lastReadMessage": id,
+					"users.$.readTime": readReceipt.DateTime.Round(time.Second),
 				},
 			},
 		)

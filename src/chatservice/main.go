@@ -3,11 +3,14 @@ package main
 import (
 	"context"
 	"crypto/tls"
-	"github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
 	"github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/handler"
 	chat2 "github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/repository"
 	chat3 "github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/service"
+	"github.com/cshep4/premier-predictor-microservices/src/common/auth"
+	"github.com/cshep4/premier-predictor-microservices/src/common/factory"
 	"github.com/cshep4/premier-predictor-microservices/src/common/health"
+	"github.com/cshep4/premier-predictor-microservices/src/common/notification"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"log"
@@ -67,15 +70,22 @@ func startGrpcServer() *grpc.Server {
 
 	log.Printf("Listening on %s", path)
 
-	//grpcServer := grpc.NewServer(grpc.UnaryInterceptor(auth.Interceptor))
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(auth.Interceptor))
+	//grpcServer := grpc.NewServer()
 
 	repository, err := chat2.NewRepository()
 	if err != nil {
 		log.Fatalf("failed to create repository: %v", err)
 	}
 
-	service, err := chat3.NewService(repository)
+	notificationFactory := factory.NewNotificationClientFactory(os.Getenv("NOTIFICATION_ADDR"))
+
+	notifier, err := notification.NewNotifier(notificationFactory)
+	if err != nil {
+		log.Fatalf("failed to create notifier: %v", err)
+	}
+
+	service, err := chat3.NewService(repository, notifier)
 	if err != nil {
 		log.Fatalf("failed to create service: %v", err)
 	}
@@ -85,7 +95,7 @@ func startGrpcServer() *grpc.Server {
 		log.Fatalf("failed to grpc handler: %v", err)
 	}
 
-	chat.RegisterChatServiceServer(grpcServer, server)
+	gen.RegisterChatServiceServer(grpcServer, server)
 
 	err = grpcServer.Serve(lis)
 	if err != nil {

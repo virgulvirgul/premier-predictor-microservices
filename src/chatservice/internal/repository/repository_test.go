@@ -97,7 +97,17 @@ func Test_Repository(t *testing.T) {
 			defer cleanupDb()
 
 			messageId := primitive.NewObjectID()
-			err := repository.SaveReadReceipt(chatId, userId, messageId.Hex())
+
+			now := time.Now().Round(time.Second)
+
+			readReceipt := model.ReadReceipt{
+				ChatId: chatId,
+				SenderId: userId,
+				MessageId: messageId.Hex(),
+				DateTime: now,
+			}
+
+			err := repository.SaveReadReceipt(readReceipt)
 			assert.NoError(t, err)
 
 			c, err := repository.GetChatById(chatId)
@@ -106,6 +116,7 @@ func Test_Repository(t *testing.T) {
 			assert.Equal(t, chatId, c.Id)
 			assert.Equal(t, userId, c.Users[0].Id)
 			assert.Equal(t, messageId.Hex(), c.Users[0].LastReadMessage)
+			assert.Equal(t, now, c.Users[0].ReadTime)
 		})
 
 		t.Run("Doesn't update other user's", func(t *testing.T) {
@@ -117,7 +128,17 @@ func Test_Repository(t *testing.T) {
 			assert.NoError(t, err)
 
 			messageId := primitive.NewObjectID()
-			err := repository.SaveReadReceipt(chatId, userId, messageId.Hex())
+
+			now := time.Now().Round(time.Second)
+
+			readReceipt := model.ReadReceipt{
+				ChatId: chatId,
+				SenderId: userId,
+				MessageId: messageId.Hex(),
+				DateTime: now,
+			}
+
+			err := repository.SaveReadReceipt(readReceipt)
 			assert.NoError(t, err)
 
 			c, err := repository.GetChatById(chatId)
@@ -126,6 +147,7 @@ func Test_Repository(t *testing.T) {
 			assert.Equal(t, chatId, c.Id)
 			assert.Equal(t, userId, c.Users[0].Id)
 			assert.Equal(t, messageId.Hex(), c.Users[0].LastReadMessage)
+			assert.Equal(t, now, c.Users[0].ReadTime)
 			assert.Equal(t, userId2, c.Users[1].Id)
 			assert.Equal(t, "", c.Users[1].LastReadMessage)
 		})

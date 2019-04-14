@@ -1,9 +1,10 @@
 syntax = "proto3";
 option java_multiple_files = true;
-option java_package = "com.cshep4.premierpredictor.chat.gen";
+option java_package = "com.cshep4.premierpredictor.chat";
+//option go_package = "chat";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
-package chat;
+package model;
 
 service ChatService {
     rpc CreateChat (AddRequest) returns (google.protobuf.Empty) {}

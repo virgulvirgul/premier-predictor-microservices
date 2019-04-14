@@ -17,13 +17,13 @@ spec:
         - name: chatservice-app
           image: chatservice
           ports:
-            - containerPort: 3000
+            - containerPort: 3003
               name: grpc
           env:
             - name: PORT
-              value: "3000"
+              value: "3003"
             - name: HEALTH_PORT
-              value: "8080"
+              value: "8083"
             - name: MONGO_SCHEME
               valueFrom:
                 secretKeyRef:
@@ -49,19 +49,14 @@ spec:
                 secretKeyRef:
                   name: pp-secrets
                   key: dbHost
-            - name: MONGO_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: pp-secrets
-                  key: db
           readinessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: 8083
           livenessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: 8083
           resources:
             requests:
               cpu: 100m
@@ -79,6 +74,6 @@ spec:
   selector:
     k8s-app: chatservice-app
   ports:
-    - port: 3000
-      targetPort: 3000
+    - port: 3003
+      targetPort: 3003
       name: grpc
