@@ -6,7 +6,6 @@ import com.cshep4.premierpredictor.notification.model.NotificationUser;
 import com.cshep4.premierpredictor.notification.model.SingleNotificationRequest;
 import com.cshep4.premierpredictor.notification.repository.NotificationRepository;
 import com.google.firebase.messaging.FirebaseMessagingException;
-import lombok.SneakyThrows;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

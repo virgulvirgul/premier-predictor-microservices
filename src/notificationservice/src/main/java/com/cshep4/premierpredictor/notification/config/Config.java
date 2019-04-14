@@ -7,6 +7,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import io.grpc.ManagedChannelBuilder;
 import lombok.val;
+import lombok.var;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +15,10 @@ import org.springframework.context.annotation.Configuration;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Configuration
-public class Mongo {
+public class Config {
     @Value("${MONGO_SCHEME}")
     private String mongoScheme;
 
@@ -32,9 +34,18 @@ public class Mongo {
     @Value("${MONGO_PORT}")
     private String mongoPort;
 
+    @Value("${AUTH_ADDR}")
+    private String authServiceAddress;
+
     @Bean
     public MongoClient client() {
-        val mongoUri = mongoScheme + "://" + mongoUsername + ":" + mongoPassword + "@" + mongoHost + ":" + mongoPort;
+        var mongoUri = mongoScheme + "://" + mongoUsername + ":" + mongoPassword + "@" + mongoHost;
+
+        if (!isEmpty(mongoPort)) {
+            mongoUri += ":" + mongoPort;
+        }
+
+        mongoUri += "/?retryWrites=true";
 
         val pojoCodecRegistry = fromRegistries(
                 MongoClientSettings.getDefaultCodecRegistry(),
@@ -52,9 +63,6 @@ public class Mongo {
 
         return MongoClients.create(settings);
     }
-
-    @Value("${AUTH_ADDR}")
-    private String authServiceAddress;
 
     @Bean
     public AuthServiceGrpc.AuthServiceBlockingStub stub() {

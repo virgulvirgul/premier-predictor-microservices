@@ -54,6 +54,15 @@ func (c *chatServiceServer) GetPreviousMessages(ctx context.Context, req *Previo
 	return c.toMessageList(messages)
 }
 
+func (c *chatServiceServer) GetRecentMessages(ctx context.Context, req *PreviousMessagesRequest) (*MessageList, error) {
+	messages, err := c.service.GetRecentMessages(req.ChatId, req.CurrentMessageId)
+	if err != nil {
+		return  nil, err
+	}
+
+	return c.toMessageList(messages)
+}
+
 func (c * chatServiceServer) toMessageList(messages []model.Message) (*MessageList, error) {
 	var m []*Message
 	for i := range messages {
@@ -73,7 +82,7 @@ func (c * chatServiceServer) toMessageList(messages []model.Message) (*MessageLi
 func (c *chatServiceServer) Send(ctx context.Context, req *SendRequest) (*empty.Empty, error) {
 	msg := model.MessageFromGrpc(req)
 
-	id, err := c.service.SendMessage(msg)
+	id, err := c.service.SendMessage(ctx, msg)
 	if err != nil {
 		return nil, err
 	}

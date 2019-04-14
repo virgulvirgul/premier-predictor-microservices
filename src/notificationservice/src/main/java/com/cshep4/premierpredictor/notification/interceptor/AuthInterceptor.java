@@ -10,7 +10,7 @@ import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 @Component
 public class AuthInterceptor implements ServerInterceptor {
-    private static final Metadata.Key<String> AUTHORISATION = Metadata.Key.of("Authorisation", ASCII_STRING_MARSHALLER);
+    private static final Metadata.Key<String> AUTHORISATION = Metadata.Key.of("token", ASCII_STRING_MARSHALLER);
 
     @Autowired
     public AuthServiceClient authServiceClient;

@@ -14,7 +14,7 @@ _copyjava:
 _copyjs:
 	@cp -R model/protodefs/auth.proto model/protodefs/request.proto ../src/authservice/protodefs
 
-gen: _gengo _gendart _copyjava _copyjs
+gen: _gengo _copyjava _copyjs
 
 build: get gen
 	@env CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -ldflags '-w -extldflags "-static"' -o build/${PROJECT_NAME}_linux_amd64 .

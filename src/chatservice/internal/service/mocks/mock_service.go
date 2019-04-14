@@ -5,6 +5,7 @@
 package chatmocks
 
 import (
+	context "context"
 	model "github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/model"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
@@ -77,6 +78,21 @@ func (mr *MockServiceMockRecorder) GetPreviousMessages(arg0, arg1 interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPreviousMessages", reflect.TypeOf((*MockService)(nil).GetPreviousMessages), arg0, arg1)
 }
 
+// GetRecentMessages mocks base method
+func (m *MockService) GetRecentMessages(arg0, arg1 string) ([]model.Message, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRecentMessages", arg0, arg1)
+	ret0, _ := ret[0].([]model.Message)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRecentMessages indicates an expected call of GetRecentMessages
+func (mr *MockServiceMockRecorder) GetRecentMessages(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRecentMessages", reflect.TypeOf((*MockService)(nil).GetRecentMessages), arg0, arg1)
+}
+
 // JoinChat mocks base method
 func (m *MockService) JoinChat(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
@@ -106,18 +122,18 @@ func (mr *MockServiceMockRecorder) LeaveChat(arg0, arg1 interface{}) *gomock.Cal
 }
 
 // SendMessage mocks base method
-func (m *MockService) SendMessage(arg0 model.Message) (string, error) {
+func (m *MockService) SendMessage(arg0 context.Context, arg1 model.Message) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendMessage", arg0)
+	ret := m.ctrl.Call(m, "SendMessage", arg0, arg1)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SendMessage indicates an expected call of SendMessage
-func (mr *MockServiceMockRecorder) SendMessage(arg0 interface{}) *gomock.Call {
+func (mr *MockServiceMockRecorder) SendMessage(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMessage", reflect.TypeOf((*MockService)(nil).SendMessage), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMessage", reflect.TypeOf((*MockService)(nil).SendMessage), arg0, arg1)
 }
 
 // UpdateReadMessage mocks base method

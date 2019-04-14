@@ -12,6 +12,7 @@ service ChatService {
     rpc LeaveChat (AddRequest) returns (google.protobuf.Empty) {}
     rpc GetLatestMessages (LatestMessagesRequest) returns (MessageList) {}
     rpc GetPreviousMessages (PreviousMessagesRequest) returns (MessageList) {}
+    rpc GetRecentMessages (PreviousMessagesRequest) returns (MessageList) {}
     rpc Send (SendRequest) returns (google.protobuf.Empty) {}
     rpc Subscribe (stream ReadReceipt) returns (stream Message) {}
 }

@@ -92,6 +92,21 @@ func (mr *MockRepositoryMockRecorder) GetPreviousMessages(arg0, arg1 interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPreviousMessages", reflect.TypeOf((*MockRepository)(nil).GetPreviousMessages), arg0, arg1)
 }
 
+// GetRecentMessages mocks base method
+func (m *MockRepository) GetRecentMessages(arg0, arg1 string) ([]model.Message, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRecentMessages", arg0, arg1)
+	ret0, _ := ret[0].([]model.Message)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRecentMessages indicates an expected call of GetRecentMessages
+func (mr *MockRepositoryMockRecorder) GetRecentMessages(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRecentMessages", reflect.TypeOf((*MockRepository)(nil).GetRecentMessages), arg0, arg1)
+}
+
 // JoinChat mocks base method
 func (m *MockRepository) JoinChat(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
