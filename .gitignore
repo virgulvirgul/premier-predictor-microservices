@@ -9,4 +9,4 @@ pkg/
 .idea
 .skaffold-*.yaml
 certs/
-kubernetes-manifests/secrets.yaml
+kubernetes-manifests/ppsecrets.yaml
