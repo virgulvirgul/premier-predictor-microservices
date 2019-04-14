@@ -8,6 +8,7 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"io"
 	"log"
+	"time"
 )
 
 type chatServiceServer struct {
@@ -99,6 +100,20 @@ func (c *chatServiceServer) Send(ctx context.Context, req *SendRequest) (*empty.
 	for u := range c.msg[req.ChatId] {
 		if u != req.UserId {
 			c.msg[req.ChatId][u] <- m
+
+			go func() {
+				read := model.ReadReceipt{
+					SenderId: u,
+					ChatId: req.ChatId,
+					MessageId: id,
+					DateTime: time.Now(),
+				}
+
+				err := c.service.UpdateReadMessage(read)
+				if err != nil {
+					log.Println(err)
+				}
+			}()
 		}
 	}
 
