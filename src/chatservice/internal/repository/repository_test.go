@@ -346,4 +346,41 @@ func Test_Repository(t *testing.T) {
 			}
 		})
 	})
+
+	t.Run("GetPreviousMessages", func(t *testing.T) {
+		t.Run("Returns error if messageId is invalid", func(t *testing.T) {
+			messages, err := repository.GetRecentMessages(chatId, "")
+			assert.Error(t, err)
+			assert.Nil(t, messages)
+		})
+
+		t.Run("Gets all latest messages after specified id", func(t *testing.T) {
+			const messageIndex = 100
+
+			var ids []string
+			defer cleanupChat()
+
+			var messageId string
+
+			for i := 0; i < 200; i++ {
+				id, err := repository.SaveMessage(model.Message{ChatId: chatId, Text: strconv.Itoa(i)})
+				assert.NoError(t, err)
+
+				if i == messageIndex {
+					messageId = id
+				}
+
+				ids = append(ids, id)
+			}
+
+			messages, err := repository.GetRecentMessages(chatId, messageId)
+			assert.NoError(t, err)
+			assert.NotNil(t, messages)
+
+			for i := range messages {
+				assert.Equal(t, ids[i+messageIndex+1], messages[i].Id)
+				assert.Equal(t, strconv.Itoa(i+messageIndex+1), messages[i].Text)
+			}
+		})
+	})
 }

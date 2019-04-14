@@ -2,7 +2,10 @@
 
 package interfaces
 
-import "github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/model"
+import (
+	"context"
+	"github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/model"
+)
 
 type Service interface {
 	UpdateReadMessage(readReceipt model.ReadReceipt) error
@@ -11,6 +14,7 @@ type Service interface {
 	LeaveChat(chatId, userId string) error
 	GetLatestMessages(chatId string) ([]model.Message, error)
 	GetPreviousMessages(chatId, messageId string) ([]model.Message, error)
-	SendMessage(message model.Message) (string, error)
+	GetRecentMessages(chatId, messageId string) ([]model.Message, error)
+	SendMessage(ctx context.Context, message model.Message) (string, error)
 }
 

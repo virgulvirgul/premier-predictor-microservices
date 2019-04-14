@@ -51,7 +51,7 @@ func TestNotifier_Send(t *testing.T) {
 		notificationClientFactory.EXPECT().CloseConnection().Return(nil)
 		notificationClient.EXPECT().Send(ctx, req).Return(&empty.Empty{}, nil)
 
-		err := notifier.Send(notification, userId1)
+		err := notifier.Send(ctx, notification, userId1)
 		assert.NoError(t, err)
 	})
 
@@ -69,7 +69,7 @@ func TestNotifier_Send(t *testing.T) {
 		notificationClientFactory.EXPECT().CloseConnection().Return(nil)
 		notificationClient.EXPECT().SendToGroup(ctx, req).Return(&empty.Empty{}, nil)
 
-		err := notifier.Send(notification, ids...)
+		err := notifier.Send(ctx, notification, ids...)
 		assert.NoError(t, err)
 	})
 
@@ -82,7 +82,7 @@ func TestNotifier_Send(t *testing.T) {
 		notificationClientFactory.EXPECT().CloseConnection().Return(nil)
 		notificationClient.EXPECT().SendToAll(ctx, req).Return(&empty.Empty{}, nil)
 
-		err := notifier.Send(notification)
+		err := notifier.Send(ctx, notification)
 		assert.NoError(t, err)
 	})
 
@@ -100,7 +100,7 @@ func TestNotifier_Send(t *testing.T) {
 		notificationClientFactory.EXPECT().CloseConnection().Return(nil)
 		notificationClient.EXPECT().Send(ctx, req).Return(&empty.Empty{}, e)
 
-		err := notifier.Send(notification, userId1)
+		err := notifier.Send(ctx, notification, userId1)
 		assert.Error(t, err)
 		assert.Equal(t, e, err)
 	})
@@ -119,7 +119,7 @@ func TestNotifier_Send(t *testing.T) {
 		notificationClientFactory.EXPECT().CloseConnection().Times(0)
 		notificationClient.EXPECT().Send(ctx, req).Times(0)
 
-		err := notifier.Send(notification, userId1)
+		err := notifier.Send(ctx, notification, userId1)
 		assert.Error(t, err)
 		assert.Equal(t, e, err)
 	})

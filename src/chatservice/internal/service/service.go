@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"context"
 	"github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/interfaces"
 	"github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/model"
 	common "github.com/cshep4/premier-predictor-microservices/src/common/interfaces"
@@ -23,30 +24,34 @@ func NewService(repository interfaces.Repository, notifier common.Notifier) (int
 }
 
 func (s *service) UpdateReadMessage(readReceipt model.ReadReceipt) error {
-	return nil
+	return s.repository.SaveReadReceipt(readReceipt)
 }
 
 func (s *service) CreateChat(chatId, userId string) error {
-	panic("implement me")
+	return s.repository.CreateChat(chatId, userId)
 }
 
 func (s *service) JoinChat(chatId, userId string) error {
-	panic("implement me")
+	return s.repository.JoinChat(chatId, userId)
 }
 
 func (s *service) LeaveChat(chatId, userId string) error {
-	panic("implement me")
+	return s.repository.LeaveChat(chatId, userId)
 }
 
 func (s *service) GetLatestMessages(chatId string) ([]model.Message, error) {
-	panic("implement me")
+	return s.repository.GetLatestMessages(chatId)
 }
 
 func (s *service) GetPreviousMessages(chatId, messageId string) ([]model.Message, error) {
-	panic("implement me")
+	return s.repository.GetPreviousMessages(chatId, messageId)
 }
 
-func (s *service) SendMessage(message model.Message) (string, error) {
+func (s *service) GetRecentMessages(chatId, messageId string) ([]model.Message, error) {
+	return s.repository.GetRecentMessages(chatId, messageId)
+}
+
+func (s *service) SendMessage(ctx context.Context, message model.Message) (string, error) {
 	id, err := s.repository.SaveMessage(message)
 	if err != nil {
 		return "", err
@@ -65,7 +70,7 @@ func (s *service) SendMessage(message model.Message) (string, error) {
 			log.Println(err)
 		}
 
-		err = s.sendNotifications(message)
+		err = s.sendNotifications(ctx, message)
 		if err != nil {
 			log.Println(err)
 		}
@@ -74,7 +79,7 @@ func (s *service) SendMessage(message model.Message) (string, error) {
 	return id, nil
 }
 
-func (s *service) sendNotifications(message model.Message) error {
+func (s *service) sendNotifications(ctx context.Context, message model.Message) error {
 	chat, _ := s.repository.GetChatById(message.ChatId)
 
 	var userIds []string
@@ -89,5 +94,5 @@ func (s *service) sendNotifications(message model.Message) error {
 		Message: message.Text,
 	}
 
-	return s.notifier.Send(notification, userIds...)
+	return s.notifier.Send(ctx, notification, userIds...)
 }

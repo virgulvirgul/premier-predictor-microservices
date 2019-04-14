@@ -3,9 +3,10 @@
 package interfaces
 
 import (
+	"context"
 	"github.com/cshep4/premier-predictor-microservices/src/common/model"
 )
 
 type Notifier interface {
-	Send(notification model.Notification, userIds ...string) error
+	Send(ctx context.Context, notification model.Notification, userIds ...string) error
 }

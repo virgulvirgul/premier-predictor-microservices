@@ -9,7 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"go.mongodb.org/mongo-driver/x/bsonx"
 	"os"
 	"time"
@@ -23,6 +22,8 @@ const (
 
 var ErrChatNotFound = errors.New("chat not found")
 var ErrMessageAlreadyExists = errors.New("message already exists")
+
+var limit = int64(50)
 
 type repository struct {
 	client *mongo.Client
@@ -41,7 +42,6 @@ func NewRepository() (*repository, error) {
 	if port != "" {
 		mongoUri = fmt.Sprintf("%s:%s", mongoUri, port)
 	}
-	mongoUri = fmt.Sprintf("%s/?retryWrites=true&connectTimeoutMS=500", mongoUri)
 
 	c, err := mongo.NewClient(options.Client().ApplyURI(mongoUri))
 	if err != nil {
@@ -185,7 +185,16 @@ func (r *repository) LeaveChat(chatId, userId string) error {
 }
 
 func (r *repository) GetLatestMessages(chatId string) ([]model.Message, error) {
-	return r.getMessages(chatId, bson.M{})
+	return r.getMessages(
+		chatId,
+		bson.D{},
+		&options.FindOptions{
+			Limit: &limit,
+			Sort: bson.D{
+				bson.E{Key: "_id", Value: -1},
+			},
+		},
+	)
 }
 
 func (r *repository) GetPreviousMessages(chatId, messageId string) ([]model.Message, error) {
@@ -194,23 +203,54 @@ func (r *repository) GetPreviousMessages(chatId, messageId string) ([]model.Mess
 		return nil, err
 	}
 
-	return r.getMessages(chatId, bson.M{
-		"_id" : bson.M{
-			"$lt": id,
+	return r.getMessages(
+		chatId,
+		bson.D{
+			bson.E{
+				Key:  "_id", Value: bson.D{
+					bson.E{
+						Key:  "$lt", Value: id,
+					},
+				},
+			},
 		},
-	})
+		&options.FindOptions{
+			Limit: &limit,
+			Sort: bson.D{
+				bson.E{Key: "_id", Value: -1},
+			},
+		},
+	)
 }
 
-func (r *repository) getMessages(chatId string, filter interface{}) ([]model.Message, error) {
+func (r *repository) GetRecentMessages(chatId, messageId string) ([]model.Message, error) {
+	id, err := primitive.ObjectIDFromHex(messageId)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.getMessages(
+		chatId,
+		bson.D{
+			bson.E{
+				Key: "_id", Value: bson.D{
+					bson.E{
+						Key: "$gt", Value: id,
+					},
+				},
+			},
+		},
+		&options.FindOptions{
+			Sort: bson.D{
+				bson.E{"_id", -1},
+			},
+		},
+	)
+}
+
+func (r *repository) getMessages(chatId string, filter interface{}, opts *options.FindOptions) ([]model.Message, error) {
 	ctx := context.Background()
 
-	limit := int64(50)
-	opts := &options.FindOptions{
-		Limit: &limit,
-		Sort: bson.D{
-			bson.E{"_id", -1},
-		},
-	}
 	cur, err := r.client.
 		Database(db).
 		Collection(r.getChatCollection(chatId)).
@@ -237,8 +277,8 @@ func (r *repository) getMessages(chatId string, filter interface{}) ([]model.Mes
 		messages = append(messages, *toMessage(m))
 	}
 
-	for i := len(messages)/2-1; i >= 0; i-- {
-		opp := len(messages)-1-i
+	for i := len(messages)/2 - 1; i >= 0; i-- {
+		opp := len(messages) - 1 - i
 		messages[i], messages[opp] = messages[opp], messages[i]
 	}
 
@@ -267,7 +307,7 @@ func (r *repository) SaveReadReceipt(readReceipt model.ReadReceipt) error {
 			bson.M{
 				"$set": bson.M{
 					"users.$.lastReadMessage": id,
-					"users.$.readTime": readReceipt.DateTime.Round(time.Second),
+					"users.$.readTime":        readReceipt.DateTime.Round(time.Second),
 				},
 			},
 		)
@@ -302,7 +342,7 @@ func (r *repository) SaveMessage(message model.Message) (string, error) {
 
 func (r *repository) Ping() error {
 	ctx, _ := context.WithTimeout(context.Background(), time.Duration(500*time.Millisecond))
-	return r.client.Ping(ctx, &readpref.ReadPref{})
+	return r.client.Ping(ctx, nil)
 }
 
 func (r *repository) Close() error {

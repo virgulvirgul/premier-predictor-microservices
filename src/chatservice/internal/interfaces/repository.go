@@ -11,6 +11,7 @@ type Repository interface {
 	LeaveChat(chatId, userId string) error
 	GetLatestMessages(chatId string) ([]model.Message, error)
 	GetPreviousMessages(chatId, messageId string) ([]model.Message, error)
+	GetRecentMessages(chatId, messageId string) ([]model.Message, error)
 	SaveReadReceipt(readReceipt model.ReadReceipt) error
 	SaveMessage(message model.Message) (string, error)
 }
