@@ -20,8 +20,16 @@ build:
   # must provide a "default repo" using one of the methods described
   # here:
   # https://github.com/GoogleContainerTools/skaffold/blob/master/docs/concepts.adoc#2-push
+  - image: authservice
+    context: src/authservice
   - image: chatservice
-    context: src/chatservice
+      context: src/chatservice
+  - image: emailservice
+      context: src/emailservice
+  - image: notificationservice
+      context: src/notificationservice
+  - image: premierpredictor
+      context: src/core
   tagPolicy:
     gitCommit: {}
 deploy:
