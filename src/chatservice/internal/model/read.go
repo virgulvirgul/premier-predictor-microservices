@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
 	"github.com/golang/protobuf/ptypes"
 	"time"
 )
@@ -13,7 +13,7 @@ type ReadReceipt struct {
 	DateTime time.Time
 }
 
-func ReceiptFromGrpc(receipt *chat.ReadReceipt) ReadReceipt {
+func ReceiptFromGrpc(receipt *gen.ReadReceipt) ReadReceipt {
 	t, err := ptypes.Timestamp(receipt.DateTime)
 	if err != nil {
 		t = time.Now()

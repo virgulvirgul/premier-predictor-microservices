@@ -14,6 +14,7 @@ type chatEntity struct {
 type chatUser struct {
 	Id              string              `bson:"id,omitempty"`
 	LastReadMessage *primitive.ObjectID `bson:"lastReadMessage,omitempty"`
+	ReadTime        time.Time           `bson:"readTime,omitempty"`
 }
 
 type message struct {
@@ -34,6 +35,7 @@ func toChat(chat chatEntity) *model.Chat {
 		u := model.ChatUser{
 			Id:              chat.Users[i].Id,
 			LastReadMessage: objectIdToString(chat.Users[i].LastReadMessage),
+			ReadTime:        chat.Users[i].ReadTime,
 		}
 
 		c.Users = append(c.Users, u)
@@ -65,6 +67,7 @@ func fromChat(chat model.Chat) *chatEntity {
 		u := chatUser{
 			Id:              chat.Users[i].Id,
 			LastReadMessage: &messageId,
+			ReadTime:        chat.Users[i].ReadTime,
 		}
 
 		c.Users = append(c.Users, u)

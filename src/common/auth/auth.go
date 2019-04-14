@@ -2,7 +2,7 @@ package auth
 
 import (
 	"context"
-	. "github.com/cshep4/gyme-grpc/proto-gen/model/gen"
+	. "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
@@ -67,10 +67,10 @@ func createRequest(ctx context.Context, req interface{}) (*ValidateRequest, erro
 	return &ValidateRequest{Id: id, Token: meta["token"][0]}, nil
 }
 
-func getUserId(req interface{}) (int32, error) {
+func getUserId(req interface{}) (string, error) {
 	request, ok := req.(*IdRequest)
 	if !ok {
-		return -1, status.Errorf(codes.Unauthenticated, "cannot get user id")
+		return "", status.Errorf(codes.Unauthenticated, "cannot get user id")
 	}
 
 	return request.Id, nil

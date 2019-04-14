@@ -1,0 +1,33 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.cshep4.premierpredictor.notification";
+//option go_package = "chat";
+import "google/protobuf/empty.proto";
+package model;
+
+service NotificationService {
+    rpc SaveUser (SaveRequest) returns (google.protobuf.Empty) {}
+    rpc Send (SingleRequest) returns (google.protobuf.Empty) {}
+    rpc SendToGroup (GroupRequest) returns (google.protobuf.Empty) {}
+    rpc SendToAll (Notification) returns (google.protobuf.Empty) {}
+}
+
+message SaveRequest {
+    string userId = 1;
+    string notificationToken = 2;
+}
+
+message SingleRequest {
+    string userId = 1;
+    Notification notification = 2;
+}
+
+message GroupRequest {
+    repeated string userIds = 1;
+    Notification notification = 2;
+}
+
+message Notification {
+    string title = 1;
+    string message = 2;
+}

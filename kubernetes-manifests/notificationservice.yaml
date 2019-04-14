@@ -1,0 +1,79 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: notificationservice
+spec:
+  template:
+    metadata:
+      labels:
+        app: notificationservice
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image: notificationservice
+          ports:
+            - containerPort: 3004
+          env:
+            - name: PORT
+              value: "3004"
+            - name: HEALTH_PORT
+              value: "8084"
+            - name: MONGO_SCHEME
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbScheme
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbUser
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbPassword
+            - name: MONGO_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbPort
+            - name: MONGO_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbHost
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8084
+            initialDelaySeconds: 60
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8084
+            initialDelaySeconds: 60
+          resources:
+            requests:
+              cpu: 200m
+              memory: 180Mi
+            limits:
+              cpu: 300m
+              memory: 300Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notificationservice
+  annotations:
+    service.alpha.kubernetes.io/app-protocols: '{"notificationservice":"HTTP2"}'
+spec:
+  type: NodePort
+  selector:
+    app: notificationservice
+  ports:
+    - name: grpc
+      port: 3004
+      targetPort: 3004
+      protocol: TCP

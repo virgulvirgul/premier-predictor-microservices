@@ -1,0 +1,21 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.cshep4.premierpredictor.legacy";
+//option go_package = "legacy";
+import "google/protobuf/timestamp.proto";
+package model;
+
+import "request.proto";
+
+service LegacyUserService {
+    rpc GetLegacyUser (model.EmailRequest) returns (LegacyUser) {}
+}
+
+message LegacyUser {
+    string firstName = 1;
+    string surname = 2;
+    string email = 3;
+    string password = 4;
+    google.protobuf.Timestamp joined = 5;
+    bool adFree = 6;
+}

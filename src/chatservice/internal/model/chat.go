@@ -1,7 +1,8 @@
 package model
 
 import (
-	"github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	_ "github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
 	"time"
 )
@@ -14,6 +15,7 @@ type Chat struct {
 type ChatUser struct {
 	Id              string
 	LastReadMessage string
+	ReadTime        time.Time
 }
 
 type Message struct {
@@ -24,7 +26,7 @@ type Message struct {
 	DateTime time.Time
 }
 
-func MessageFromGrpc(req *chat.SendRequest) Message {
+func MessageFromGrpc(req *gen.SendRequest) Message {
 	t, err := ptypes.Timestamp(req.DateTime)
 	if err != nil {
 		t = time.Now()
@@ -38,17 +40,17 @@ func MessageFromGrpc(req *chat.SendRequest) Message {
 	}
 }
 
-func MessageToGrpcMessage(msg Message) (*chat.Message, error) {
+func MessageToGrpcMessage(msg Message) (*gen.Message, error) {
 	t, err := ptypes.TimestampProto(msg.DateTime)
 	if err != nil {
 		return nil, err
 	}
 
-	return &chat.Message{
+	return &gen.Message{
 		MessageId: msg.Id,
-		SenderId: msg.SenderId,
-		Type: chat.Message_MESSAGE,
-		Text:     msg.Text,
-		DateTime: t,
+		SenderId:  msg.SenderId,
+		Type:      gen.Message_MESSAGE,
+		Text:      msg.Text,
+		DateTime:  t,
 	}, nil
 }

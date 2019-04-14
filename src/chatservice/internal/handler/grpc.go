@@ -3,19 +3,19 @@ package handler
 import (
 	"context"
 	. "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	"github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/interfaces"
 	"github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/model"
-	"github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/service"
 	"github.com/golang/protobuf/ptypes/empty"
 	"io"
 	"log"
 )
 
 type chatServiceServer struct {
-	service chat.Service
+	service interfaces.Service
 	msg     map[string]map[string]chan Message
 }
 
-func NewChatServiceServer(service chat.Service) (*chatServiceServer, error) {
+func NewChatServiceServer(service interfaces.Service) (*chatServiceServer, error) {
 	log.Print("Registered chatServiceServer handler")
 
 	return &chatServiceServer{
