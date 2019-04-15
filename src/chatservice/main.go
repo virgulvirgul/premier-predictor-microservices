@@ -4,8 +4,8 @@ import (
 	"context"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
 	"github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/handler"
-	chat2 "github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/repository"
-	chat3 "github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/service"
+	repo "github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/repository"
+	svc "github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/service"
 	"github.com/cshep4/premier-predictor-microservices/src/common/auth"
 	"github.com/cshep4/premier-predictor-microservices/src/common/factory"
 	"github.com/cshep4/premier-predictor-microservices/src/common/health"
@@ -40,6 +40,13 @@ func main() {
 	case os.Interrupt, syscall.SIGINT, syscall.SIGQUIT:
 		log.Print("Shutting down")
 
+		for i := range  clientConnCloseFunc{
+			err := clientConnCloseFunc[i]()
+			if err != nil {
+				log.Printf("Error closing client connection: %v\n", err)
+			}
+		}
+
 		grpcServer.GracefulStop()
 		err := healthServer.Shutdown(context.Background())
 		if err != nil {
@@ -53,6 +60,8 @@ func main() {
 
 	os.Exit(int(exitCode))
 }
+
+var clientConnCloseFunc []func() error
 
 func startGrpcServer() *grpc.Server {
 	//cer, err := tls.LoadX509KeyPair("certs/fullchain.pem", "certs/privkey.pem")
@@ -77,22 +86,40 @@ func startGrpcServer() *grpc.Server {
 
 	log.Printf("Listening on %s", path)
 
-	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(auth.Interceptor))
-	//grpcServer := grpc.NewServer()
-
-	repository, err := chat2.NewRepository()
-	if err != nil {
-		log.Fatalf("failed to create repository: %v", err)
+	authAddress, ok := os.LookupEnv("AUTH_ADDR")
+	if !ok {
+		log.Fatalf("failed to get authservice address")
 	}
 
-	notificationFactory := factory.NewNotificationClientFactory(os.Getenv("NOTIFICATION_ADDR"))
+	notificationAddress, ok := os.LookupEnv("NOTIFICATION_ADDR")
+	if !ok {
+		log.Fatalf("failed to get notificationservice address")
+	}
 
-	notifier, err := notification.NewNotifier(notificationFactory)
+	authFactory := factory.NewAuthClientFactory(authAddress)
+	authClient, err := authFactory.NewAuthClient()
+	clientConnCloseFunc = append(clientConnCloseFunc, authFactory.CloseConnection)
+
+	notificationFactory := factory.NewNotificationClientFactory(notificationAddress)
+	notificationClient, err := notificationFactory.NewNotificationClient()
+	clientConnCloseFunc = append(clientConnCloseFunc, notificationFactory.CloseConnection)
+
+	authenticator, err := auth.NewAuthenticator(authClient)
+	if err != nil {
+		log.Fatalf("failed to create authenticator: %v", err)
+	}
+
+	notifier, err := notification.NewNotifier(notificationClient)
 	if err != nil {
 		log.Fatalf("failed to create notifier: %v", err)
 	}
 
-	service, err := chat3.NewService(repository, notifier)
+	repository, err := repo.NewRepository()
+	if err != nil {
+		log.Fatalf("failed to create repository: %v", err)
+	}
+
+	service, err := svc.NewService(repository, notifier)
 	if err != nil {
 		log.Fatalf("failed to create service: %v", err)
 	}
@@ -101,6 +128,11 @@ func startGrpcServer() *grpc.Server {
 	if err != nil {
 		log.Fatalf("failed to grpc handler: %v", err)
 	}
+
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(authenticator.GrpcUnaryInterceptor),
+		grpc.StreamInterceptor(authenticator.GrpcStreamInterceptor),
+	)
 
 	gen.RegisterChatServiceServer(grpcServer, server)
 

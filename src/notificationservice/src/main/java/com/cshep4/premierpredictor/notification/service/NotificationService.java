@@ -27,6 +27,10 @@ public class NotificationService {
     public void send(SingleNotificationRequest req) throws FirebaseMessagingException {
         val user = notificationRepository.getById(req.getUserId());
 
+        if (user == null) {
+            return;
+        }
+
         firebaseService.sendNotification(req.getNotification(), user.getNotificationToken());
     }
 
@@ -36,6 +40,10 @@ public class NotificationService {
                 .map(NotificationUser::getNotificationToken)
                 .collect(toList());
 
+        if (tokens.size() == 0) {
+            return;
+        }
+
         firebaseService.sendNotification(req.getNotification(), tokens);
     }
 
@@ -44,6 +52,10 @@ public class NotificationService {
                 .stream()
                 .map(NotificationUser::getNotificationToken)
                 .collect(toList());
+
+        if (tokens.size() == 0) {
+            return;
+        }
 
         firebaseService.sendNotification(notification, tokens);
     }
