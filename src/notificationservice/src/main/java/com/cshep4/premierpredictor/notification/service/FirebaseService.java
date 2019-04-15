@@ -9,9 +9,9 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MulticastMessage;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.List;
 
 @Service
@@ -20,9 +20,9 @@ public class FirebaseService {
 
     @SneakyThrows
     public FirebaseService() {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        val classloader = Thread.currentThread().getContextClassLoader();
 
-        try (InputStream serviceAccountFile = classloader.getResourceAsStream(FCM_CONFIG_FILE)) {
+        try (val serviceAccountFile = classloader.getResourceAsStream(FCM_CONFIG_FILE)) {
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccountFile))
                     .build();
@@ -32,7 +32,7 @@ public class FirebaseService {
     }
 
     public void sendNotification(Notification notification, String token) throws FirebaseMessagingException {
-        Message message = Message.builder()
+        val message = Message.builder()
                 .setToken(token)
                 .setNotification(new com.google.firebase.messaging.Notification(notification.getTitle(), notification.getMessage()))
                 .build();
@@ -41,7 +41,7 @@ public class FirebaseService {
     }
 
     public void sendNotification(Notification notification, List<String> tokens) throws FirebaseMessagingException {
-        MulticastMessage message = MulticastMessage.builder()
+        val message = MulticastMessage.builder()
                 .addAllTokens(tokens)
                 .setNotification(new com.google.firebase.messaging.Notification(notification.getTitle(), notification.getMessage()))
                 .build();

@@ -10,12 +10,12 @@ import (
 )
 
 type notifier struct {
-	notificationClientFactory interfaces.NotificationClientFactory
+	client gen.NotificationServiceClient
 }
 
-func NewNotifier(notificationClientFactory interfaces.NotificationClientFactory) (interfaces.Notifier, error) {
+func NewNotifier(client gen.NotificationServiceClient) (interfaces.Notifier, error) {
 	return &notifier{
-		notificationClientFactory: notificationClientFactory,
+		client: client,
 	}, nil
 }
 
@@ -30,27 +30,21 @@ func (n *notifier) Send(ctx context.Context, notification model.Notification, us
 		return err
 	}
 
-	client, err := n.notificationClientFactory.NewNotificationClient()
-	if err != nil {
-		return err
-	}
-	defer n.notificationClientFactory.CloseConnection()
-
 	switch len(userIds) {
 	case 0:
-		_, err = client.SendToAll(metadata, not)
+		_, err = n.client.SendToAll(metadata, not)
 	case 1:
 		req := &gen.SingleRequest{
 			UserId:       userIds[0],
 			Notification: not,
 		}
-		_, err = client.Send(metadata, req)
+		_, err = n.client.Send(metadata, req)
 	default:
 		req := &gen.GroupRequest{
 			UserIds:      userIds,
 			Notification: not,
 		}
-		_, err = client.SendToGroup(metadata, req)
+		_, err = n.client.SendToGroup(metadata, req)
 	}
 
 	return err

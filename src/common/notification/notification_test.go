@@ -6,12 +6,12 @@ import (
 	"context"
 	"errors"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
-	"github.com/cshep4/premier-predictor-microservices/src/common/factory/mocks"
 	"github.com/cshep4/premier-predictor-microservices/src/common/model"
 	"github.com/cshep4/premier-predictor-microservices/src/common/notification/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/grpc/metadata"
 	"testing"
 )
 
@@ -19,10 +19,9 @@ func TestNotifier_Send(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	notificationClientFactory := factorymocks.NewMockNotificationClientFactory(ctrl)
 	notificationClient := notificationmocks.NewMockNotificationServiceClient(ctrl)
 
-	notifier, err := NewNotifier(notificationClientFactory)
+	notifier, err := NewNotifier(notificationClient)
 	assert.NoError(t, err)
 
 	const title = "title"
@@ -37,19 +36,21 @@ func TestNotifier_Send(t *testing.T) {
 	userId2 := "2"
 	userId3 := "3"
 
-	ctx := context.Background()
+	tokenMap := map[string][]string{
+		"token": {"token"},
+	}
+
+	ctx := metadata.NewIncomingContext(context.Background(), tokenMap)
 
 	t.Run("If one user id is specified then notification is sent to single recipient", func(t *testing.T) {
 		req := &gen.SingleRequest{
 			UserId: userId1,
 			Notification: &gen.Notification{
-				Title: notification.Title,
+				Title:   notification.Title,
 				Message: notification.Message,
 			},
 		}
-		notificationClientFactory.EXPECT().NewNotificationClient().Return(notificationClient, nil)
-		notificationClientFactory.EXPECT().CloseConnection().Return(nil)
-		notificationClient.EXPECT().Send(ctx, req).Return(&empty.Empty{}, nil)
+		notificationClient.EXPECT().Send(gomock.Any(), req).Return(&empty.Empty{}, nil)
 
 		err := notifier.Send(ctx, notification, userId1)
 		assert.NoError(t, err)
@@ -61,13 +62,11 @@ func TestNotifier_Send(t *testing.T) {
 		req := &gen.GroupRequest{
 			UserIds: ids,
 			Notification: &gen.Notification{
-				Title: notification.Title,
+				Title:   notification.Title,
 				Message: notification.Message,
 			},
 		}
-		notificationClientFactory.EXPECT().NewNotificationClient().Return(notificationClient, nil)
-		notificationClientFactory.EXPECT().CloseConnection().Return(nil)
-		notificationClient.EXPECT().SendToGroup(ctx, req).Return(&empty.Empty{}, nil)
+		notificationClient.EXPECT().SendToGroup(gomock.Any(), req).Return(&empty.Empty{}, nil)
 
 		err := notifier.Send(ctx, notification, ids...)
 		assert.NoError(t, err)
@@ -75,12 +74,10 @@ func TestNotifier_Send(t *testing.T) {
 
 	t.Run("If no user ids are specified then notification is sent to all", func(t *testing.T) {
 		req := &gen.Notification{
-			Title: notification.Title,
+			Title:   notification.Title,
 			Message: notification.Message,
 		}
-		notificationClientFactory.EXPECT().NewNotificationClient().Return(notificationClient, nil)
-		notificationClientFactory.EXPECT().CloseConnection().Return(nil)
-		notificationClient.EXPECT().SendToAll(ctx, req).Return(&empty.Empty{}, nil)
+		notificationClient.EXPECT().SendToAll(gomock.Any(), req).Return(&empty.Empty{}, nil)
 
 		err := notifier.Send(ctx, notification)
 		assert.NoError(t, err)
@@ -90,34 +87,13 @@ func TestNotifier_Send(t *testing.T) {
 		req := &gen.SingleRequest{
 			UserId: userId1,
 			Notification: &gen.Notification{
-				Title: notification.Title,
+				Title:   notification.Title,
 				Message: notification.Message,
 			},
 		}
 		e := errors.New("notification request failed")
 
-		notificationClientFactory.EXPECT().NewNotificationClient().Return(notificationClient, nil)
-		notificationClientFactory.EXPECT().CloseConnection().Return(nil)
-		notificationClient.EXPECT().Send(ctx, req).Return(&empty.Empty{}, e)
-
-		err := notifier.Send(ctx, notification, userId1)
-		assert.Error(t, err)
-		assert.Equal(t, e, err)
-	})
-
-	t.Run("An error is returned if there is a problem with connecting the client", func(t *testing.T) {
-		req := &gen.SingleRequest{
-			UserId: userId1,
-			Notification: &gen.Notification{
-				Title: notification.Title,
-				Message: notification.Message,
-			},
-		}
-		e := errors.New("client connection failed")
-
-		notificationClientFactory.EXPECT().NewNotificationClient().Return(nil, e)
-		notificationClientFactory.EXPECT().CloseConnection().Times(0)
-		notificationClient.EXPECT().Send(ctx, req).Times(0)
+		notificationClient.EXPECT().Send(gomock.Any(), req).Return(&empty.Empty{}, e)
 
 		err := notifier.Send(ctx, notification, userId1)
 		assert.Error(t, err)

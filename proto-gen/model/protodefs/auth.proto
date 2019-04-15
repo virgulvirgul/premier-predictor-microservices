@@ -6,42 +6,9 @@ import "google/protobuf/empty.proto";
 package model;
 
 service AuthService {
-    //    rpc Login (LoginRequest) returns (LoginResponse) {}
-    //    rpc Register (RegisterRequest) returns (google.protobuf.Empty) {}
-    //    rpc SendPasswordResetEmail (model.EmailRequest) returns (google.protobuf.Empty) {}
-    //    rpc SendVerificationEmail (model.EmailRequest) returns (google.protobuf.Empty) {}
-    //    rpc ResetPassword (ResetPasswordRequest) returns (google.protobuf.Empty) {}
-    //    rpc VerifyAccount (VerifyAccountRequest) returns (google.protobuf.Empty) {}
     rpc Validate (ValidateRequest) returns (google.protobuf.Empty) {}
 }
-
-//message LoginRequest {
-//    string email.proto = 1;
-//    string password = 2;
-//}
-//
-//message LoginResponse {
-//    string token = 1;
-//    string id = 2;
-//}
 
 message ValidateRequest {
     string token = 2;
 }
-
-//message RegisterRequest {
-//    string firstName = 1;
-//    string surname = 2;
-//    string email.proto = 3;
-//    string password = 4;
-//}
-//
-//message ResetPasswordRequest {
-//    string token = 1;
-//    string password = 2;
-//}
-//
-//message VerifyAccountRequest {
-//    string email.proto = 1;
-//    string token = 2;
-//}
