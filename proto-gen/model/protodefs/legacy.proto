@@ -8,7 +8,7 @@ package model;
 import "request.proto";
 
 service LegacyUserService {
-    rpc GetLegacyUser (model.EmailRequest) returns (LegacyUser) {}
+    rpc GetLegacyUser (EmailRequest) returns (LegacyUser) {}
 }
 
 message LegacyUser {

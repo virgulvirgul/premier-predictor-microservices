@@ -6,12 +6,13 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 import "request.proto";
+import "prediction.proto";
 
 package model;
 
 service LiveMatchService {
     rpc GetUpcomingMatches (google.protobuf.Empty) returns (stream UpcomingMatchesResponse) {}
-    rpc GetMatchSummary (model.IdRequest) returns (stream MatchSummary) {}
+    rpc GetMatchSummary (IdRequest) returns (stream MatchSummary) {}
 }
 
 message UpcomingMatchesResponse {
@@ -22,19 +23,6 @@ message MatchSummary {
     MatchFacts match = 1;
     MatchPredictionSummary predictionSummary = 2;
     Prediction prediction = 3;
-}
-
-message Prediction {
-    string userId = 1;
-    string matchId = 2;
-    int32 hGoals = 3;
-    int32 aGoals = 4;
-}
-
-message MatchPredictionSummary {
-    int32 homeWin = 1;
-    int32 draw = 2;
-    int32 awayWin = 3;
 }
 
 message MatchFacts {
@@ -62,7 +50,7 @@ message MatchFacts {
     string penaltyVisitor = 22;
     repeated Event events = 23;
     Commentary commentary = 24;
-    google.protobuf.Timestamp lastUpdated = 25;
+    google.protobuf.Timestamp matchDate = 25;
 }
 
 message Event {

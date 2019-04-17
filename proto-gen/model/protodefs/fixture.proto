@@ -1,0 +1,27 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.cshep4.premierpredictor.fixture";
+//option go_package = "fixture";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+package model;
+
+service FixtureService {
+    rpc GetMatches (google.protobuf.Empty) returns (Matches) {}
+}
+
+message Matches {
+    repeated Match matches = 1;
+}
+
+message Match {
+    string id = 1;
+    string hTeam = 2;
+    string aTeam = 3;
+    int32 hGoals = 4;
+    int32 aGoals = 5;
+    int32 played = 6;
+    google.protobuf.Timestamp dateTime = 7;
+    int32 matchday = 8;
+}
