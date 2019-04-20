@@ -20,5 +20,5 @@ RUN GRPC_HEALTH_PROBE_VERSION=v0.2.0 && \
 WORKDIR /app
 COPY --from=builder /app .
 
-EXPOSE 3001
-ENTRYPOINT ["/app/build/install/suggestionsservice/bin/suggestionsservice"]
+EXPOSE 3004
+ENTRYPOINT ["/app/build/install/notificationservice/bin/notificationservice"]

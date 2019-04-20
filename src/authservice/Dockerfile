@@ -27,9 +27,6 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 
 COPY . .
 
-ADD ./certs ./certs
-ADD ./certs ./certs
-
-EXPOSE 3002
+EXPOSE 3001
 
 ENTRYPOINT [ "node", "server.js" ]

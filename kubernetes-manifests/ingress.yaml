@@ -10,13 +10,17 @@ metadata:
   name: chat-ingress
   namespace: default
 spec:
+  tls:
+    - hosts:
+      - chat.premierpredictor.xyz
+    - secretName: pp-secret
   rules:
-  - host: chat.gyme.uk
-    http:
-      paths:
-      - backend:
-          serviceName: chatservice
-          servicePort: 3000
+    - host: chat.premierpredictor.xyz
+      http:
+        paths:
+        - backend:
+            serviceName: chatservice
+            servicePort: 3003
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -26,8 +30,12 @@ metadata:
   name: app-ingress
   namespace: default
 spec:
+  tls:
+    - hosts:
+      - app.premierpredictor.xyz
+    - secretName: pp-secret
   rules:
-    - host: app.gyme.uk
+    - host: app.premierpredictor.xyz
       http:
         paths:
           - backend:

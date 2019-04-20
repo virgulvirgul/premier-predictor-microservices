@@ -24,6 +24,10 @@ spec:
               value: "3003"
             - name: HEALTH_PORT
               value: "8083"
+            - name: AUTH_ADDR
+              value: "authservice:3001"
+            - name: NOTIFICATION_ADDR
+              value: "notificationservice:3004"
             - name: MONGO_SCHEME
               valueFrom:
                 secretKeyRef:
@@ -39,11 +43,6 @@ spec:
                 secretKeyRef:
                   name: pp-secrets
                   key: dbPassword
-            - name: MONGO_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: pp-secrets
-                  key: dbPort
             - name: MONGO_HOST
               valueFrom:
                 secretKeyRef:

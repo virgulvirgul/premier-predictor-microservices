@@ -20,5 +20,5 @@ RUN GRPC_HEALTH_PROBE_VERSION=v0.2.0 && \
     chmod +x /bin/grpc_health_probe
 COPY --from=builder /emailservice /emailservice
 
-EXPOSE 3003
+EXPOSE 3011
 ENTRYPOINT ["/emailservice"]

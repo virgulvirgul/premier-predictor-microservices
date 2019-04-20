@@ -23,70 +23,67 @@ spec:
             - name: API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
+                  name: premierpredictor-secrets
                   key: apiKey
             - name: API_URL
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
+                  name: premierpredictor-secrets
                   key: apiUrl
             - name: API_URL_COMMENTARY
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
+                  name: premierpredictor-secrets
                   key: apiUrlCommentary
-            - name: DATABASE_SCHEME
+            - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
-                  key: dbScheme
-            - name: DATABASE_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: pp-secrets
-                  key: dbHost
+                  name: premierpredictor-secrets
+                  key: dbUrl
             - name: DATABASE_USER
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
+                  name: premierpredictor-secrets
                   key: dbUser
             - name: DATABASE_PASS
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
+                  name: premierpredictor-secrets
                   key: dbPassword
             - name: DYNAMO_DB_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
+                  name: premierpredictor-secrets
                   key: dynamoDbAccessKey
             - name: DYNAMODB_ENDPOINT
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
+                  name: premierpredictor-secrets
                   key: dynamoDbEndpoint
             - name: DYNAMO_DB_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
+                  name: premierpredictor-secrets
                   key: dynamoDbSecretKey
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
+                  name: premierpredictor-secrets
                   key: jwtSecret
             - name: SEND_GRIP_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
+                  name: premierpredictor-secrets
                   key: sendGridApiKey
             - name: JAVA_OPTS
               value: -Xmx125m -Xms125m -Xss256k -XX:+UseCompressedOops -XX:+UseContainerSupport -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark
           resources:
             requests:
-              memory: "500Mi"
+              cpu: 100m
+              memory: 500Mi
             limits:
-              memory: "600Mi"
+              cpu: 100m
+              memory: 600Mi
           readinessProbe:
             httpGet:
               path: /_health

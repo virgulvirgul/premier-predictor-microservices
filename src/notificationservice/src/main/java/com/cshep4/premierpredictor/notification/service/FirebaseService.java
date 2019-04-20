@@ -23,6 +23,10 @@ public class FirebaseService {
         val classloader = Thread.currentThread().getContextClassLoader();
 
         try (val serviceAccountFile = classloader.getResourceAsStream(FCM_CONFIG_FILE)) {
+            if (serviceAccountFile == null) {
+                return;
+            }
+
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccountFile))
                     .build();
