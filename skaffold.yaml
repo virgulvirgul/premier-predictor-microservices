@@ -23,13 +23,13 @@ build:
   - image: authservice
     context: src/authservice
   - image: chatservice
-      context: src/chatservice
+    context: src/chatservice
   - image: emailservice
-      context: src/emailservice
+    context: src/emailservice
   - image: notificationservice
-      context: src/notificationservice
+    context: src/notificationservice
   - image: premierpredictor
-      context: src/core
+    context: src/core
   tagPolicy:
     gitCommit: {}
 deploy:

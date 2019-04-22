@@ -19,6 +19,10 @@ spec:
               value: "3004"
             - name: HEALTH_PORT
               value: "8084"
+            - name: AUTH_ADDR
+              value: "authservice:3001"
+            - name: MONGO_PORT
+              value: ""
             - name: MONGO_SCHEME
               valueFrom:
                 secretKeyRef:
@@ -34,11 +38,6 @@ spec:
                 secretKeyRef:
                   name: pp-secrets
                   key: dbPassword
-            - name: MONGO_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: pp-secrets
-                  key: dbPort
             - name: MONGO_HOST
               valueFrom:
                 secretKeyRef:
@@ -56,10 +55,10 @@ spec:
             initialDelaySeconds: 60
           resources:
             requests:
-              cpu: 200m
+              cpu: 100m
               memory: 180Mi
             limits:
-              cpu: 300m
+              cpu: 100m
               memory: 300Mi
 ---
 apiVersion: v1

@@ -10,3 +10,5 @@ pkg/
 .skaffold-*.yaml
 certs/
 kubernetes-manifests/ppsecrets.yaml
+
+src/core/out/

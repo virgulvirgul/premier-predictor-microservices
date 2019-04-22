@@ -31,18 +31,18 @@ spec:
                   key: jwtSecret
           readinessProbe:
             httpGet:
-              path: /health
+              path: /_health
               port: 8081
           livenessProbe:
             httpGet:
-              path: /health
+              path: /_health
               port: 8081
           resources:
             requests:
               cpu: 100m
               memory: 64Mi
             limits:
-              cpu: 200m
+              cpu: 100m
               memory: 128Mi
 ---
 apiVersion: v1

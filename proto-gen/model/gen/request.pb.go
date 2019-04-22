@@ -3,11 +3,9 @@
 
 package model
 
-import (
-	fmt "fmt"
-	proto "github.com/golang/protobuf/proto"
-	math "math"
-)
+import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -18,7 +16,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type IdRequest struct {
 	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -31,17 +29,16 @@ func (m *IdRequest) Reset()         { *m = IdRequest{} }
 func (m *IdRequest) String() string { return proto.CompactTextString(m) }
 func (*IdRequest) ProtoMessage()    {}
 func (*IdRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_7f73548e33e655fe, []int{0}
+	return fileDescriptor_request_f47dcb19f0b5374a, []int{0}
 }
-
 func (m *IdRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_IdRequest.Unmarshal(m, b)
 }
 func (m *IdRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_IdRequest.Marshal(b, m, deterministic)
 }
-func (m *IdRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_IdRequest.Merge(m, src)
+func (dst *IdRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_IdRequest.Merge(dst, src)
 }
 func (m *IdRequest) XXX_Size() int {
 	return xxx_messageInfo_IdRequest.Size(m)
@@ -70,17 +67,16 @@ func (m *EmailRequest) Reset()         { *m = EmailRequest{} }
 func (m *EmailRequest) String() string { return proto.CompactTextString(m) }
 func (*EmailRequest) ProtoMessage()    {}
 func (*EmailRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_7f73548e33e655fe, []int{1}
+	return fileDescriptor_request_f47dcb19f0b5374a, []int{1}
 }
-
 func (m *EmailRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_EmailRequest.Unmarshal(m, b)
 }
 func (m *EmailRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_EmailRequest.Marshal(b, m, deterministic)
 }
-func (m *EmailRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EmailRequest.Merge(m, src)
+func (dst *EmailRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EmailRequest.Merge(dst, src)
 }
 func (m *EmailRequest) XXX_Size() int {
 	return xxx_messageInfo_EmailRequest.Size(m)
@@ -103,9 +99,9 @@ func init() {
 	proto.RegisterType((*EmailRequest)(nil), "model.EmailRequest")
 }
 
-func init() { proto.RegisterFile("request.proto", fileDescriptor_7f73548e33e655fe) }
+func init() { proto.RegisterFile("request.proto", fileDescriptor_request_f47dcb19f0b5374a) }
 
-var fileDescriptor_7f73548e33e655fe = []byte{
+var fileDescriptor_request_f47dcb19f0b5374a = []byte{
 	// 133 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2d, 0x4a, 0x2d, 0x2c,
 	0x4d, 0x2d, 0x2e, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0xcd, 0xcd, 0x4f, 0x49, 0xcd,
