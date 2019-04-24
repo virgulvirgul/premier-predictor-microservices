@@ -12,17 +12,21 @@ package model;
 
 service LiveMatchService {
     rpc GetUpcomingMatches (google.protobuf.Empty) returns (stream UpcomingMatchesResponse) {}
-    rpc GetMatchSummary (IdRequest) returns (stream MatchSummary) {}
+    rpc GetMatchSummary (PredictionRequest) returns (stream MatchSummary) {}
 }
 
 message UpcomingMatchesResponse {
-    map<string, MatchFacts> matches = 1;
+    map<string, MatchFactsList> matches = 1;
 }
 
 message MatchSummary {
     MatchFacts match = 1;
     MatchPredictionSummary predictionSummary = 2;
     Prediction prediction = 3;
+}
+
+message MatchFactsList {
+    repeated MatchFacts matches = 1;
 }
 
 message MatchFacts {

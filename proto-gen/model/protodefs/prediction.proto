@@ -8,7 +8,7 @@ import "request.proto";
 package model;
 
 service PredictionService {
-    rpc GetPrediction (IdRequest) returns (Prediction) {}
+    rpc GetPrediction (PredictionRequest) returns (Prediction) {}
     rpc GetPredictionSummary (IdRequest) returns (MatchPredictionSummary) {}
 }
 

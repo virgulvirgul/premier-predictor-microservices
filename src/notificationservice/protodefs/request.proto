@@ -10,3 +10,8 @@ message IdRequest {
 message EmailRequest {
     string email = 1;
 }
+
+message PredictionRequest {
+    string userId = 1;
+    string matchId = 2;
+}

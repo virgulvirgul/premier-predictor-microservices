@@ -1,4 +1,4 @@
-//go:generate mockgen -destination=./mocks/mock_notification_client.go -package=notificationmocks github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen NotificationServiceClient
+//go:generate mockgen -destination=./mocks/mock_notification_service_client.go -package=notificationmocks github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen NotificationServiceClient
 
 package notification
 

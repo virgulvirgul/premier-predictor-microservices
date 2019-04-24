@@ -2,11 +2,10 @@ package notification
 
 import (
 	"context"
-	"errors"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
 	"github.com/cshep4/premier-predictor-microservices/src/common/interfaces"
 	"github.com/cshep4/premier-predictor-microservices/src/common/model"
-	"google.golang.org/grpc/metadata"
+	"github.com/cshep4/premier-predictor-microservices/src/common/util"
 )
 
 type notifier struct {
@@ -25,7 +24,7 @@ func (n *notifier) Send(ctx context.Context, notification model.Notification, us
 		Message: notification.Message,
 	}
 
-	metadata, err := n.createRequestMetadata(ctx)
+	metadata, err := util.CreateRequestMetadata(ctx)
 	if err != nil {
 		return err
 	}
@@ -48,18 +47,4 @@ func (n *notifier) Send(ctx context.Context, notification model.Notification, us
 	}
 
 	return err
-}
-
-
-func (n *notifier) createRequestMetadata(ctx context.Context) (context.Context, error) {
-	meta, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, errors.New("can't create request metadata")
-	}
-
-	if len(meta["token"]) != 1 {
-		return nil, errors.New("can't create request metadata")
-	}
-
-	return metadata.AppendToOutgoingContext(context.Background(), "token", meta["token"][0]), nil
 }

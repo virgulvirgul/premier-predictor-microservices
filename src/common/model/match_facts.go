@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
 	"github.com/golang/protobuf/ptypes"
 	"time"
@@ -27,11 +28,23 @@ type MatchFacts struct {
 	HtScore          string      `json:"ht_score,omitempty"`
 	FtScore          string      `json:"ft_score,omitempty"`
 	EtScore          string      `json:"et_score,omitempty"`
-	PenaltyLocal     string      `json:"penaltyLocal,omitempty"`
+	PenaltyLocal     string      `json:"penalty_local,omitempty"`
 	PenaltyVisitor   string      `json:"penalty_visitor,omitempty"`
 	Events           []*Event    `json:"events,omitempty"`
 	Commentary       *Commentary `json:"commentary,omitempty"`
-	MatchDate        time.Time   `json:"matchTime, omitempty"`
+	MatchDate        time.Time   `json:"matchDate, omitempty"`
+}
+
+func (m *MatchFacts) GetDateTime() time.Time {
+	layout := "02.01.2006T15:04"
+	str := fmt.Sprintf("%sT%s", m.FormattedDate, m.Time)
+	t, err := time.Parse(layout, str)
+
+	if err != nil {
+		t = time.Date(2020, 6, 10, 12, 0, 0, 0, time.Now().Location())
+	}
+
+	return t
 }
 
 func MatchFactsFromGrpc(matchFacts *model.MatchFacts) *MatchFacts {
@@ -584,4 +597,18 @@ func PlayerToGrpc(player *Player) *model.Player {
 		PenScore:       player.PenScore,
 		PenMiss:        player.PenMiss,
 	}
+}
+
+type MatchFactsSlice []*MatchFacts
+
+func (m MatchFactsSlice) Len() int {
+	return len(m)
+}
+
+func (m MatchFactsSlice) Less(i, j int) bool {
+	return m[i].GetDateTime().Before(m[j].GetDateTime())
+}
+
+func (m MatchFactsSlice) Swap(i, j int) {
+	m[i], m[j] = m[j], m[i]
 }
