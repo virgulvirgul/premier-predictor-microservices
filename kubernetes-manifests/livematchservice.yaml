@@ -1,0 +1,78 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: livematchservice-app
+  namespace: default
+  labels:
+    k8s-app: livematchservice-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: livematchservice-app
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: livematchservice-app
+          image: livematchservice
+          ports:
+            - containerPort: 3008
+              name: grpc
+          env:
+            - name: PORT
+              value: "3008"
+            - name: HEALTH_PORT
+              value: "8088"
+            - name: AUTH_ADDR
+              value: "authservice:3001"
+            - name: PREDICTION_ADDR
+              value: "predictionservice:3007"
+            - name: MONGO_SCHEME
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbScheme
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbUser
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbPassword
+            - name: MONGO_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbHost
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8088
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8088
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: livematchservice
+  namespace: default
+spec:
+  selector:
+    k8s-app: livematchservice-app
+  ports:
+    - port: 3008
+      targetPort: 3008
+      name: grpc

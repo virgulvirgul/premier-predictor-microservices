@@ -28,6 +28,8 @@ build:
     context: src/emailservice
   - image: notificationservice
     context: src/notificationservice
+  - image: livematchservice
+      context: src/livematchservice
   - image: premierpredictor
     context: src/core
   tagPolicy:

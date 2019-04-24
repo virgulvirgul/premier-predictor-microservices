@@ -7,7 +7,9 @@ import (
 	"github.com/cshep4/premier-predictor-microservices/src/common/auth"
 	"github.com/cshep4/premier-predictor-microservices/src/common/factory"
 	"github.com/cshep4/premier-predictor-microservices/src/common/health"
+	pFactory "github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/factory"
 	"github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/handler"
+	"github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/prediction"
 	repo "github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/repository"
 	svc "github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/service"
 	"google.golang.org/grpc"
@@ -91,13 +93,27 @@ func startGrpcServer() *grpc.Server {
 		log.Fatalf("failed to get authservice address")
 	}
 
+	predictionAddress, ok := os.LookupEnv("PREDICTION_ADDR")
+	if !ok {
+		log.Fatalf("failed to get predictionservice address")
+	}
+
 	authFactory := factory.NewAuthClientFactory(authAddress)
 	authClient, err := authFactory.NewAuthClient()
 	clientConnCloseFunc = append(clientConnCloseFunc, authFactory.CloseConnection)
 
+	predictionFactory := pFactory.NewPredictionClientFactory(predictionAddress)
+	predictionClient, err := predictionFactory.NewPredictionClient()
+	clientConnCloseFunc = append(clientConnCloseFunc, predictionFactory.CloseConnection)
+
 	authenticator, err := auth.NewAuthenticator(authClient)
 	if err != nil {
 		log.Fatalf("failed to create authenticator: %v", err)
+	}
+
+	predictor, err := prediction.NewPredictor(predictionClient)
+	if err != nil {
+		log.Fatalf("failed to create predictor: %v", err)
 	}
 
 	repository, err := repo.NewRepository()
@@ -105,7 +121,7 @@ func startGrpcServer() *grpc.Server {
 		log.Fatalf("failed to create repository: %v", err)
 	}
 
-	service, err := svc.NewService(repository)
+	service, err := svc.NewService(repository, predictor)
 	if err != nil {
 		log.Fatalf("failed to create service: %v", err)
 	}
