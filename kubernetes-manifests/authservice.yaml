@@ -31,11 +31,11 @@ spec:
                   key: jwtSecret
           readinessProbe:
             httpGet:
-              path: /_health
+              path: /health
               port: 8081
           livenessProbe:
             httpGet:
-              path: /_health
+              path: /health
               port: 8081
           resources:
             requests:

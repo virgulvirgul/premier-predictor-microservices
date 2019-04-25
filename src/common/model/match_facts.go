@@ -135,6 +135,10 @@ type Event struct {
 }
 
 func EventsFromGrpc(event *model.Event) *Event {
+	if event == nil {
+		return nil
+	}
+
 	return &Event{
 		Id:       event.Id,
 		Type:     event.Type,
@@ -150,6 +154,10 @@ func EventsFromGrpc(event *model.Event) *Event {
 }
 
 func EventsToGrpc(event *Event) *model.Event {
+	if event == nil {
+		return nil
+	}
+
 	return &model.Event{
 		Id:       event.Id,
 		Type:     event.Type,
@@ -176,6 +184,10 @@ type Commentary struct {
 }
 
 func CommentaryFromGrpc(commentary *model.Commentary) *Commentary {
+	if commentary == nil {
+		return nil
+	}
+
 	var matchInfo []*MatchInfo
 	for _, m := range commentary.MatchInfo {
 		matchInfo = append(matchInfo, MatchInfoFromGrpc(m))
@@ -199,6 +211,10 @@ func CommentaryFromGrpc(commentary *model.Commentary) *Commentary {
 }
 
 func CommentaryToGrpc(commentary *Commentary) *model.Commentary {
+	if commentary == nil {
+		return nil
+	}
+
 	var matchInfo []*model.MatchInfo
 	for _, m := range commentary.MatchInfo {
 		matchInfo = append(matchInfo, MatchInfoToGrpc(m))
@@ -228,6 +244,10 @@ type MatchInfo struct {
 }
 
 func MatchInfoFromGrpc(matchInfo *model.MatchInfo) *MatchInfo {
+	if matchInfo == nil {
+		return nil
+	}
+
 	return &MatchInfo{
 		Stadium:    matchInfo.Stadium,
 		Attendance: matchInfo.Attendance,
@@ -236,6 +256,10 @@ func MatchInfoFromGrpc(matchInfo *model.MatchInfo) *MatchInfo {
 }
 
 func MatchInfoToGrpc(matchInfo *MatchInfo) *model.MatchInfo {
+	if matchInfo == nil {
+		return nil
+	}
+
 	return &model.MatchInfo{
 		Stadium:    matchInfo.Stadium,
 		Attendance: matchInfo.Attendance,
@@ -249,6 +273,10 @@ type Lineup struct {
 }
 
 func LineupFromGrpc(lineup *model.Lineup) *Lineup {
+	if lineup == nil {
+		return nil
+	}
+
 	var local []*Position
 	for _, t := range lineup.LocalTeam {
 		local = append(local, PositionFromGrpc(t))
@@ -266,6 +294,10 @@ func LineupFromGrpc(lineup *model.Lineup) *Lineup {
 }
 
 func LineupToGrpc(lineup *Lineup) *model.Lineup {
+	if lineup == nil {
+		return nil
+	}
+
 	var local []*model.Position
 	for _, t := range lineup.LocalTeam {
 		local = append(local, PositionToGrpc(t))
@@ -290,6 +322,10 @@ type Position struct {
 }
 
 func PositionFromGrpc(position *model.Position) *Position {
+	if position == nil {
+		return nil
+	}
+
 	return &Position{
 		Id:     position.Id,
 		Number: position.Number,
@@ -299,6 +335,10 @@ func PositionFromGrpc(position *model.Position) *Position {
 }
 
 func PositionToGrpc(position *Position) *model.Position {
+	if position == nil {
+		return nil
+	}
+
 	return &model.Position{
 		Id:     position.Id,
 		Number: position.Number,
@@ -313,6 +353,10 @@ type Substitutions struct {
 }
 
 func SubstitutionsFromGrpc(substitutions *model.Substitutions) *Substitutions {
+	if substitutions == nil {
+		return nil
+	}
+
 	var local []*Substitution
 	for _, t := range substitutions.LocalTeam {
 		local = append(local, SubstitutionFromGrpc(t))
@@ -330,6 +374,10 @@ func SubstitutionsFromGrpc(substitutions *model.Substitutions) *Substitutions {
 }
 
 func SubstitutionsToGrpc(substitutions *Substitutions) *model.Substitutions {
+	if substitutions == nil {
+		return nil
+	}
+
 	var local []*model.Substitution
 	for _, t := range substitutions.LocalTeam {
 		local = append(local, SubstitutionToGrpc(t))
@@ -356,6 +404,10 @@ type Substitution struct {
 }
 
 func SubstitutionFromGrpc(substitution *model.Substitution) *Substitution {
+	if substitution == nil {
+		return nil
+	}
+
 	return &Substitution{
 		OffName: substitution.OffName,
 		OnName:  substitution.OnName,
@@ -367,6 +419,10 @@ func SubstitutionFromGrpc(substitution *model.Substitution) *Substitution {
 }
 
 func SubstitutionToGrpc(substitution *Substitution) *model.Substitution {
+	if substitution == nil {
+		return nil
+	}
+
 	return &model.Substitution{
 		OffName: substitution.OffName,
 		OnName:  substitution.OnName,
@@ -386,6 +442,10 @@ type Comment struct {
 }
 
 func CommentFromGrpc(comment *model.Comment) *Comment {
+	if comment == nil {
+		return nil
+	}
+
 	return &Comment{
 		Id:        comment.Id,
 		Important: comment.Important,
@@ -396,6 +456,10 @@ func CommentFromGrpc(comment *model.Comment) *Comment {
 }
 
 func CommentToGrpc(comment *Comment) *model.Comment {
+	if comment == nil {
+		return nil
+	}
+
 	return &model.Comment{
 		Id:        comment.Id,
 		Important: comment.Important,
@@ -411,6 +475,10 @@ type MatchStats struct {
 }
 
 func MatchStatsFromGrpc(matchStats *model.MatchStats) *MatchStats {
+	if matchStats == nil {
+		return nil
+	}
+
 	var local []*TeamStats
 	for _, t := range matchStats.LocalTeam {
 		local = append(local, TeamStatsFromGrpc(t))
@@ -428,6 +496,10 @@ func MatchStatsFromGrpc(matchStats *model.MatchStats) *MatchStats {
 }
 
 func MatchStatsToGrpc(matchStats *MatchStats) *model.MatchStats {
+	if matchStats == nil {
+		return nil
+	}
+
 	var local []*model.TeamStats
 	for _, t := range matchStats.LocalTeam {
 		local = append(local, TeamStatsToGrpc(t))
@@ -458,6 +530,10 @@ type TeamStats struct {
 }
 
 func TeamStatsFromGrpc(teamStats *model.TeamStats) *TeamStats {
+	if teamStats == nil {
+		return nil
+	}
+
 	return &TeamStats{
 		ShotsTotal:     teamStats.ShotsTotal,
 		ShotsOnGoal:    teamStats.ShotsOnGoal,
@@ -473,6 +549,10 @@ func TeamStatsFromGrpc(teamStats *model.TeamStats) *TeamStats {
 }
 
 func TeamStatsToGrpc(teamStats *TeamStats) *model.TeamStats {
+	if teamStats == nil {
+		return nil
+	}
+
 	return &model.TeamStats{
 		ShotsTotal:     teamStats.ShotsTotal,
 		ShotsOnGoal:    teamStats.ShotsOnGoal,
@@ -493,6 +573,10 @@ type PlayerStats struct {
 }
 
 func PlayerStatsFromGrpc(playerStats *model.PlayerStats) *PlayerStats {
+	if playerStats == nil {
+		return nil
+	}
+
 	return &PlayerStats{
 		LocalTeam:   PlayersFromGrpc(playerStats.LocalTeam),
 		VisitorTeam: PlayersFromGrpc(playerStats.VisitorTeam),
@@ -500,6 +584,10 @@ func PlayerStatsFromGrpc(playerStats *model.PlayerStats) *PlayerStats {
 }
 
 func PlayerStatsToGrpc(playerStats *PlayerStats) *model.PlayerStats {
+	if playerStats == nil {
+		return nil
+	}
+
 	return &model.PlayerStats{
 		LocalTeam:   PlayersToGrpc(playerStats.LocalTeam),
 		VisitorTeam: PlayersToGrpc(playerStats.VisitorTeam),
@@ -511,6 +599,10 @@ type Players struct {
 }
 
 func PlayersFromGrpc(players *model.Players) *Players {
+	if players == nil {
+		return nil
+	}
+
 	var plyrs []*Player
 	for _, p := range players.Player {
 		plyrs = append(plyrs, PlayerFromGrpc(p))
@@ -522,6 +614,10 @@ func PlayersFromGrpc(players *model.Players) *Players {
 }
 
 func PlayersToGrpc(players *Players) *model.Players {
+	if players == nil {
+		return nil
+	}
+
 	var plyrs []*model.Player
 	for _, p := range players.Player {
 		plyrs = append(plyrs, PlayerToGrpc(p))
@@ -554,6 +650,10 @@ type Player struct {
 }
 
 func PlayerFromGrpc(player *model.Player) *Player {
+	if player == nil {
+		return nil
+	}
+
 	return &Player{
 		Id:             player.Id,
 		Num:            player.Num,
@@ -577,6 +677,10 @@ func PlayerFromGrpc(player *model.Player) *Player {
 }
 
 func PlayerToGrpc(player *Player) *model.Player {
+	if player == nil {
+		return nil
+	}
+
 	return &model.Player{
 		Id:             player.Id,
 		Num:            player.Num,

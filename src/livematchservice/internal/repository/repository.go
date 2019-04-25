@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/cshep4/premier-predictor-microservices/src/common/model"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/x/bsonx"
@@ -89,11 +90,89 @@ func (r *repository) ensureIndexes() error {
 }
 
 func (r *repository) GetUpcomingMatches() ([]*model.MatchFacts, error) {
-	panic("implement me")
+	year, month, day := time.Now().Date()
+	today := time.Date(year, month, day, 0, 0, 0, 0, time.Now().Location())
+
+	return r.getMatches(
+		bson.D{
+			{
+				Key: "matchDate",
+				Value: bson.D{
+					{
+						Key:   "$gte",
+						Value: today,
+					},
+				},
+			},
+		},
+		&options.FindOptions{
+			Limit: &limit,
+			Sort: bson.D{
+				bson.E{Key: "matchDate", Value: 1},
+			},
+		},
+	)
+}
+
+func (r *repository) getMatches(filter interface{}, opts *options.FindOptions) ([]*model.MatchFacts, error) {
+	ctx := context.Background()
+
+	cur, err := r.client.
+		Database(db).
+		Collection(collection).
+		Find(
+			ctx,
+			filter,
+			opts,
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	matches := []*model.MatchFacts{}
+
+	defer cur.Close(ctx)
+	for cur.Next(ctx) {
+		var m matchFactsEntity
+		err := cur.Decode(&m)
+		if err != nil {
+			return nil, err
+		}
+
+		matches = append(matches, toMatchFacts(&m))
+	}
+
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+
+	return matches, nil
 }
 
 func (r *repository) GetMatchFacts(id string) (*model.MatchFacts, error) {
-	panic("implement me")
+	var m matchFactsEntity
+
+	err := r.client.
+		Database(db).
+		Collection(collection).
+		FindOne(
+			context.Background(),
+			bson.M{
+				"_id": id,
+			},
+		).
+		Decode(&m)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, ErrMatchNotFound
+		}
+
+		return nil, err
+	}
+
+	return toMatchFacts(&m), nil
 }
 
 func (r *repository) Ping() error {

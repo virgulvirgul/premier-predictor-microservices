@@ -117,6 +117,10 @@ type event struct {
 }
 
 func fromEvent(e *model.Event) *event {
+	if e == nil {
+		return nil
+	}
+
 	return &event{
 		Id:       e.Id,
 		Type:     e.Type,
@@ -132,6 +136,10 @@ func fromEvent(e *model.Event) *event {
 }
 
 func toEvent(e *event) *model.Event {
+	if e == nil {
+		return nil
+	}
+
 	return &model.Event{
 		Id:       e.Id,
 		Type:     e.Type,
@@ -158,6 +166,10 @@ type commentary struct {
 }
 
 func fromCommentary(c *model.Commentary) *commentary {
+	if c == nil {
+		return nil
+	}
+
 	var matchInfo []*matchInfo
 	for _, m := range c.MatchInfo {
 		matchInfo = append(matchInfo, fromMatchInfo(m))
@@ -181,6 +193,10 @@ func fromCommentary(c *model.Commentary) *commentary {
 }
 
 func toCommentary(c *commentary) *model.Commentary {
+	if c == nil {
+		return nil
+	}
+
 	var matchInfo []*model.MatchInfo
 	for _, m := range c.MatchInfo {
 		matchInfo = append(matchInfo, toMatchInfo(m))
@@ -210,6 +226,10 @@ type matchInfo struct {
 }
 
 func fromMatchInfo(m *model.MatchInfo) *matchInfo {
+	if m == nil {
+		return nil
+	}
+
 	return &matchInfo{
 		Stadium:    m.Stadium,
 		Attendance: m.Attendance,
@@ -218,6 +238,10 @@ func fromMatchInfo(m *model.MatchInfo) *matchInfo {
 }
 
 func toMatchInfo(m *matchInfo) *model.MatchInfo {
+	if m == nil {
+		return nil
+	}
+
 	return &model.MatchInfo{
 		Stadium:    m.Stadium,
 		Attendance: m.Attendance,
@@ -231,6 +255,10 @@ type lineup struct {
 }
 
 func fromLineup(l *model.Lineup) *lineup {
+	if l == nil {
+		return nil
+	}
+
 	var local []*position
 	for _, t := range l.LocalTeam {
 		local = append(local, fromPosition(t))
@@ -248,6 +276,10 @@ func fromLineup(l *model.Lineup) *lineup {
 }
 
 func toLineup(l *lineup) *model.Lineup {
+	if l == nil {
+		return nil
+	}
+
 	var local []*model.Position
 	for _, t := range l.LocalTeam {
 		local = append(local, toPosition(t))
@@ -272,6 +304,10 @@ type position struct {
 }
 
 func fromPosition(p *model.Position) *position {
+	if p == nil {
+		return nil
+	}
+
 	return &position{
 		Id:     p.Id,
 		Number: p.Number,
@@ -281,6 +317,10 @@ func fromPosition(p *model.Position) *position {
 }
 
 func toPosition(p *position) *model.Position {
+	if p == nil {
+		return nil
+	}
+
 	return &model.Position{
 		Id:     p.Id,
 		Number: p.Number,
@@ -295,6 +335,10 @@ type substitutions struct {
 }
 
 func fromSubstitutions(s *model.Substitutions) *substitutions {
+	if s == nil {
+		return nil
+	}
+
 	var local []*substitution
 	for _, t := range s.LocalTeam {
 		local = append(local, fromSubstitution(t))
@@ -312,6 +356,10 @@ func fromSubstitutions(s *model.Substitutions) *substitutions {
 }
 
 func toSubstitutions(s *substitutions) *model.Substitutions {
+	if s == nil {
+		return nil
+	}
+
 	var local []*model.Substitution
 	for _, t := range s.LocalTeam {
 		local = append(local, toSubstitution(t))
@@ -338,6 +386,10 @@ type substitution struct {
 }
 
 func fromSubstitution(s *model.Substitution) *substitution {
+	if s == nil {
+		return nil
+	}
+
 	return &substitution{
 		OffName: s.OffName,
 		OnName:  s.OnName,
@@ -349,6 +401,10 @@ func fromSubstitution(s *model.Substitution) *substitution {
 }
 
 func toSubstitution(s *substitution) *model.Substitution {
+	if s == nil {
+		return nil
+	}
+
 	return &model.Substitution{
 		OffName: s.OffName,
 		OnName:  s.OnName,
@@ -368,6 +424,10 @@ type comment struct {
 }
 
 func fromComment(c *model.Comment) *comment {
+	if c == nil {
+		return nil
+	}
+
 	return &comment{
 		Id:        c.Id,
 		Important: c.Important,
@@ -378,6 +438,10 @@ func fromComment(c *model.Comment) *comment {
 }
 
 func toComment(c *comment) *model.Comment {
+	if c == nil {
+		return nil
+	}
+
 	return &model.Comment{
 		Id:        c.Id,
 		Important: c.Important,
@@ -393,6 +457,10 @@ type matchStats struct {
 }
 
 func fromMatchStats(m *model.MatchStats) *matchStats {
+	if m == nil {
+		return nil
+	}
+
 	var local []*teamStats
 	for _, t := range m.LocalTeam {
 		local = append(local, fromTeamStats(t))
@@ -410,6 +478,10 @@ func fromMatchStats(m *model.MatchStats) *matchStats {
 }
 
 func toMatchStats(m *matchStats) *model.MatchStats {
+	if m == nil {
+		return nil
+	}
+
 	var local []*model.TeamStats
 	for _, t := range m.LocalTeam {
 		local = append(local, toTeamStats(t))
@@ -440,6 +512,10 @@ type teamStats struct {
 }
 
 func fromTeamStats(t *model.TeamStats) *teamStats {
+	if t == nil {
+		return nil
+	}
+
 	return &teamStats{
 		ShotsTotal:     t.ShotsTotal,
 		ShotsOnGoal:    t.ShotsOnGoal,
@@ -455,6 +531,10 @@ func fromTeamStats(t *model.TeamStats) *teamStats {
 }
 
 func toTeamStats(t *teamStats) *model.TeamStats {
+	if t == nil {
+		return nil
+	}
+
 	return &model.TeamStats{
 		ShotsTotal:     t.ShotsTotal,
 		ShotsOnGoal:    t.ShotsOnGoal,
@@ -475,6 +555,10 @@ type playerStats struct {
 }
 
 func fromPlayerStats(p *model.PlayerStats) *playerStats {
+	if p == nil {
+		return nil
+	}
+
 	return &playerStats{
 		LocalTeam:   fromPlayers(p.LocalTeam),
 		VisitorTeam: fromPlayers(p.VisitorTeam),
@@ -482,6 +566,10 @@ func fromPlayerStats(p *model.PlayerStats) *playerStats {
 }
 
 func toPlayerStats(p *playerStats) *model.PlayerStats {
+	if p == nil {
+		return nil
+	}
+
 	return &model.PlayerStats{
 		LocalTeam:   toPlayers(p.LocalTeam),
 		VisitorTeam: toPlayers(p.VisitorTeam),
@@ -493,6 +581,10 @@ type players struct {
 }
 
 func fromPlayers(p *model.Players) *players {
+	if p == nil {
+		return nil
+	}
+
 	var plyrs []*player
 	for _, p := range p.Player {
 		plyrs = append(plyrs, fromPlayer(p))
@@ -504,6 +596,10 @@ func fromPlayers(p *model.Players) *players {
 }
 
 func toPlayers(p *players) *model.Players {
+	if p == nil {
+		return nil
+	}
+
 	var plyrs []*model.Player
 	for _, p := range p.Player {
 		plyrs = append(plyrs, toPlayer(p))
@@ -536,6 +632,10 @@ type player struct {
 }
 
 func fromPlayer(p *model.Player) *player {
+	if p == nil {
+		return nil
+	}
+
 	return &player{
 		Id:             p.Id,
 		Num:            p.Num,
@@ -559,6 +659,10 @@ func fromPlayer(p *model.Player) *player {
 }
 
 func toPlayer(p *player) *model.Player {
+	if p == nil {
+		return nil
+	}
+
 	return &model.Player{
 		Id:             p.Id,
 		Num:            p.Num,
