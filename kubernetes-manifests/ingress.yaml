@@ -11,8 +11,6 @@ metadata:
   namespace: default
 spec:
   tls:
-    - hosts:
-      - chat.premierpredictor.xyz
     - secretName: pp-secret
   rules:
     - host: chat.premierpredictor.xyz
@@ -35,8 +33,6 @@ metadata:
   namespace: default
 spec:
   tls:
-    - hosts:
-        - livematch.premierpredictor.xyz
     - secretName: pp-secret
   rules:
     - host: livematch.premierpredictor.xyz
@@ -51,12 +47,11 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/ingress.allow-http: "false"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
   name: app-ingress
   namespace: default
 spec:
   tls:
-    - hosts:
-      - app.premierpredictor.xyz
     - secretName: pp-secret
   rules:
     - host: app.premierpredictor.xyz

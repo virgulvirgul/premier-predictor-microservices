@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: fixtureservice-app
+  namespace: default
+  labels:
+    k8s-app: fixtureservice-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: fixtureservice-app
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: fixtureservice-app
+          image: fixtureservice
+          ports:
+            - name: grpc
+              containerPort: 3006
+          env:
+            - name: PORT
+              value: "3006"
+            - name: HEALTH_PORT
+              value: "8086"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: jwtSecret
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8086
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8086
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fixtureservice
+  namespace: default
+spec:
+  selector:
+    k8s-app: fixtureservice-app
+  ports:
+    - port: 3006
+      targetPort: 3006
+      name: grpc
