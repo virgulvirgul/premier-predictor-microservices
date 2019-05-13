@@ -1,14 +1,26 @@
-import app from './app';
-import * as https from 'https';
-import * as fs from 'fs';
+import {Http} from "./http";
+import {Router} from "./http/router";
+import {Repository} from "./repository/repository";
+import {Service} from "./service/service";
+import {Controller} from "./http/controller";
+import {Middleware} from "./middleware/middleware";
+import {Grpc} from "./grpc";
+import {Handler} from "./grpc/handler";
+import {FormFormatter} from "./component/form-formatter";
+import {FixtureFormatter} from "./component/fixture-formatter";
 
-const PORT = 3006;
+const repository = new Repository();
+const fixtureFormatter = new FixtureFormatter();
+const formFormatter = new FormFormatter();
+const service = new Service(repository, fixtureFormatter, formFormatter);
+const middleware = new Middleware();
 
-const httpsOptions = {
-    key: fs.readFileSync('./certs/key.pem'),
-    cert: fs.readFileSync('./certs/cert.pem')
-};
+const controller = new Controller(service);
+const router = new Router(controller, middleware);
+const httpServer = new Http(router);
 
-https.createServer(httpsOptions, app).listen(PORT, () => {
-    console.log('Express server listening on port ' + PORT);
-});
+const handler = new Handler(service);
+const grpcServer = new Grpc(handler);
+
+httpServer.start();
+grpcServer.start();

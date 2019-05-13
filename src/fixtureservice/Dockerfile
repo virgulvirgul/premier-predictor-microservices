@@ -8,7 +8,7 @@ WORKDIR /app
 ADD . /app
 
 # Expose the port outside of the container
-EXPOSE 3006
+EXPOSE 3006 8086
 
 # Grab dependencies and transpile src directory to dist
 RUN npm install && tsc

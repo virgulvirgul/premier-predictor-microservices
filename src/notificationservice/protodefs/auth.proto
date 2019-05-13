@@ -10,5 +10,5 @@ service AuthService {
 }
 
 message ValidateRequest {
-    string token = 2;
+    string token = 1;
 }

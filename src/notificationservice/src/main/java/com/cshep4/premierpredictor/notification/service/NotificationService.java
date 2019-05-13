@@ -6,9 +6,12 @@ import com.cshep4.premierpredictor.notification.model.NotificationUser;
 import com.cshep4.premierpredictor.notification.model.SingleNotificationRequest;
 import com.cshep4.premierpredictor.notification.repository.NotificationRepository;
 import com.google.firebase.messaging.FirebaseMessagingException;
+import io.reactivex.Observer;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Queue;
 
 import static java.util.stream.Collectors.toList;
 
@@ -21,7 +24,7 @@ public class NotificationService {
     private FirebaseService firebaseService;
 
     public void saveUser(NotificationUser notificationUser) {
-        notificationRepository.save(notificationUser);
+        notificationRepository.saveUser(notificationUser);
     }
 
     public void send(SingleNotificationRequest req) throws FirebaseMessagingException {
@@ -30,6 +33,8 @@ public class NotificationService {
         if (user == null) {
             return;
         }
+
+        notificationRepository.saveNotification(req.getNotification(), req.getUserId());
 
         firebaseService.sendNotification(req.getNotification(), user.getNotificationToken());
     }
@@ -43,6 +48,9 @@ public class NotificationService {
         if (tokens.size() == 0) {
             return;
         }
+
+        req.getUserIds()
+                .forEach(u -> notificationRepository.saveNotification(req.getNotification(), u));
 
         firebaseService.sendNotification(req.getNotification(), tokens);
     }
@@ -58,5 +66,17 @@ public class NotificationService {
         }
 
         firebaseService.sendNotification(notification, tokens);
+    }
+
+    public Queue<Notification> getNotifications(String id) {
+        return notificationRepository.getRecentNotifications(id);
+    }
+
+    public void updateReadNotification(String userId, String notificationId) {
+        notificationRepository.updateReadNotification(userId, notificationId);
+    }
+
+    public void subscribeToUpdates(String id, Observer<Notification> notificationObserver) {
+        notificationRepository.subscribeToUpdates(id, notificationObserver);
     }
 }

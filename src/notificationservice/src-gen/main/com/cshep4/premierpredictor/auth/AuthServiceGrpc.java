@@ -68,14 +68,6 @@ public final class AuthServiceGrpc {
   public static abstract class AuthServiceImplBase implements io.grpc.BindableService {
 
     /**
-     * <pre>
-     *    rpc Login (LoginRequest) returns (LoginResponse) {}
-     *    rpc Register (RegisterRequest) returns (google.protobuf.Empty) {}
-     *    rpc SendPasswordResetEmail (model.EmailRequest) returns (google.protobuf.Empty) {}
-     *    rpc SendVerificationEmail (model.EmailRequest) returns (google.protobuf.Empty) {}
-     *    rpc ResetPassword (ResetPasswordRequest) returns (google.protobuf.Empty) {}
-     *    rpc VerifyAccount (VerifyAccountRequest) returns (google.protobuf.Empty) {}
-     * </pre>
      */
     public void validate(com.cshep4.premierpredictor.auth.ValidateRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
@@ -114,14 +106,6 @@ public final class AuthServiceGrpc {
     }
 
     /**
-     * <pre>
-     *    rpc Login (LoginRequest) returns (LoginResponse) {}
-     *    rpc Register (RegisterRequest) returns (google.protobuf.Empty) {}
-     *    rpc SendPasswordResetEmail (model.EmailRequest) returns (google.protobuf.Empty) {}
-     *    rpc SendVerificationEmail (model.EmailRequest) returns (google.protobuf.Empty) {}
-     *    rpc ResetPassword (ResetPasswordRequest) returns (google.protobuf.Empty) {}
-     *    rpc VerifyAccount (VerifyAccountRequest) returns (google.protobuf.Empty) {}
-     * </pre>
      */
     public void validate(com.cshep4.premierpredictor.auth.ValidateRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
@@ -149,14 +133,6 @@ public final class AuthServiceGrpc {
     }
 
     /**
-     * <pre>
-     *    rpc Login (LoginRequest) returns (LoginResponse) {}
-     *    rpc Register (RegisterRequest) returns (google.protobuf.Empty) {}
-     *    rpc SendPasswordResetEmail (model.EmailRequest) returns (google.protobuf.Empty) {}
-     *    rpc SendVerificationEmail (model.EmailRequest) returns (google.protobuf.Empty) {}
-     *    rpc ResetPassword (ResetPasswordRequest) returns (google.protobuf.Empty) {}
-     *    rpc VerifyAccount (VerifyAccountRequest) returns (google.protobuf.Empty) {}
-     * </pre>
      */
     public com.google.protobuf.Empty validate(com.cshep4.premierpredictor.auth.ValidateRequest request) {
       return blockingUnaryCall(
@@ -183,14 +159,6 @@ public final class AuthServiceGrpc {
     }
 
     /**
-     * <pre>
-     *    rpc Login (LoginRequest) returns (LoginResponse) {}
-     *    rpc Register (RegisterRequest) returns (google.protobuf.Empty) {}
-     *    rpc SendPasswordResetEmail (model.EmailRequest) returns (google.protobuf.Empty) {}
-     *    rpc SendVerificationEmail (model.EmailRequest) returns (google.protobuf.Empty) {}
-     *    rpc ResetPassword (ResetPasswordRequest) returns (google.protobuf.Empty) {}
-     *    rpc VerifyAccount (VerifyAccountRequest) returns (google.protobuf.Empty) {}
-     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> validate(
         com.cshep4.premierpredictor.auth.ValidateRequest request) {

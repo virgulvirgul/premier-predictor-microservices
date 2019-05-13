@@ -22,7 +22,7 @@ spec:
           env:
             - name: PORT
               value: "3006"
-            - name: HEALTH_PORT
+            - name: HTTP_PORT
               value: "8086"
             - name: JWT_SECRET
               valueFrom:

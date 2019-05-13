@@ -43,7 +43,7 @@ public  final class ValidateRequest extends
             }
             break;
           }
-          case 18: {
+          case 10: {
             java.lang.String s = input.readStringRequireUtf8();
 
             token_ = s;
@@ -72,10 +72,10 @@ public  final class ValidateRequest extends
             com.cshep4.premierpredictor.auth.ValidateRequest.class, com.cshep4.premierpredictor.auth.ValidateRequest.Builder.class);
   }
 
-  public static final int TOKEN_FIELD_NUMBER = 2;
+  public static final int TOKEN_FIELD_NUMBER = 1;
   private volatile java.lang.Object token_;
   /**
-   * <code>string token = 2;</code>
+   * <code>string token = 1;</code>
    */
   public java.lang.String getToken() {
     java.lang.Object ref = token_;
@@ -90,7 +90,7 @@ public  final class ValidateRequest extends
     }
   }
   /**
-   * <code>string token = 2;</code>
+   * <code>string token = 1;</code>
    */
   public com.google.protobuf.ByteString
       getTokenBytes() {
@@ -119,7 +119,7 @@ public  final class ValidateRequest extends
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (!getTokenBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, token_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, token_);
     }
   }
 
@@ -129,7 +129,7 @@ public  final class ValidateRequest extends
 
     size = 0;
     if (!getTokenBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, token_);
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, token_);
     }
     memoizedSize = size;
     return size;
@@ -388,7 +388,7 @@ public  final class ValidateRequest extends
 
     private java.lang.Object token_ = "";
     /**
-     * <code>string token = 2;</code>
+     * <code>string token = 1;</code>
      */
     public java.lang.String getToken() {
       java.lang.Object ref = token_;
@@ -403,7 +403,7 @@ public  final class ValidateRequest extends
       }
     }
     /**
-     * <code>string token = 2;</code>
+     * <code>string token = 1;</code>
      */
     public com.google.protobuf.ByteString
         getTokenBytes() {
@@ -419,7 +419,7 @@ public  final class ValidateRequest extends
       }
     }
     /**
-     * <code>string token = 2;</code>
+     * <code>string token = 1;</code>
      */
     public Builder setToken(
         java.lang.String value) {
@@ -432,7 +432,7 @@ public  final class ValidateRequest extends
       return this;
     }
     /**
-     * <code>string token = 2;</code>
+     * <code>string token = 1;</code>
      */
     public Builder clearToken() {
       
@@ -441,7 +441,7 @@ public  final class ValidateRequest extends
       return this;
     }
     /**
-     * <code>string token = 2;</code>
+     * <code>string token = 1;</code>
      */
     public Builder setTokenBytes(
         com.google.protobuf.ByteString value) {

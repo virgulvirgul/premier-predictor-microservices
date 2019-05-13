@@ -14,6 +14,10 @@ public class AuthServiceClient {
     private AuthServiceBlockingStub client;
 
     public boolean validate(String token) {
+        if (token == null) {
+            return false;
+        }
+
         val req = ValidateRequest.newBuilder()
                 .setToken(token)
                 .build();

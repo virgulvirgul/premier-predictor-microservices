@@ -24,14 +24,18 @@ build:
     context: src/authservice
   - image: chatservice
     context: src/chatservice
-  - image: emailservice
-    context: src/emailservice
-  - image: notificationservice
-    context: src/notificationservice
-  - image: livematchservice
-      context: src/livematchservice
   - image: premierpredictor
     context: src/core
+  - image: emailservice
+    context: src/emailservice
+  - image: fixtureservice
+    context: src/fixtureservice
+  - image: livematchservice
+    context: src/livematchservice
+  - image: notificationservice
+    context: src/notificationservice
+  - image: predictionservice
+    context: src/predictionservice
   tagPolicy:
     gitCommit: {}
 deploy:

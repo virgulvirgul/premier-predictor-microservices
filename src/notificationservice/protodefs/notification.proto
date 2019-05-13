@@ -5,11 +5,26 @@ option java_package = "com.cshep4.premierpredictor.notification";
 import "google/protobuf/empty.proto";
 package model;
 
+import "request.proto";
+
 service NotificationService {
     rpc SaveUser (SaveRequest) returns (google.protobuf.Empty) {}
     rpc Send (SingleRequest) returns (google.protobuf.Empty) {}
     rpc SendToGroup (GroupRequest) returns (google.protobuf.Empty) {}
     rpc SendToAll (Notification) returns (google.protobuf.Empty) {}
+    rpc GetNotifications (IdRequest) returns (stream NotificationResponse) {}
+    rpc UpdateReadNotification (UpdateReadRequest) returns (google.protobuf.Empty) {}
+}
+
+message UpdateReadRequest {
+    string userId = 1;
+    string notificationId = 2;
+}
+
+message NotificationResponse {
+    string id = 1;
+    string title = 2;
+    string message = 3;
 }
 
 message SaveRequest {

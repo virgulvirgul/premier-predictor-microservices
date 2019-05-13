@@ -24,6 +24,11 @@ public final class Request {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_model_EmailRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_model_PredictionRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_model_PredictionRequest_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -34,9 +39,10 @@ public final class Request {
   static {
     java.lang.String[] descriptorData = {
       "\n\rrequest.proto\022\005model\"\027\n\tIdRequest\022\n\n\002i" +
-      "d\030\001 \001(\t\"\035\n\014EmailRequest\022\r\n\005email\030\001 \001(\tB\'" +
-      "\n#com.cshep4.premierpredictor.requestP\001b" +
-      "\006proto3"
+      "d\030\001 \001(\t\"\035\n\014EmailRequest\022\r\n\005email\030\001 \001(\t\"4" +
+      "\n\021PredictionRequest\022\016\n\006userId\030\001 \001(\t\022\017\n\007m" +
+      "atchId\030\002 \001(\tB\'\n#com.cshep4.premierpredic" +
+      "tor.requestP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -62,6 +68,12 @@ public final class Request {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_EmailRequest_descriptor,
         new java.lang.String[] { "Email", });
+    internal_static_model_PredictionRequest_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_model_PredictionRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_model_PredictionRequest_descriptor,
+        new java.lang.String[] { "UserId", "MatchId", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

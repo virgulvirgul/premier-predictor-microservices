@@ -15,6 +15,16 @@ public final class NotificationOuterClass {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_model_UpdateReadRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_model_UpdateReadRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_model_NotificationResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_model_NotificationResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_model_SaveRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -44,21 +54,29 @@ public final class NotificationOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\022notification.proto\022\005model\032\033google/prot" +
-      "obuf/empty.proto\"8\n\013SaveRequest\022\016\n\006userI" +
-      "d\030\001 \001(\t\022\031\n\021notificationToken\030\002 \001(\t\"J\n\rSi" +
-      "ngleRequest\022\016\n\006userId\030\001 \001(\t\022)\n\014notificat" +
-      "ion\030\002 \001(\0132\023.model.Notification\"J\n\014GroupR" +
-      "equest\022\017\n\007userIds\030\001 \003(\t\022)\n\014notification\030" +
-      "\002 \001(\0132\023.model.Notification\".\n\014Notificati" +
-      "on\022\r\n\005title\030\001 \001(\t\022\017\n\007message\030\002 \001(\t2\201\002\n\023N" +
-      "otificationService\0228\n\010SaveUser\022\022.model.S" +
-      "aveRequest\032\026.google.protobuf.Empty\"\000\0226\n\004",
-      "Send\022\024.model.SingleRequest\032\026.google.prot" +
-      "obuf.Empty\"\000\022<\n\013SendToGroup\022\023.model.Grou" +
-      "pRequest\032\026.google.protobuf.Empty\"\000\022:\n\tSe" +
-      "ndToAll\022\023.model.Notification\032\026.google.pr" +
-      "otobuf.Empty\"\000B,\n(com.cshep4.premierpred" +
-      "ictor.notificationP\001b\006proto3"
+      "obuf/empty.proto\032\rrequest.proto\";\n\021Updat" +
+      "eReadRequest\022\016\n\006userId\030\001 \001(\t\022\026\n\016notifica" +
+      "tionId\030\002 \001(\t\"B\n\024NotificationResponse\022\n\n\002" +
+      "id\030\001 \001(\t\022\r\n\005title\030\002 \001(\t\022\017\n\007message\030\003 \001(\t" +
+      "\"8\n\013SaveRequest\022\016\n\006userId\030\001 \001(\t\022\031\n\021notif" +
+      "icationToken\030\002 \001(\t\"J\n\rSingleRequest\022\016\n\006u" +
+      "serId\030\001 \001(\t\022)\n\014notification\030\002 \001(\0132\023.mode" +
+      "l.Notification\"J\n\014GroupRequest\022\017\n\007userId" +
+      "s\030\001 \003(\t\022)\n\014notification\030\002 \001(\0132\023.model.No",
+      "tification\".\n\014Notification\022\r\n\005title\030\001 \001(" +
+      "\t\022\017\n\007message\030\002 \001(\t2\226\003\n\023NotificationServi" +
+      "ce\0228\n\010SaveUser\022\022.model.SaveRequest\032\026.goo" +
+      "gle.protobuf.Empty\"\000\0226\n\004Send\022\024.model.Sin" +
+      "gleRequest\032\026.google.protobuf.Empty\"\000\022<\n\013" +
+      "SendToGroup\022\023.model.GroupRequest\032\026.googl" +
+      "e.protobuf.Empty\"\000\022:\n\tSendToAll\022\023.model." +
+      "Notification\032\026.google.protobuf.Empty\"\000\022E" +
+      "\n\020GetNotifications\022\020.model.IdRequest\032\033.m" +
+      "odel.NotificationResponse\"\0000\001\022L\n\026UpdateR",
+      "eadNotification\022\030.model.UpdateReadReques" +
+      "t\032\026.google.protobuf.Empty\"\000B,\n(com.cshep" +
+      "4.premierpredictor.notificationP\001b\006proto" +
+      "3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -72,32 +90,46 @@ public final class NotificationOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.EmptyProto.getDescriptor(),
+          com.cshep4.premierpredictor.request.Request.getDescriptor(),
         }, assigner);
-    internal_static_model_SaveRequest_descriptor =
+    internal_static_model_UpdateReadRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
+    internal_static_model_UpdateReadRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_model_UpdateReadRequest_descriptor,
+        new java.lang.String[] { "UserId", "NotificationId", });
+    internal_static_model_NotificationResponse_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_model_NotificationResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_model_NotificationResponse_descriptor,
+        new java.lang.String[] { "Id", "Title", "Message", });
+    internal_static_model_SaveRequest_descriptor =
+      getDescriptor().getMessageTypes().get(2);
     internal_static_model_SaveRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_SaveRequest_descriptor,
         new java.lang.String[] { "UserId", "NotificationToken", });
     internal_static_model_SingleRequest_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_model_SingleRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_SingleRequest_descriptor,
         new java.lang.String[] { "UserId", "Notification", });
     internal_static_model_GroupRequest_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_model_GroupRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_GroupRequest_descriptor,
         new java.lang.String[] { "UserIds", "Notification", });
     internal_static_model_Notification_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_model_Notification_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_Notification_descriptor,
         new java.lang.String[] { "Title", "Message", });
     com.google.protobuf.EmptyProto.getDescriptor();
+    com.cshep4.premierpredictor.request.Request.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

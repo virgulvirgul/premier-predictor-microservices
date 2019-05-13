@@ -1,0 +1,76 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: predictionservice-app
+  namespace: default
+  labels:
+    k8s-app: predictionservice-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: predictionservice-app
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: predictionservice-app
+          image: predictionservice
+          ports:
+            - containerPort: 3007
+              name: grpc
+          env:
+            - name: PORT
+              value: "3007"
+            - name: HTTP_PORT
+              value: "8087"
+            - name: FIXTURE_ADDR
+              value: "fixtureservice:3006"
+            - name: MONGO_SCHEME
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbScheme
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbUser
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbPassword
+            - name: MONGO_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbHost
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8087
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8087
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: predictionservice
+  namespace: default
+spec:
+  selector:
+    k8s-app: predictionservice-app
+  ports:
+    - port: 3007
+      targetPort: 3007
+      name: grpc

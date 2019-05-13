@@ -75,6 +75,30 @@ public final class NotificationServiceGrpc {
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               com.google.protobuf.Empty.getDefaultInstance()))
           .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<com.cshep4.premierpredictor.request.IdRequest,
+      com.cshep4.premierpredictor.notification.NotificationResponse> METHOD_GET_NOTIFICATIONS =
+      io.grpc.MethodDescriptor.<com.cshep4.premierpredictor.request.IdRequest, com.cshep4.premierpredictor.notification.NotificationResponse>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+          .setFullMethodName(generateFullMethodName(
+              "model.NotificationService", "GetNotifications"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              com.cshep4.premierpredictor.request.IdRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              com.cshep4.premierpredictor.notification.NotificationResponse.getDefaultInstance()))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<com.cshep4.premierpredictor.notification.UpdateReadRequest,
+      com.google.protobuf.Empty> METHOD_UPDATE_READ_NOTIFICATION =
+      io.grpc.MethodDescriptor.<com.cshep4.premierpredictor.notification.UpdateReadRequest, com.google.protobuf.Empty>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "model.NotificationService", "UpdateReadNotification"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              com.cshep4.premierpredictor.notification.UpdateReadRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              com.google.protobuf.Empty.getDefaultInstance()))
+          .build();
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -131,6 +155,20 @@ public final class NotificationServiceGrpc {
       asyncUnimplementedUnaryCall(METHOD_SEND_TO_ALL, responseObserver);
     }
 
+    /**
+     */
+    public void getNotifications(com.cshep4.premierpredictor.request.IdRequest request,
+        io.grpc.stub.StreamObserver<com.cshep4.premierpredictor.notification.NotificationResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_GET_NOTIFICATIONS, responseObserver);
+    }
+
+    /**
+     */
+    public void updateReadNotification(com.cshep4.premierpredictor.notification.UpdateReadRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_UPDATE_READ_NOTIFICATION, responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -161,6 +199,20 @@ public final class NotificationServiceGrpc {
                 com.cshep4.premierpredictor.notification.Notification,
                 com.google.protobuf.Empty>(
                   this, METHODID_SEND_TO_ALL)))
+          .addMethod(
+            METHOD_GET_NOTIFICATIONS,
+            asyncServerStreamingCall(
+              new MethodHandlers<
+                com.cshep4.premierpredictor.request.IdRequest,
+                com.cshep4.premierpredictor.notification.NotificationResponse>(
+                  this, METHODID_GET_NOTIFICATIONS)))
+          .addMethod(
+            METHOD_UPDATE_READ_NOTIFICATION,
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.cshep4.premierpredictor.notification.UpdateReadRequest,
+                com.google.protobuf.Empty>(
+                  this, METHODID_UPDATE_READ_NOTIFICATION)))
           .build();
     }
   }
@@ -214,6 +266,22 @@ public final class NotificationServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_SEND_TO_ALL, getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void getNotifications(com.cshep4.premierpredictor.request.IdRequest request,
+        io.grpc.stub.StreamObserver<com.cshep4.premierpredictor.notification.NotificationResponse> responseObserver) {
+      asyncServerStreamingCall(
+          getChannel().newCall(METHOD_GET_NOTIFICATIONS, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void updateReadNotification(com.cshep4.premierpredictor.notification.UpdateReadRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_UPDATE_READ_NOTIFICATION, getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -260,6 +328,21 @@ public final class NotificationServiceGrpc {
     public com.google.protobuf.Empty sendToAll(com.cshep4.premierpredictor.notification.Notification request) {
       return blockingUnaryCall(
           getChannel(), METHOD_SEND_TO_ALL, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public java.util.Iterator<com.cshep4.premierpredictor.notification.NotificationResponse> getNotifications(
+        com.cshep4.premierpredictor.request.IdRequest request) {
+      return blockingServerStreamingCall(
+          getChannel(), METHOD_GET_NOTIFICATIONS, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.google.protobuf.Empty updateReadNotification(com.cshep4.premierpredictor.notification.UpdateReadRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_UPDATE_READ_NOTIFICATION, getCallOptions(), request);
     }
   }
 
@@ -312,12 +395,22 @@ public final class NotificationServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_SEND_TO_ALL, getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> updateReadNotification(
+        com.cshep4.premierpredictor.notification.UpdateReadRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_UPDATE_READ_NOTIFICATION, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_SAVE_USER = 0;
   private static final int METHODID_SEND = 1;
   private static final int METHODID_SEND_TO_GROUP = 2;
   private static final int METHODID_SEND_TO_ALL = 3;
+  private static final int METHODID_GET_NOTIFICATIONS = 4;
+  private static final int METHODID_UPDATE_READ_NOTIFICATION = 5;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -350,6 +443,14 @@ public final class NotificationServiceGrpc {
           break;
         case METHODID_SEND_TO_ALL:
           serviceImpl.sendToAll((com.cshep4.premierpredictor.notification.Notification) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+          break;
+        case METHODID_GET_NOTIFICATIONS:
+          serviceImpl.getNotifications((com.cshep4.premierpredictor.request.IdRequest) request,
+              (io.grpc.stub.StreamObserver<com.cshep4.premierpredictor.notification.NotificationResponse>) responseObserver);
+          break;
+        case METHODID_UPDATE_READ_NOTIFICATION:
+          serviceImpl.updateReadNotification((com.cshep4.premierpredictor.notification.UpdateReadRequest) request,
               (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
           break;
         default:
@@ -389,6 +490,8 @@ public final class NotificationServiceGrpc {
               .addMethod(METHOD_SEND)
               .addMethod(METHOD_SEND_TO_GROUP)
               .addMethod(METHOD_SEND_TO_ALL)
+              .addMethod(METHOD_GET_NOTIFICATIONS)
+              .addMethod(METHOD_UPDATE_READ_NOTIFICATION)
               .build();
         }
       }

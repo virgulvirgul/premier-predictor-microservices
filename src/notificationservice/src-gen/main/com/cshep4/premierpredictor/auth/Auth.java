@@ -29,7 +29,7 @@ public final class Auth {
   static {
     java.lang.String[] descriptorData = {
       "\n\nauth.proto\022\005model\032\033google/protobuf/emp" +
-      "ty.proto\" \n\017ValidateRequest\022\r\n\005token\030\002 \001" +
+      "ty.proto\" \n\017ValidateRequest\022\r\n\005token\030\001 \001" +
       "(\t2K\n\013AuthService\022<\n\010Validate\022\026.model.Va" +
       "lidateRequest\032\026.google.protobuf.Empty\"\000B" +
       "$\n com.cshep4.premierpredictor.authP\001b\006p" +

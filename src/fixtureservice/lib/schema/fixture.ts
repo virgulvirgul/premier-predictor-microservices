@@ -5,15 +5,15 @@ const Schema = mongoose.Schema;
 export const FixtureSchema = new Schema({
     _id: {
         type: String,
-        required: 'Enter ID'
+        required: 'ID is required'
     },
     hTeam: {
         type: String,
-        required: 'Enter a home team'
+        required: 'Home team is required'
     },
     aTeam: {
         type: String,
-        required: 'Enter a away team'
+        required: 'Away team is required'
     },
     hGoals: {
         type: Number
@@ -26,8 +26,10 @@ export const FixtureSchema = new Schema({
     },
     dateTime: {
         type: Date,
+        required: 'DateTime is required'
     },
     matchday: {
-        type: Number
+        type: Number,
+        required: 'Matchday is required'
     }
 });

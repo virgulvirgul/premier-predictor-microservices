@@ -8,11 +8,11 @@ public interface ValidateRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string token = 2;</code>
+   * <code>string token = 1;</code>
    */
   java.lang.String getToken();
   /**
-   * <code>string token = 2;</code>
+   * <code>string token = 1;</code>
    */
   com.google.protobuf.ByteString
       getTokenBytes();
