@@ -6,6 +6,7 @@ import (
 	"github.com/cshep4/premier-predictor-microservices/src/common/auth"
 	"github.com/cshep4/premier-predictor-microservices/src/common/factory"
 	common "github.com/cshep4/premier-predictor-microservices/src/common/interfaces"
+	fFactory "github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/factory"
 	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/handler"
 	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/interfaces"
 	repo "github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/repository"
@@ -30,6 +31,15 @@ func main() {
 	authClient, err := authFactory.NewAuthClient()
 	clientConnCloseFunc = append(clientConnCloseFunc, authFactory.CloseConnection)
 
+	fixtureAddress, ok := os.LookupEnv("FIXTURE_ADDR")
+	if !ok {
+		log.Fatalf("failed to get fixtureservice address")
+	}
+
+	fixtureFactory := fFactory.NewFixtureClientFactory(fixtureAddress)
+	fixtureClient, err := fixtureFactory.NewFixtureClient()
+	clientConnCloseFunc = append(clientConnCloseFunc, fixtureFactory.CloseConnection)
+
 	authenticator, err := auth.NewAuthenticator(authClient)
 	if err != nil {
 		log.Fatalf("failed to create authenticator: %v", err)
@@ -40,7 +50,7 @@ func main() {
 		log.Fatalf("failed to create repository: %v", err)
 	}
 
-	service, err := svc.NewService(repository)
+	service, err := svc.NewService(repository, fixtureClient)
 	if err != nil {
 		log.Fatalf("failed to create service: %v", err)
 	}

@@ -26,5 +26,13 @@ func (h *httpHandler) Route() http.Handler {
 	router := mux.NewRouter()
 	router.Use(h.authenticator.HttpMiddleware)
 
+	router.HandleFunc("/fixtures/predicted/{id}", h.getFixturesWithPredictions).Methods(http.MethodGet)
+
 	return router
+}
+
+func (h *httpHandler) getFixturesWithPredictions(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+
+	w.WriteHeader(http.StatusOK)
 }
