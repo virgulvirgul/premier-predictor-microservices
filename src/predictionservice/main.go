@@ -7,6 +7,7 @@ import (
 	"github.com/cshep4/premier-predictor-microservices/src/common/factory"
 	common "github.com/cshep4/premier-predictor-microservices/src/common/interfaces"
 	fFactory "github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/factory"
+	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/fixture"
 	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/handler"
 	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/interfaces"
 	repo "github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/repository"
@@ -45,12 +46,17 @@ func main() {
 		log.Fatalf("failed to create authenticator: %v", err)
 	}
 
+	fixtureService, err := fixture.NewFixtureService(fixtureClient)
+	if err != nil {
+		log.Fatalf("failed to create fixtureClient: %v", err)
+	}
+
 	repository, err := repo.NewRepository()
 	if err != nil {
 		log.Fatalf("failed to create repository: %v", err)
 	}
 
-	service, err := svc.NewService(repository, fixtureClient)
+	service, err := svc.NewService(repository, fixtureService)
 	if err != nil {
 		log.Fatalf("failed to create service: %v", err)
 	}

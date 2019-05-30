@@ -36,6 +36,26 @@ func (m *MockNotificationServiceClient) EXPECT() *MockNotificationServiceClientM
 	return m.recorder
 }
 
+// GetNotifications mocks base method
+func (m *MockNotificationServiceClient) GetNotifications(arg0 context.Context, arg1 *gen.IdRequest, arg2 ...grpc.CallOption) (gen.NotificationService_GetNotificationsClient, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetNotifications", varargs...)
+	ret0, _ := ret[0].(gen.NotificationService_GetNotificationsClient)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetNotifications indicates an expected call of GetNotifications
+func (mr *MockNotificationServiceClientMockRecorder) GetNotifications(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNotifications", reflect.TypeOf((*MockNotificationServiceClient)(nil).GetNotifications), varargs...)
+}
+
 // SaveUser mocks base method
 func (m *MockNotificationServiceClient) SaveUser(arg0 context.Context, arg1 *gen.SaveRequest, arg2 ...grpc.CallOption) (*empty.Empty, error) {
 	m.ctrl.T.Helper()
@@ -114,4 +134,24 @@ func (mr *MockNotificationServiceClientMockRecorder) SendToGroup(arg0, arg1 inte
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendToGroup", reflect.TypeOf((*MockNotificationServiceClient)(nil).SendToGroup), varargs...)
+}
+
+// UpdateReadNotification mocks base method
+func (m *MockNotificationServiceClient) UpdateReadNotification(arg0 context.Context, arg1 *gen.UpdateReadRequest, arg2 ...grpc.CallOption) (*empty.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UpdateReadNotification", varargs...)
+	ret0, _ := ret[0].(*empty.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateReadNotification indicates an expected call of UpdateReadNotification
+func (mr *MockNotificationServiceClientMockRecorder) UpdateReadNotification(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateReadNotification", reflect.TypeOf((*MockNotificationServiceClient)(nil).UpdateReadNotification), varargs...)
 }

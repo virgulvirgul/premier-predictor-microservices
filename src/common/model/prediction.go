@@ -25,18 +25,18 @@ func MatchPredictionSummaryToGrpc(predictionSummary *MatchPredictionSummary) *mo
 }
 
 type Prediction struct {
-	UserId  string `json:"userId,omitempty"`
-	MatchId string `json:"matchId,omitempty"`
-	HGoals  int32  `json:"hGoals,omitempty"`
-	AGoals  int32  `json:"aGoals,omitempty"`
+	UserId    string `json:"userId,omitempty"`
+	MatchId   string `json:"matchId,omitempty"`
+	HomeGoals int32  `json:"hGoals,omitempty"`
+	AwayGoals int32  `json:"aGoals,omitempty"`
 }
 
 func PredictionFromGrpc(prediction *model.Prediction) *Prediction {
 	return &Prediction{
-		UserId:  prediction.UserId,
-		MatchId: prediction.MatchId,
-		HGoals:  prediction.HGoals,
-		AGoals:  prediction.AGoals,
+		UserId:    prediction.UserId,
+		MatchId:   prediction.MatchId,
+		HomeGoals: prediction.HGoals,
+		AwayGoals: prediction.AGoals,
 	}
 }
 
@@ -44,7 +44,7 @@ func PredictionToGrpc(prediction *Prediction) *model.Prediction {
 	return &model.Prediction{
 		UserId:  prediction.UserId,
 		MatchId: prediction.MatchId,
-		HGoals:  prediction.HGoals,
-		AGoals:  prediction.AGoals,
+		HGoals:  prediction.HomeGoals,
+		AGoals:  prediction.AwayGoals,
 	}
 }
