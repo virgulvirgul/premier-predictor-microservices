@@ -1,90 +1,39 @@
 package handler
 
 import (
+	"context"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
-	common "github.com/cshep4/premier-predictor-microservices/src/common/model"
+	"github.com/cshep4/premier-predictor-microservices/src/common/model"
 	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/interfaces"
-	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/model"
-	"github.com/golang/protobuf/ptypes/empty"
 	"log"
-	"time"
 )
 
-type liveMatchServiceServer struct {
-	service  interfaces.Service
-	interval time.Duration
+type predictionServiceServer struct {
+	service interfaces.Service
 }
 
-func NewLiveMatchServiceServer(service interfaces.Service, interval time.Duration) (*liveMatchServiceServer, error) {
-	log.Print("Registered liveMatchServiceServer handler")
+func NewPredictionServiceServer(service interfaces.Service) (*predictionServiceServer, error) {
+	log.Print("Registered predictionServiceServer handler")
 
-	return &liveMatchServiceServer{
-		service:  service,
-		interval: interval,
+	return &predictionServiceServer{
+		service: service,
 	}, nil
 }
 
-func (l *liveMatchServiceServer) GetUpcomingMatches(req *empty.Empty, stream gen.LiveMatchService_GetUpcomingMatchesServer) error {
-	matches, err := l.service.GetUpcomingMatches()
+func (p *predictionServiceServer) GetPrediction(ctx context.Context, req *gen.PredictionRequest) (*gen.Prediction, error) {
+	prediction, err := p.service.GetPrediction(req.UserId, req.MatchId)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	resp := model.ToUpcomingMatchesResponse(matches)
-
-	if err := stream.Send(resp); err != nil {
-		return err
-	}
-
-	ticker := time.NewTicker(l.interval)
-	for {
-		select {
-		case <-ticker.C:
-			matches, err := l.service.GetUpcomingMatches()
-			if err != nil {
-				return nil
-			}
-
-			resp := model.ToUpcomingMatchesResponse(matches)
-
-			if err := stream.Send(resp); err != nil {
-				return nil
-			}
-		}
-	}
+	return model.PredictionToGrpc(prediction), nil
 }
 
-func (l *liveMatchServiceServer) GetMatchSummary(req *gen.PredictionRequest, stream gen.LiveMatchService_GetMatchSummaryServer) error {
-	r := model.PredictionRequest{
-		UserId:  req.UserId,
-		MatchId: req.MatchId,
-	}
-
-	matchSummary, err := l.service.GetMatchSummary(stream.Context(), r)
+func (p *predictionServiceServer) GetPredictionSummary(ctx context.Context, req *gen.IdRequest) (*gen.MatchPredictionSummary, error) {
+	predictionSummary, err := p.service.GetMatchPredictionSummary(req.Id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	resp := model.MatchSummaryToGrpc(matchSummary)
-
-	if err := stream.Send(resp); err != nil {
-		return err
-	}
-
-	ticker := time.NewTicker(l.interval)
-	for {
-		select {
-		case <-ticker.C:
-			match, err := l.service.GetMatchFacts(req.MatchId)
-			if err != nil {
-				return nil
-			}
-
-			resp.Match = common.MatchFactsToGrpc(match)
-
-			if err := stream.Send(resp); err != nil {
-				return nil
-			}
-		}
-	}
+	return model.MatchPredictionSummaryToGrpc(predictionSummary), nil
 }

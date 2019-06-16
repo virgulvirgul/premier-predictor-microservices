@@ -2,17 +2,19 @@ package prediction
 
 import (
 	"context"
+	"github.com/cshep4/premier-predictor-microservices/src/common/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"os"
-	"strconv"
 	"testing"
-	"time"
 )
 
 const (
-	matchId = "matchId"
+	userId   = "userId"
+	userId2  = "userId2"
+	matchId  = "matchId"
+	matchId2 = "matchId2"
 )
 
 func Test_Repository(t *testing.T) {
@@ -26,14 +28,14 @@ func Test_Repository(t *testing.T) {
 	repository, err := NewRepository()
 	assert.NoError(t, err)
 
-	createMatch := func(m *matchFactsEntity) {
+	createPrediction := func(p *predictionEntity) {
 		_, err = repository.
 			client.
 			Database(db).
 			Collection(collection).
 			InsertOne(
 				context.Background(),
-				m,
+				p,
 			)
 
 		require.NoError(t, err)
@@ -50,92 +52,177 @@ func Test_Repository(t *testing.T) {
 			)
 	}
 
-	t.Run("GetUpcomingMatches", func(t *testing.T) {
-		t.Run("gets the next 20 matches, either in the future or today", func(t *testing.T) {
-			const numMatches = 50
-			const limit = 20
+	t.Run("GetPrediction", func(t *testing.T) {
+		t.Run("gets prediction by userId and matchId", func(t *testing.T) {
+			p := &predictionEntity{
+				UserId:    userId,
+				MatchId:   matchId,
+				HomeGoals: 1,
+				AwayGoals: 1,
+			}
 
 			defer cleanupDb()
+			createPrediction(p)
 
-			for i := 0; i < numMatches; i++ {
-				m := &matchFactsEntity{
-					Id:        matchId + strconv.Itoa(i),
-					MatchDate: time.Now().AddDate(0, 0, numMatches-1-i),
-				}
-				createMatch(m)
-			}
-
-			matches, err := repository.GetUpcomingMatches()
+			prediction, err := repository.GetPrediction(userId, matchId)
 			require.NoError(t, err)
 
-			assert.Equal(t, limit, len(matches))
+			expectedResult := toPrediction(p)
 
-			for i := range matches {
-				id := matchId + strconv.Itoa(numMatches-i-1)
-				assert.Equal(t, id, matches[i].Id)
-			}
+			assert.Equal(t, expectedResult, prediction)
 		})
 
-		t.Run("gets today's matches even if they have passed", func(t *testing.T) {
-			defer cleanupDb()
+		t.Run("returns error if not found", func(t *testing.T) {
+			prediction, err := repository.GetPrediction(userId, matchId)
+			require.Error(t, err)
 
-			m := &matchFactsEntity{
-				Id:        matchId,
-				MatchDate: time.Now().Add(-time.Hour).Round(time.Second),
-			}
-			createMatch(m)
-
-			matches, err := repository.GetUpcomingMatches()
-			require.NoError(t, err)
-
-			assert.Equal(t, toMatchFacts(m), matches[0])
-		})
-
-		t.Run("will not return matches in the past", func(t *testing.T) {
-			const numMatches = 50
-
-			defer cleanupDb()
-
-			for i := 0; i < numMatches; i++ {
-				m := &matchFactsEntity{
-					Id:        matchId + strconv.Itoa(i),
-					MatchDate: time.Now().AddDate(0, 0, -1-i),
-				}
-				createMatch(m)
-			}
-
-			matches, err := repository.GetUpcomingMatches()
-			require.NoError(t, err)
-
-			assert.Equal(t, 0, len(matches))
+			assert.Nil(t, prediction)
+			assert.Equal(t, ErrPredictionNotFound, err)
 		})
 	})
 
-	t.Run("GetMatchFacts", func(t *testing.T) {
-		t.Run("gets the specified match", func(t *testing.T) {
-			m := &matchFactsEntity{
-				Id:         matchId,
-				Commentary: &commentary{},
-				MatchDate:  time.Now().Round(time.Second),
+	t.Run("GetPredictionsByUserId", func(t *testing.T) {
+		t.Run("gets all predictions by userId", func(t *testing.T) {
+			p1 := &predictionEntity{
+				UserId:    userId,
+				MatchId:   matchId,
+				HomeGoals: 1,
+				AwayGoals: 1,
+			}
+			p2 := &predictionEntity{
+				UserId:    userId,
+				MatchId:   matchId2,
+				HomeGoals: 1,
+				AwayGoals: 1,
+			}
+			p3 := &predictionEntity{
+				UserId:    userId2,
+				MatchId:   matchId,
+				HomeGoals: 1,
+				AwayGoals: 1,
 			}
 
-			createMatch(m)
 			defer cleanupDb()
+			createPrediction(p1)
+			createPrediction(p2)
+			createPrediction(p3)
 
-			match, err := repository.GetMatchFacts(matchId)
+			expectedResult := []model.Prediction{
+				*toPrediction(p1),
+				*toPrediction(p2),
+			}
+
+			predictions, err := repository.GetPredictionsByUserId(userId)
 			require.NoError(t, err)
 
-			expectedResult := toMatchFacts(m)
+			assert.Equal(t, expectedResult, predictions)
+		})
+	})
 
-			assert.Equal(t, expectedResult, match)
+	t.Run("UpdatePredictions", func(t *testing.T) {
+		t.Run("inserts new predictions", func(t *testing.T) {
+			predictions := []model.Prediction{
+				{
+					UserId:    userId,
+					MatchId:   matchId,
+					HomeGoals: 2,
+					AwayGoals: 1,
+				},
+				{
+					UserId:    userId,
+					MatchId:   matchId2,
+					HomeGoals: 2,
+					AwayGoals: 1,
+				},
+			}
+
+			defer cleanupDb()
+
+			err := repository.UpdatePredictions(predictions)
+			require.NoError(t, err)
+
+			result, err := repository.GetPredictionsByUserId(userId)
+			require.NoError(t, err)
+
+			assert.Equal(t, predictions, result)
 		})
 
-		t.Run("Returns error if not found", func(t *testing.T) {
-			match, err := repository.GetMatchFacts(matchId)
-			require.Error(t, err)
+		t.Run("updates prediction if already exists", func(t *testing.T) {
+			defer cleanupDb()
 
-			assert.Nil(t, match)
-			assert.Equal(t, ErrMatchNotFound, err)
+			err := repository.UpdatePredictions([]model.Prediction{
+				{
+					UserId:    userId,
+					MatchId:   matchId,
+					HomeGoals: 2,
+					AwayGoals: 1,
+				},
+			})
+			require.NoError(t, err)
+
+			predictions := []model.Prediction{
+				{
+					UserId:    userId,
+					MatchId:   matchId,
+					HomeGoals: 3,
+					AwayGoals: 3,
+				},
+				{
+					UserId:    userId,
+					MatchId:   matchId2,
+					HomeGoals: 2,
+					AwayGoals: 1,
+				},
+			}
+
+			err = repository.UpdatePredictions(predictions)
+			require.NoError(t, err)
+
+			result, err := repository.GetPredictionsByUserId(userId)
+			require.NoError(t, err)
+
+			assert.Equal(t, predictions, result)
+		})
+	})
+
+	t.Run("GetMatchPredictionSummary", func(t *testing.T) {
+		t.Run("gets a count of each prediction's result for a specified match	", func(t *testing.T) {
+			predictions := []model.Prediction{
+				{
+					UserId:    "1",
+					MatchId:   matchId,
+					HomeGoals: 1,
+					AwayGoals: 0,
+				},
+				{
+					UserId:    "2",
+					MatchId:   matchId2,
+					HomeGoals: 1,
+					AwayGoals: 1,
+				},
+				{
+					UserId:    "3",
+					MatchId:   matchId,
+					HomeGoals: 3,
+					AwayGoals: 1,
+				},
+				{
+					UserId:    "4",
+					MatchId:   matchId,
+					HomeGoals: 0,
+					AwayGoals: 1,
+				},
+			}
+
+			err = repository.UpdatePredictions(predictions)
+			require.NoError(t, err)
+
+			homeWins, draw, awayWins, err := repository.GetMatchPredictionSummary(matchId)
+			require.NoError(t, err)
+
+			assert.Equal(t, 2, homeWins)
+			assert.Equal(t, 0, draw)
+			assert.Equal(t, 1, awayWins)
 		})
 	})
 }

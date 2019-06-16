@@ -14,13 +14,11 @@ import (
 )
 
 const (
-	db         = "liveMatch"
-	collection = "liveMatch"
+	db         = "prediction"
+	collection = "prediction"
 )
 
-var ErrMatchNotFound = errors.New("match not found")
-
-var limit = int64(20)
+var ErrPredictionNotFound = errors.New("prediction not found")
 
 type repository struct {
 	client *mongo.Client
@@ -65,93 +63,61 @@ func NewRepository() (*repository, error) {
 }
 
 func (r *repository) ensureIndexes() error {
-	_, err := r.client.
-		Database(db).
-		Collection(collection).
-		Indexes().CreateOne(
-		context.Background(),
-		mongo.IndexModel{
-			Keys: bsonx.Doc{
-				{Key: "matchDate", Value: bsonx.Int64(1)},
-			},
-			Options: options.Index().
-				SetName("matchDate_idx").
-				SetUnique(false).
-				SetSparse(true).
-				SetBackground(true),
+	idxs := []struct {
+		name   string
+		field  []string
+		unique bool
+	}{
+		{
+			name:   "userId_idx",
+			field:  []string{"userId"},
+			unique: false,
 		},
-	)
+		{
+			name:   "match_idx",
+			field:  []string{"matchId"},
+			unique: false,
+		},
+		{
+			name:   "prediction_idx",
+			field:  []string{"userId", "matchId"},
+			unique: true,
+		},
+	}
 
-	if err != nil {
-		return err
+	for _, i := range idxs {
+		var doc bsonx.Doc
+		for _, f := range i.field {
+			doc = append(doc, bsonx.Elem{Key: f, Value: bsonx.Int64(1)})
+		}
+
+		opts := options.Index().
+			SetName(i.name).
+			SetUnique(i.unique).
+			SetSparse(false).
+			SetBackground(true)
+
+		_, err := r.client.
+			Database(db).
+			Collection(collection).
+			Indexes().CreateOne(
+			context.Background(),
+			mongo.IndexModel{
+				Keys:    doc,
+				Options: opts,
+			},
+		)
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-func (r *repository) GetUpcomingMatches() ([]*model.MatchFacts, error) {
-	year, month, day := time.Now().Date()
-	today := time.Date(year, month, day, 0, 0, 0, 0, time.Now().Location())
-
-	return r.getMatches(
-		bson.D{
-			{
-				Key: "matchDate",
-				Value: bson.D{
-					{
-						Key:   "$gte",
-						Value: today,
-					},
-				},
-			},
-		},
-		&options.FindOptions{
-			Limit: &limit,
-			Sort: bson.D{
-				bson.E{Key: "matchDate", Value: 1},
-			},
-		},
-	)
-}
-
-func (r *repository) getMatches(filter interface{}, opts *options.FindOptions) ([]*model.MatchFacts, error) {
-	ctx := context.Background()
-
-	cur, err := r.client.
-		Database(db).
-		Collection(collection).
-		Find(
-			ctx,
-			filter,
-			opts,
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	matches := []*model.MatchFacts{}
-
-	defer cur.Close(ctx)
-	for cur.Next(ctx) {
-		var m matchFactsEntity
-		err := cur.Decode(&m)
-		if err != nil {
-			return nil, err
-		}
-
-		matches = append(matches, toMatchFacts(&m))
-	}
-
-	if err := cur.Err(); err != nil {
-		return nil, err
-	}
-
-	return matches, nil
-}
-
-func (r *repository) GetMatchFacts(id string) (*model.MatchFacts, error) {
-	var m matchFactsEntity
+func (r *repository) GetPrediction(userId, matchId string) (*model.Prediction, error) {
+	var p predictionEntity
 
 	err := r.client.
 		Database(db).
@@ -159,20 +125,124 @@ func (r *repository) GetMatchFacts(id string) (*model.MatchFacts, error) {
 		FindOne(
 			context.Background(),
 			bson.M{
-				"_id": id,
+				"userId":  userId,
+				"matchId": matchId,
 			},
 		).
-		Decode(&m)
+		Decode(&p)
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, ErrMatchNotFound
+			return nil, ErrPredictionNotFound
 		}
 
 		return nil, err
 	}
 
-	return toMatchFacts(&m), nil
+	return toPrediction(&p), nil
+}
+
+func (r *repository) GetPredictionsByUserId(id string) ([]model.Prediction, error) {
+	ctx := context.Background()
+
+	cur, err := r.client.
+		Database(db).
+		Collection(collection).
+		Find(
+			ctx,
+			bson.M{
+				"userId": id,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	predictions := []model.Prediction{}
+
+	defer cur.Close(ctx)
+	for cur.Next(ctx) {
+		var m predictionEntity
+		err := cur.Decode(&m)
+		if err != nil {
+			return nil, err
+		}
+
+		predictions = append(predictions, *toPrediction(&m))
+	}
+
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+
+	return predictions, nil
+}
+
+func (r *repository) UpdatePredictions(predictions []model.Prediction) error {
+	opts := options.FindOneAndReplaceOptions{}
+	opts.SetUpsert(true)
+
+	for _, p := range predictions {
+		err := r.client.
+			Database(db).
+			Collection(collection).
+			FindOneAndReplace(
+				context.Background(),
+				bson.M{
+					"userId":  p.UserId,
+					"matchId": p.MatchId,
+				},
+				fromPrediction(&p),
+				&opts,
+			)
+		if err.Err() != nil {
+			return err.Err()
+		}
+	}
+
+	return nil
+}
+
+func (r *repository) GetMatchPredictionSummary(id string) (homeWins int, draw int, awayWins int, err error) {
+	ctx := context.Background()
+
+	cur, err := r.client.
+		Database(db).
+		Collection(collection).
+		Find(
+			ctx,
+			bson.M{
+				"matchId": id,
+			},
+		)
+
+	if err != nil {
+		return
+	}
+
+	defer cur.Close(ctx)
+	for cur.Next(ctx) {
+		var m predictionEntity
+		err = cur.Decode(&m)
+		if err != nil {
+			return
+		}
+
+		if m.HomeGoals > m.AwayGoals {
+			homeWins++
+		} else if m.HomeGoals < m.AwayGoals {
+			awayWins++
+		} else {
+			draw++
+		}
+	}
+
+	if err = cur.Err(); err != nil {
+		return
+	}
+
+	return
 }
 
 func (r *repository) Ping() error {

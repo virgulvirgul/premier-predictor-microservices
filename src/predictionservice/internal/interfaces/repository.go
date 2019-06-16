@@ -5,6 +5,8 @@ package interfaces
 import "github.com/cshep4/premier-predictor-microservices/src/common/model"
 
 type Repository interface {
-	GetUpcomingMatches() ([]*model.MatchFacts, error)
-	GetMatchFacts(id string) (*model.MatchFacts, error)
+	GetPrediction(userId, matchId string) (*model.Prediction, error)
+	GetPredictionsByUserId(id string) ([]model.Prediction, error)
+	UpdatePredictions(predictions []model.Prediction) error
+	GetMatchPredictionSummary(id string) (int, int, int, error)
 }

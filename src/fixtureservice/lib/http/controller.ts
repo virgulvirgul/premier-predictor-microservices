@@ -3,6 +3,7 @@ import {FixtureSchema} from '../schema/fixture';
 import {Request, Response} from 'express';
 import {Service} from "../service/service";
 import {Forms} from "../model/form";
+import {logger} from "../utils/utils";
 
 const Contact = mongoose.model('Contact', FixtureSchema);
 

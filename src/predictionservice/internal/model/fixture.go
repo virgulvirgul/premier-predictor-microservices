@@ -8,17 +8,17 @@ import (
 )
 
 type FixturePrediction struct {
-	Id           string    `json:"id,omitempty"`
-	PredictionId string    `json:"predictionId,omitempty"`
-	HomeTeam     string    `json:"hTeam,omitempty"`
-	AwayTeam     string    `json:"aTeam,omitempty"`
-	HomeGoals    int       `json:"hGoals,omitempty"`
-	AwayGoals    int       `json:"aGoals,omitempty"`
-	HomeResult   int       `json:"hResult,omitempty"`
-	AwayResult   int       `json:"aResult,omitempty"`
-	Played       int       `json:"played,omitempty"`
-	DateTime     time.Time `json:"dateTime,omitempty"`
-	Matchday     int       `json:"matchday,omitempty"`
+	Id         string    `json:"id,omitempty"`
+	UserId     string    `json:"userId,omitempty"`
+	HomeTeam   string    `json:"hTeam,omitempty"`
+	AwayTeam   string    `json:"aTeam,omitempty"`
+	HomeGoals  *int      `json:"hGoals,omitempty"`
+	AwayGoals  *int      `json:"aGoals,omitempty"`
+	HomeResult int       `json:"hResult,omitempty"`
+	AwayResult int       `json:"aResult,omitempty"`
+	Played     int       `json:"played,omitempty"`
+	DateTime   time.Time `json:"dateTime,omitempty"`
+	Matchday   int       `json:"matchday,omitempty"`
 }
 
 type TeamForm struct {
@@ -116,6 +116,6 @@ func locationFromGrpc(location model.TeamMatchResult_Location) (Location, error)
 }
 
 type PredictorData struct {
-	Predictions []FixturePrediction  `json:"predictions,omitempty"`
-	Forms       map[string]*TeamForm `json:"forms,omitempty"`
+	Predictions []FixturePrediction `json:"predictions,omitempty"`
+	Forms       map[string]TeamForm `json:"forms,omitempty"`
 }

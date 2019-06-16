@@ -140,17 +140,16 @@ func startGrpcServer(service interfaces.Service, authenticator common.Authentica
 
 	log.Printf("Grpc server listening on %s", path)
 
-	server, err := handler.NewLiveMatchServiceServer(service, time.Minute)
+	server, err := handler.NewPredictionServiceServer(service)
 	if err != nil {
 		log.Fatalf("failed to create grpc handler: %v", err)
 	}
 
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(authenticator.GrpcUnaryInterceptor),
-		grpc.StreamInterceptor(authenticator.GrpcStreamInterceptor),
 	)
 
-	gen.RegisterLiveMatchServiceServer(grpcServer, server)
+	gen.RegisterPredictionServiceServer(grpcServer, server)
 
 	err = grpcServer.Serve(lis)
 	if err != nil {

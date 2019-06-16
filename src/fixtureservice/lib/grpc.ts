@@ -1,4 +1,5 @@
 import {Handler} from "./grpc/handler";
+import {logger} from "./utils/utils";
 
 const PORT = process.env.PORT;
 
@@ -30,6 +31,6 @@ export class Grpc {
 
         server.bind(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure());
         server.start();
-        console.log('GRPC server listening on port ' + PORT);
+        logger.info('GRPC server listening on port ' + PORT);
     }
 }
