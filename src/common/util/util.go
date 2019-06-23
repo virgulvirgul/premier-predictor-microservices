@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"google.golang.org/grpc/metadata"
+	"strings"
 )
 
 func CreateRequestMetadata(ctx context.Context) (context.Context, error) {
@@ -17,4 +18,8 @@ func CreateRequestMetadata(ctx context.Context) (context.Context, error) {
 	}
 
 	return metadata.AppendToOutgoingContext(context.Background(), "token", meta["token"][0]), nil
+}
+
+func GetErrorMessage(err error) string {
+	return err.Error()[:strings.IndexByte(err.Error(), ':')]
 }

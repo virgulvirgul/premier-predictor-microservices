@@ -1,3 +1,5 @@
+//go:generate mockgen -destination=../auth/mocks/mock_auth_client.go -package=authmocks github.com/cshep4/premier-predictor-microservices/src/common/interfaces Authenticator
+
 package interfaces
 
 import (
