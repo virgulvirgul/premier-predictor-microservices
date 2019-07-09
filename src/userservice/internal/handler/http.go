@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/cshep4/premier-predictor-microservices/src/common/health"
 	common "github.com/cshep4/premier-predictor-microservices/src/common/interfaces"
 	m "github.com/cshep4/premier-predictor-microservices/src/common/model"
 	"github.com/cshep4/premier-predictor-microservices/src/common/util"
@@ -44,6 +45,9 @@ func (h *httpHandler) Route() http.Handler {
 	router.HandleFunc("/users/password", h.updatePassword).
 		Methods(http.MethodPut)
 	router.HandleFunc("/users/score/{id}", h.getUserScore).
+		Methods(http.MethodGet)
+
+	router.HandleFunc("/health", health.Health).
 		Methods(http.MethodGet)
 
 	return router

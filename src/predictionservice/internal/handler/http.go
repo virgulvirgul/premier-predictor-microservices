@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/cshep4/premier-predictor-microservices/src/common/health"
 	common "github.com/cshep4/premier-predictor-microservices/src/common/interfaces"
 	"github.com/cshep4/premier-predictor-microservices/src/common/model"
 	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/interfaces"
@@ -39,6 +40,9 @@ func (h *httpHandler) Route() http.Handler {
 	router.HandleFunc("/predictions/summary/{id}", h.getUsersPastPredictions).
 		Methods(http.MethodGet)
 	router.HandleFunc("/predictions/{userId}/{matchId}", h.getPrediction).
+		Methods(http.MethodGet)
+
+	router.HandleFunc("/health", health.Health).
 		Methods(http.MethodGet)
 
 	return router
