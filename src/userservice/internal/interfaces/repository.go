@@ -11,4 +11,7 @@ type Repository interface {
 	GetAllUsers() ([]*model.User, error)
 	GetAllUsersByIds(ids []string) ([]*model.User, error)
 	IsEmailTakenByADifferentUser(id, email string) bool
+	GetOverallRank(id string) (int64, error)
+	GetRankForGroup(id string, ids []string) (int64, error)
+	GetUserCount() (int64, error)
 }

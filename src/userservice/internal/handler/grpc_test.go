@@ -58,7 +58,7 @@ func TestUserServiceServer_GetAllUsers(t *testing.T) {
 	})
 }
 
-func TestUserServiceServer_GetLeagueUsers(t *testing.T) {
+func TestUserServiceServer_GetAllUsersByIds(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -69,16 +69,16 @@ func TestUserServiceServer_GetLeagueUsers(t *testing.T) {
 
 	ids := []string{id1, id2}
 
-	req := &gen.LeagueRequest{
+	req := &gen.GroupIdRequest{
 		Ids: ids,
 	}
 
 	t.Run("returns error if users cannot be retrieved", func(t *testing.T) {
 		e := errors.New("error")
 
-		service.EXPECT().GetLeagueUsers(ids).Return(nil, e)
+		service.EXPECT().GetAllUsersByIds(ids).Return(nil, e)
 
-		resp, err := userService.GetLeagueUsers(context.Background(), req)
+		resp, err := userService.GetAllUsersByIds(context.Background(), req)
 		require.Error(t, err)
 
 		assert.Equal(t, e, err)
@@ -94,12 +94,119 @@ func TestUserServiceServer_GetLeagueUsers(t *testing.T) {
 				Id: id2,
 			},
 		}
-		service.EXPECT().GetLeagueUsers(ids).Return(users, nil)
+		service.EXPECT().GetAllUsersByIds(ids).Return(users, nil)
 
-		resp, err := userService.GetLeagueUsers(context.Background(), req)
+		resp, err := userService.GetAllUsersByIds(context.Background(), req)
 		require.NoError(t, err)
 
 		assert.Equal(t, id1, resp.Users[0].Id)
 		assert.Equal(t, id2, resp.Users[1].Id)
+	})
+}
+
+func TestUserServiceServer_GetOverallRank(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	service := usermocks.NewMockService(ctrl)
+
+	userService, err := NewUserServiceServer(service)
+	require.NoError(t, err)
+
+	req := &gen.IdRequest{
+		Id: id1,
+	}
+
+	t.Run("returns error if rank cannot be retrieved", func(t *testing.T) {
+		e := errors.New("error")
+
+		service.EXPECT().GetOverallRank(id1).Return(int64(0), e)
+
+		resp, err := userService.GetOverallRank(context.Background(), req)
+		require.Error(t, err)
+
+		assert.Equal(t, e, err)
+		assert.Nil(t, resp)
+	})
+
+	t.Run("returns all league users", func(t *testing.T) {
+		rank := int64(1231)
+		service.EXPECT().GetOverallRank(id1).Return(rank, nil)
+
+		resp, err := userService.GetOverallRank(context.Background(), req)
+		require.NoError(t, err)
+
+		assert.Equal(t, rank, resp.Rank)
+	})
+}
+
+func TestUserServiceServer_GetRankForGroup(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	service := usermocks.NewMockService(ctrl)
+
+	userService, err := NewUserServiceServer(service)
+	require.NoError(t, err)
+
+	ids := []string{id1, id2}
+
+	req := &gen.GroupRankRequest{
+		Id: id1,
+		Ids: ids,
+	}
+
+	t.Run("returns error if rank cannot be retrieved", func(t *testing.T) {
+		e := errors.New("error")
+
+		service.EXPECT().GetRankForGroup(id1, ids).Return(int64(0), e)
+
+		resp, err := userService.GetRankForGroup(context.Background(), req)
+		require.Error(t, err)
+
+		assert.Equal(t, e, err)
+		assert.Nil(t, resp)
+	})
+
+	t.Run("returns all league users", func(t *testing.T) {
+		rank := int64(2)
+		service.EXPECT().GetRankForGroup(id1, ids).Return(rank, nil)
+
+		resp, err := userService.GetRankForGroup(context.Background(), req)
+		require.NoError(t, err)
+
+		assert.Equal(t, rank, resp.Rank)
+	})
+}
+
+func TestUserServiceServer_GetUserCount(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	service := usermocks.NewMockService(ctrl)
+
+	userService, err := NewUserServiceServer(service)
+	require.NoError(t, err)
+
+	t.Run("returns error if user count cannot be retrieved", func(t *testing.T) {
+		e := errors.New("error")
+
+		service.EXPECT().GetUserCount().Return(int64(0), e)
+
+		resp, err := userService.GetUserCount(context.Background(), &empty.Empty{})
+		require.Error(t, err)
+
+		assert.Equal(t, e, err)
+		assert.Nil(t, resp)
+	})
+
+	t.Run("returns total user count", func(t *testing.T) {
+		count := int64(2)
+		service.EXPECT().GetUserCount().Return(count, nil)
+
+		resp, err := userService.GetUserCount(context.Background(), &empty.Empty{})
+		require.NoError(t, err)
+
+		assert.Equal(t, count, resp.Count)
 	})
 }

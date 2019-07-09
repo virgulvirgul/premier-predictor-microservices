@@ -47,7 +47,7 @@ profiles:
 # on Google Container Builder without requiring docker
 # installed on the developer machine. However, note that
 # since GCB does not cache the builds, each build will
-# start from scratch and therefore take a long time.
+# start from scratch and therefore take a long timer.
 #
 # This is not used by default. To use it, run:
 #     skaffold run -p gcb

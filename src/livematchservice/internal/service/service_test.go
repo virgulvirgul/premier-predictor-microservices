@@ -160,29 +160,29 @@ func TestService_GetUpcomingMatches(t *testing.T) {
 		tomorrow := today.AddDate(0, 0, 1)
 
 		id1 := "1"
-		m1 := &model.MatchFacts{
+		m1 := model.MatchFacts{
 			Id:            id1,
 			MatchDate:     tomorrow,
 			FormattedDate: tomorrow.Format("02.01.2006"),
 			Time:          "15:00",
 		}
 		id2 := "2"
-		m2 := &model.MatchFacts{
+		m2 := model.MatchFacts{
 			Id:            id2,
 			MatchDate:     today,
 			FormattedDate: today.Format("02.01.2006"),
 			Time:          "12:00",
 		}
 		id3 := "3"
-		m3 := &model.MatchFacts{
+		m3 := model.MatchFacts{
 			Id:            id3,
 			MatchDate:     tomorrow,
 			FormattedDate: tomorrow.Format("02.01.2006"),
 			Time:          "12:00",
 		}
-		repository.EXPECT().GetUpcomingMatches().Return([]*model.MatchFacts{m1, m2, m3}, nil)
+		repository.EXPECT().GetUpcomingMatches().Return([]model.MatchFacts{m1, m2, m3}, nil)
 
-		expectedResult := map[time.Time][]*model.MatchFacts{
+		expectedResult := map[time.Time][]model.MatchFacts{
 			tomorrow: {m3, m1},
 			today:    {m2},
 		}

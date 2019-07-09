@@ -1,6 +1,7 @@
 package user
 
 import (
+	common "github.com/cshep4/premier-predictor-microservices/src/common/model"
 	"github.com/cshep4/premier-predictor-microservices/src/userservice/internal/interfaces"
 	"github.com/cshep4/premier-predictor-microservices/src/userservice/internal/model"
 	"github.com/cshep4/premier-predictor-microservices/src/userservice/internal/util"
@@ -41,13 +42,13 @@ func (s *service) UpdateUserInfo(userInfo model.UserInfo) error {
 
 	switch {
 	case !regexp.MustCompile(emailRegex).MatchString(userInfo.Email):
-		return errors.Wrap(model.ErrInvalidRequestData, invalidEmail)
+		return errors.Wrap(common.ErrInvalidRequestData, invalidEmail)
 	case s.repository.IsEmailTakenByADifferentUser(userInfo.Id, userInfo.Email):
-		return errors.Wrap(model.ErrInvalidRequestData, emailAlreadyTaken)
+		return errors.Wrap(common.ErrInvalidRequestData, emailAlreadyTaken)
 	case userInfo.FirstName == "":
-		return errors.Wrap(model.ErrInvalidRequestData, firstNameIsBlank)
+		return errors.Wrap(common.ErrInvalidRequestData, firstNameIsBlank)
 	case userInfo.Surname == "":
-		return errors.Wrap(model.ErrInvalidRequestData, surnameIsBlank)
+		return errors.Wrap(common.ErrInvalidRequestData, surnameIsBlank)
 	}
 
 	return s.repository.UpdateUserInfo(userInfo)
@@ -61,11 +62,11 @@ func (s *service) UpdatePassword(updatePassword model.UpdatePassword) error {
 
 	switch {
 	case bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(updatePassword.OldPassword)) != nil:
-		return errors.Wrap(model.ErrInvalidRequestData, oldPasswordDoesNotMatch)
+		return errors.Wrap(common.ErrInvalidRequestData, oldPasswordDoesNotMatch)
 	case updatePassword.NewPassword != updatePassword.ConfirmPassword:
-		return errors.Wrap(model.ErrInvalidRequestData, confirmationDoesNotMatch)
+		return errors.Wrap(common.ErrInvalidRequestData, confirmationDoesNotMatch)
 	case !util.VerifyPassword(updatePassword.NewPassword):
-		return errors.Wrap(model.ErrInvalidRequestData, invalidPassword)
+		return errors.Wrap(common.ErrInvalidRequestData, invalidPassword)
 	}
 
 	return s.repository.UpdatePassword(updatePassword.Id, updatePassword.NewPassword)
@@ -84,6 +85,18 @@ func (s *service) GetAllUsers() ([]*model.User, error) {
 	return s.repository.GetAllUsers()
 }
 
-func (s *service) GetLeagueUsers(ids []string) ([]*model.User, error) {
+func (s *service) GetAllUsersByIds(ids []string) ([]*model.User, error) {
 	return s.repository.GetAllUsersByIds(ids)
+}
+
+func (s *service) GetRankForGroup(id string, ids []string) (int64, error) {
+	return s.repository.GetRankForGroup(id, ids)
+}
+
+func (s *service) GetOverallRank(id string) (int64, error) {
+	return s.repository.GetOverallRank(id)
+}
+
+func (s *service) GetUserCount() (int64, error) {
+	return s.repository.GetUserCount()
 }

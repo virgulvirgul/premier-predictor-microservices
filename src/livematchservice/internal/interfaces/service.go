@@ -12,5 +12,5 @@ import (
 type Service interface {
 	GetMatchSummary(ctx context.Context, req model.PredictionRequest) (*model.MatchSummary, error)
 	GetMatchFacts(id string) (*common.MatchFacts, error)
-	GetUpcomingMatches() (map[time.Time][]*common.MatchFacts, error)
+	GetUpcomingMatches() (map[time.Time][]common.MatchFacts, error)
 }

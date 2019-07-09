@@ -313,7 +313,7 @@ func (r *repository) IsEmailTakenByADifferentUser(id, email string) bool {
 					Value: email,
 				},
 				{
-					Key:   "_id",
+					Key: "_id",
 					Value: bson.D{
 						{
 							Key:   "$ne",
@@ -325,11 +325,120 @@ func (r *repository) IsEmailTakenByADifferentUser(id, email string) bool {
 		).
 		Decode(&u)
 
-	if err != nil && err == mongo.ErrNoDocuments{
+	if err != nil && err == mongo.ErrNoDocuments {
 		return false
 	}
 
 	return true
+}
+
+func (r *repository) GetOverallRank(id string) (int64, error) {
+	return r.getRank(id, bson.D{})
+}
+
+func (r *repository) GetRankForGroup(id string, ids []string) (int64, error) {
+	if !contains(ids, id) {
+		return 0, model.ErrUserNotInGroup
+	}
+
+	objectIds, err := toObjectIds(ids)
+	if err != nil {
+		return 0, err
+	}
+
+	return r.getRank(
+		id,
+		bson.D{
+			{
+				Key: "_id",
+				Value: bson.D{
+					{
+						Key:   "$in",
+						Value: objectIds,
+					},
+				},
+			},
+		},
+	)
+}
+
+func (r *repository) getRank(id string, filter bson.D) (int64, error) {
+	cur, err := r.client.
+		Database(db).
+		Collection(collection).
+		Find(
+			context.Background(),
+			filter,
+			&options.FindOptions{
+				Sort: bson.D{
+					bson.E{Key: "score", Value: -1},
+				},
+			},
+		)
+
+	if err != nil {
+		return 0, err
+	}
+
+	defer cur.Close(context.Background())
+
+	previousScore := -1
+	rank := int64(0)
+	jointRanking := int64(1)
+	for cur.Next(context.TODO()) {
+		var u userEntity
+
+		err := cur.Decode(&u)
+		if err != nil {
+			return 0, err
+		}
+
+		if previousScore != u.Score {
+			rank += jointRanking
+			jointRanking = 1
+		} else {
+			jointRanking++
+		}
+		previousScore = u.Score
+
+		if u.Id.Hex() == id {
+			return rank, nil
+		}
+	}
+
+	return 0, model.ErrUserNotFound
+}
+
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+func toObjectIds(ids []string) (objectIds []primitive.ObjectID, err error) {
+	for _, id := range ids {
+		objectId, err := primitive.ObjectIDFromHex(id)
+		if err != nil {
+			return nil, ErrCannotCreateObjectId
+		}
+
+		objectIds = append(objectIds, objectId)
+	}
+
+	return
+}
+
+func (r *repository) GetUserCount() (int64, error) {
+	return r.client.
+		Database(db).
+		Collection(collection).
+		CountDocuments(
+			context.Background(),
+			bson.M{},
+		)
 }
 
 func (r *repository) Ping() error {

@@ -67,10 +67,10 @@ func (mr *MockServiceMockRecorder) GetMatchSummary(arg0, arg1 interface{}) *gomo
 }
 
 // GetUpcomingMatches mocks base method
-func (m *MockService) GetUpcomingMatches() (map[time.Time][]*model.MatchFacts, error) {
+func (m *MockService) GetUpcomingMatches() (map[time.Time][]model.MatchFacts, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUpcomingMatches")
-	ret0, _ := ret[0].(map[time.Time][]*model.MatchFacts)
+	ret0, _ := ret[0].(map[time.Time][]model.MatchFacts)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -30,8 +30,8 @@ func (u *userServiceServer) GetAllUsers(ctx context.Context, req *empty.Empty) (
 	return u.buildResponse(users), nil
 }
 
-func (u *userServiceServer) GetLeagueUsers(ctx context.Context, req *gen.LeagueRequest) (*gen.UserResponse, error) {
-	users, err := u.service.GetLeagueUsers(req.Ids)
+func (u *userServiceServer) GetAllUsersByIds(ctx context.Context, req *gen.GroupIdRequest) (*gen.UserResponse, error) {
+	users, err := u.service.GetAllUsersByIds(req.Ids)
 	if err != nil {
 		return nil, err
 	}
@@ -48,4 +48,37 @@ func (u *userServiceServer) buildResponse(users []*model.User) *gen.UserResponse
 	return &gen.UserResponse{
 		Users: usrs,
 	}
+}
+
+func (u *userServiceServer) GetOverallRank(ctx context.Context, req *gen.IdRequest) (*gen.RankResponse, error) {
+	rank, err := u.service.GetOverallRank(req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &gen.RankResponse{
+		Rank: rank,
+	}, nil
+}
+
+func (u *userServiceServer) GetRankForGroup(ctx context.Context, req *gen.GroupRankRequest) (*gen.RankResponse, error) {
+	rank, err := u.service.GetRankForGroup(req.Id, req.Ids)
+	if err != nil {
+		return nil, err
+	}
+
+	return &gen.RankResponse{
+		Rank: rank,
+	}, nil
+}
+
+func (u *userServiceServer) GetUserCount(context.Context, *empty.Empty) (*gen.CountResponse, error) {
+	count, err := u.service.GetUserCount()
+	if err != nil {
+		return nil, err
+	}
+
+	return &gen.CountResponse{
+		Count: count,
+	}, nil
 }

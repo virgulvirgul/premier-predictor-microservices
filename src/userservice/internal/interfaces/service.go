@@ -10,5 +10,8 @@ type Service interface {
 	UpdatePassword(updatePassword model.UpdatePassword) error
 	GetUserScore(id string) (int, error)
 	GetAllUsers() ([]*model.User, error)
-	GetLeagueUsers(ids []string) ([]*model.User, error)
+	GetAllUsersByIds(ids []string) ([]*model.User, error)
+	GetRankForGroup(id string, ids []string) (int64, error)
+	GetOverallRank(id string) (int64, error)
+	GetUserCount() (int64, error)
 }

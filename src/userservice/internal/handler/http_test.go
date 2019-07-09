@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	authmocks "github.com/cshep4/premier-predictor-microservices/src/common/auth/mocks"
+	common "github.com/cshep4/premier-predictor-microservices/src/common/model"
 	"github.com/cshep4/premier-predictor-microservices/src/userservice/internal/model"
 	usermocks "github.com/cshep4/premier-predictor-microservices/src/userservice/internal/service/mocks"
 	"github.com/golang/mock/gomock"
@@ -174,7 +175,7 @@ func TestHttpHandler_updateUserInfo(t *testing.T) {
 		rr := httptest.NewRecorder()
 
 		const errorMessage = "error message"
-		e := errors.Wrap(model.ErrInvalidRequestData, errorMessage)
+		e := errors.Wrap(common.ErrInvalidRequestData, errorMessage)
 
 		service.EXPECT().UpdateUserInfo(userInfo).Return(e)
 
@@ -293,7 +294,7 @@ func TestHttpHandler_updatePassword(t *testing.T) {
 		rr := httptest.NewRecorder()
 
 		const errorMessage = "error message"
-		e := errors.Wrap(model.ErrInvalidRequestData, errorMessage)
+		e := errors.Wrap(common.ErrInvalidRequestData, errorMessage)
 
 		service.EXPECT().UpdatePassword(updatePassword).Return(e)
 

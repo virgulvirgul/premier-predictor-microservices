@@ -81,14 +81,14 @@ func Test_Repository(t *testing.T) {
 
 			m := &matchFactsEntity{
 				Id:        matchId,
-				MatchDate: time.Now().Add(-time.Hour).Round(time.Second),
+				MatchDate: time.Now().Add(-time.Hour).Round(time.Second).UTC(),
 			}
 			createMatch(m)
 
 			matches, err := repository.GetUpcomingMatches()
 			require.NoError(t, err)
 
-			assert.Equal(t, toMatchFacts(m), matches[0])
+			assert.Equal(t, toMatchFacts(m), &matches[0])
 		})
 
 		t.Run("will not return matches in the past", func(t *testing.T) {
@@ -116,7 +116,7 @@ func Test_Repository(t *testing.T) {
 			m := &matchFactsEntity{
 				Id:         matchId,
 				Commentary: &commentary{},
-				MatchDate:  time.Now().Round(time.Second),
+				MatchDate:  time.Now().Round(time.Second).UTC(),
 			}
 
 			createMatch(m)

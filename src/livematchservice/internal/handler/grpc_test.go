@@ -19,7 +19,7 @@ func TestLiveMatchServiceServer_GetMatchSummary(t *testing.T) {
 	_, err := NewLiveMatchServiceServer(service, interval)
 	require.NoError(t, err)
 
-	t.Run("Gets match summary and updates match facts at given time interval", func(t *testing.T) {
+	t.Run("Gets match summary and updates match facts at given timer interval", func(t *testing.T) {
 
 	})
 
@@ -43,7 +43,7 @@ func TestLiveMatchServiceServer_GetUpcomingMatches(t *testing.T) {
 	_, err := NewLiveMatchServiceServer(service, interval)
 	require.NoError(t, err)
 
-	t.Run("Gets upcoming matches and updates at given time interval", func(t *testing.T) {
+	t.Run("Gets upcoming matches and updates at given timer interval", func(t *testing.T) {
 
 	})
 

@@ -63,6 +63,36 @@ func (mr *MockRepositoryMockRecorder) GetAllUsersByIds(arg0 interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllUsersByIds", reflect.TypeOf((*MockRepository)(nil).GetAllUsersByIds), arg0)
 }
 
+// GetOverallRank mocks base method
+func (m *MockRepository) GetOverallRank(arg0 string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOverallRank", arg0)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOverallRank indicates an expected call of GetOverallRank
+func (mr *MockRepositoryMockRecorder) GetOverallRank(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOverallRank", reflect.TypeOf((*MockRepository)(nil).GetOverallRank), arg0)
+}
+
+// GetRankForGroup mocks base method
+func (m *MockRepository) GetRankForGroup(arg0 string, arg1 []string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRankForGroup", arg0, arg1)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRankForGroup indicates an expected call of GetRankForGroup
+func (mr *MockRepositoryMockRecorder) GetRankForGroup(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRankForGroup", reflect.TypeOf((*MockRepository)(nil).GetRankForGroup), arg0, arg1)
+}
+
 // GetUserById mocks base method
 func (m *MockRepository) GetUserById(arg0 string) (*model.User, error) {
 	m.ctrl.T.Helper()
@@ -76,6 +106,21 @@ func (m *MockRepository) GetUserById(arg0 string) (*model.User, error) {
 func (mr *MockRepositoryMockRecorder) GetUserById(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserById", reflect.TypeOf((*MockRepository)(nil).GetUserById), arg0)
+}
+
+// GetUserCount mocks base method
+func (m *MockRepository) GetUserCount() (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserCount")
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserCount indicates an expected call of GetUserCount
+func (mr *MockRepositoryMockRecorder) GetUserCount() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserCount", reflect.TypeOf((*MockRepository)(nil).GetUserCount))
 }
 
 // IsEmailTakenByADifferentUser mocks base method

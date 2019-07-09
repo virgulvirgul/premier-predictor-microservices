@@ -3,20 +3,22 @@
 
 package model
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
+import (
+	fmt "fmt"
+	proto "github.com/golang/protobuf/proto"
+	math "math"
+)
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-// This is a compile-time assertion to ensure that this generated file
+// This is a compile-timer assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type IdRequest struct {
 	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -29,16 +31,17 @@ func (m *IdRequest) Reset()         { *m = IdRequest{} }
 func (m *IdRequest) String() string { return proto.CompactTextString(m) }
 func (*IdRequest) ProtoMessage()    {}
 func (*IdRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_request_ff668dceef9c813d, []int{0}
+	return fileDescriptor_7f73548e33e655fe, []int{0}
 }
+
 func (m *IdRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_IdRequest.Unmarshal(m, b)
 }
 func (m *IdRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_IdRequest.Marshal(b, m, deterministic)
 }
-func (dst *IdRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_IdRequest.Merge(dst, src)
+func (m *IdRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_IdRequest.Merge(m, src)
 }
 func (m *IdRequest) XXX_Size() int {
 	return xxx_messageInfo_IdRequest.Size(m)
@@ -67,16 +70,17 @@ func (m *EmailRequest) Reset()         { *m = EmailRequest{} }
 func (m *EmailRequest) String() string { return proto.CompactTextString(m) }
 func (*EmailRequest) ProtoMessage()    {}
 func (*EmailRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_request_ff668dceef9c813d, []int{1}
+	return fileDescriptor_7f73548e33e655fe, []int{1}
 }
+
 func (m *EmailRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_EmailRequest.Unmarshal(m, b)
 }
 func (m *EmailRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_EmailRequest.Marshal(b, m, deterministic)
 }
-func (dst *EmailRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EmailRequest.Merge(dst, src)
+func (m *EmailRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EmailRequest.Merge(m, src)
 }
 func (m *EmailRequest) XXX_Size() int {
 	return xxx_messageInfo_EmailRequest.Size(m)
@@ -106,16 +110,17 @@ func (m *PredictionRequest) Reset()         { *m = PredictionRequest{} }
 func (m *PredictionRequest) String() string { return proto.CompactTextString(m) }
 func (*PredictionRequest) ProtoMessage()    {}
 func (*PredictionRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_request_ff668dceef9c813d, []int{2}
+	return fileDescriptor_7f73548e33e655fe, []int{2}
 }
+
 func (m *PredictionRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_PredictionRequest.Unmarshal(m, b)
 }
 func (m *PredictionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_PredictionRequest.Marshal(b, m, deterministic)
 }
-func (dst *PredictionRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PredictionRequest.Merge(dst, src)
+func (m *PredictionRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PredictionRequest.Merge(m, src)
 }
 func (m *PredictionRequest) XXX_Size() int {
 	return xxx_messageInfo_PredictionRequest.Size(m)
@@ -146,9 +151,9 @@ func init() {
 	proto.RegisterType((*PredictionRequest)(nil), "model.PredictionRequest")
 }
 
-func init() { proto.RegisterFile("request.proto", fileDescriptor_request_ff668dceef9c813d) }
+func init() { proto.RegisterFile("request.proto", fileDescriptor_7f73548e33e655fe) }
 
-var fileDescriptor_request_ff668dceef9c813d = []byte{
+var fileDescriptor_7f73548e33e655fe = []byte{
 	// 172 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x34, 0x8f, 0xc1, 0xea, 0x82, 0x40,
 	0x10, 0x87, 0x51, 0xd0, 0x3f, 0x0e, 0xff, 0x82, 0x24, 0x42, 0xe8, 0x12, 0x16, 0xd4, 0x69, 0x2f,

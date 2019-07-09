@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	common "github.com/cshep4/premier-predictor-microservices/src/common/interfaces"
+	m "github.com/cshep4/premier-predictor-microservices/src/common/model"
 	"github.com/cshep4/premier-predictor-microservices/src/common/util"
 	"github.com/cshep4/premier-predictor-microservices/src/userservice/internal/interfaces"
 	"github.com/cshep4/premier-predictor-microservices/src/userservice/internal/model"
@@ -60,7 +61,7 @@ func (h *httpHandler) updateUserInfo(w http.ResponseWriter, r *http.Request) {
 	var userInfo model.UserInfo
 	err := json.NewDecoder(r.Body).Decode(&userInfo)
 	if err != nil {
-		h.sendResponse(nil, errors.Wrap(model.ErrInvalidRequestData, invalidRequestBody), w)
+		h.sendResponse(nil, errors.Wrap(m.ErrInvalidRequestData, invalidRequestBody), w)
 		return
 	}
 
@@ -73,7 +74,7 @@ func (h *httpHandler) updatePassword(w http.ResponseWriter, r *http.Request) {
 	var updatePassword model.UpdatePassword
 	err := json.NewDecoder(r.Body).Decode(&updatePassword)
 	if err != nil {
-		h.sendResponse(nil, errors.Wrap(model.ErrInvalidRequestData, invalidRequestBody), w)
+		h.sendResponse(nil, errors.Wrap(m.ErrInvalidRequestData, invalidRequestBody), w)
 		return
 	}
 
@@ -107,7 +108,7 @@ func (h *httpHandler) sendResponse(data interface{}, err error, w http.ResponseW
 			Message: err.Error(),
 		})
 
-	case errors.Cause(err) == model.ErrInvalidRequestData:
+	case errors.Cause(err) == m.ErrInvalidRequestData:
 		w.WriteHeader(http.StatusBadRequest)
 		_ = json.NewEncoder(w).Encode(ServerError{
 			Message: util.GetErrorMessage(err),

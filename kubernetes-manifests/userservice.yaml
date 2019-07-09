@@ -1,0 +1,74 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: userservice-app
+  namespace: default
+  labels:
+    k8s-app: userservice-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: userservice-app
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: userservice-app
+          image: userservice
+          ports:
+            - containerPort: 3005
+              name: grpc
+          env:
+            - name: PORT
+              value: "3005"
+            - name: HTTP_PORT
+              value: "8085"
+            - name: MONGO_SCHEME
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbScheme
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbUser
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbPassword
+            - name: MONGO_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbHost
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8085
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8085
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userservice
+  namespace: default
+spec:
+  selector:
+    k8s-app: userservice-app
+  ports:
+    - port: 3005
+      targetPort: 3005
+      name: grpc

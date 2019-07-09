@@ -29,7 +29,7 @@ func MatchSummaryToGrpc(matchFacts *MatchSummary) *gen.MatchSummary {
 	}
 }
 
-func ToUpcomingMatchesResponse(upcomingMatches map[time.Time][]*model.MatchFacts) *gen.UpcomingMatchesResponse {
+func ToUpcomingMatchesResponse(upcomingMatches map[time.Time][]model.MatchFacts) *gen.UpcomingMatchesResponse {
 	matches := make(map[string]*gen.MatchFactsList)
 
 	for k, v := range upcomingMatches {
@@ -37,7 +37,7 @@ func ToUpcomingMatchesResponse(upcomingMatches map[time.Time][]*model.MatchFacts
 
 		var matchFacts []*gen.MatchFacts
 		for i := range v {
-			matchFacts = append(matchFacts, model.MatchFactsToGrpc(v[i]))
+			matchFacts = append(matchFacts, model.MatchFactsToGrpc(&v[i]))
 		}
 
 		matches[date].Matches = matchFacts

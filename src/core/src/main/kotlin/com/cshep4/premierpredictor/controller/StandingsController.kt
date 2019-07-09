@@ -22,10 +22,7 @@ class StandingsController {
 
     @PostMapping("/join")
     fun joinUserLeague(@RequestBody userLeague: UserLeague) : ResponseEntity<UserLeagueOverview> {
-        val userLeagueOverview = standingsService.joinLeague(userLeague)
-
-
-        return when (userLeagueOverview) {
+        return when (val userLeagueOverview = standingsService.joinLeague(userLeague)) {
             null -> ResponseEntity.status(NOT_FOUND).build()
             else -> ResponseEntity.status(OK).body(userLeagueOverview)
         }

@@ -49,10 +49,10 @@ func (mr *MockRepositoryMockRecorder) GetMatchFacts(arg0 interface{}) *gomock.Ca
 }
 
 // GetUpcomingMatches mocks base method
-func (m *MockRepository) GetUpcomingMatches() ([]*model.MatchFacts, error) {
+func (m *MockRepository) GetUpcomingMatches() ([]model.MatchFacts, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUpcomingMatches")
-	ret0, _ := ret[0].([]*model.MatchFacts)
+	ret0, _ := ret[0].([]model.MatchFacts)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

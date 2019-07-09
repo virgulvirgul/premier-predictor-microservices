@@ -18,7 +18,7 @@ type MatchFacts struct {
 	VenueCity        string      `json:"venue_city,omitempty"`
 	Status           string      `json:"status,omitempty"`
 	Timer            string      `json:"timer,omitempty"`
-	Time             string      `json:"time,omitempty"`
+	Time             string      `json:"timer,omitempty"`
 	LocalTeamId      string      `json:"localteam_id,omitempty"`
 	LocalTeamName    string      `json:"localteam_name,omitempty"`
 	LocalTeamScore   string      `json:"localteam_score,omitempty"`
@@ -703,7 +703,7 @@ func PlayerToGrpc(player *Player) *model.Player {
 	}
 }
 
-type MatchFactsSlice []*MatchFacts
+type MatchFactsSlice []MatchFacts
 
 func (m MatchFactsSlice) Len() int {
 	return len(m)

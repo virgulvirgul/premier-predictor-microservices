@@ -89,7 +89,7 @@ func (r *repository) ensureIndexes() error {
 	return nil
 }
 
-func (r *repository) GetUpcomingMatches() ([]*model.MatchFacts, error) {
+func (r *repository) GetUpcomingMatches() ([]model.MatchFacts, error) {
 	year, month, day := time.Now().Date()
 	today := time.Date(year, month, day, 0, 0, 0, 0, time.Now().Location())
 
@@ -114,7 +114,7 @@ func (r *repository) GetUpcomingMatches() ([]*model.MatchFacts, error) {
 	)
 }
 
-func (r *repository) getMatches(filter interface{}, opts *options.FindOptions) ([]*model.MatchFacts, error) {
+func (r *repository) getMatches(filter interface{}, opts *options.FindOptions) ([]model.MatchFacts, error) {
 	ctx := context.Background()
 
 	cur, err := r.client.
@@ -130,7 +130,7 @@ func (r *repository) getMatches(filter interface{}, opts *options.FindOptions) (
 		return nil, err
 	}
 
-	matches := []*model.MatchFacts{}
+	matches := []model.MatchFacts{}
 
 	defer cur.Close(ctx)
 	for cur.Next(ctx) {
@@ -140,7 +140,7 @@ func (r *repository) getMatches(filter interface{}, opts *options.FindOptions) (
 			return nil, err
 		}
 
-		matches = append(matches, toMatchFacts(&m))
+		matches = append(matches, *toMatchFacts(&m))
 	}
 
 	if err := cur.Err(); err != nil {

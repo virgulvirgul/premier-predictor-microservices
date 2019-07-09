@@ -2,7 +2,7 @@ package factory
 
 import (
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
-	interfaces2 "github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/interfaces"
+	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/interfaces"
 	"google.golang.org/grpc"
 )
 
@@ -11,7 +11,7 @@ type fixtureClientFactory struct {
 	addr string
 }
 
-func NewFixtureClientFactory(addr string) interfaces2.FixtureClientFactory {
+func NewFixtureClientFactory(addr string) interfaces.FixtureClientFactory {
 	return &fixtureClientFactory{
 		addr: addr,
 	}

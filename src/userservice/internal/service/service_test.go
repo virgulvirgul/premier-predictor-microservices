@@ -1,6 +1,7 @@
 package user
 
 import (
+	common "github.com/cshep4/premier-predictor-microservices/src/common/model"
 	"github.com/cshep4/premier-predictor-microservices/src/common/util"
 	"github.com/cshep4/premier-predictor-microservices/src/userservice/internal/model"
 	"github.com/cshep4/premier-predictor-microservices/src/userservice/internal/repository/mocks"
@@ -75,7 +76,7 @@ func TestService_UpdateUserInfo(t *testing.T) {
 		require.Error(t, err)
 
 		assert.Equal(t, invalidEmail, util.GetErrorMessage(err))
-		assert.Equal(t, model.ErrInvalidRequestData, errors.Cause(err))
+		assert.Equal(t, common.ErrInvalidRequestData, errors.Cause(err))
 	})
 
 	t.Run("returns error if the email address is already taken by a different user", func(t *testing.T) {
@@ -90,7 +91,7 @@ func TestService_UpdateUserInfo(t *testing.T) {
 		require.Error(t, err)
 
 		assert.Equal(t, emailAlreadyTaken, util.GetErrorMessage(err))
-		assert.Equal(t, model.ErrInvalidRequestData, errors.Cause(err))
+		assert.Equal(t, common.ErrInvalidRequestData, errors.Cause(err))
 	})
 
 	t.Run("returns error if the first name is blank", func(t *testing.T) {
@@ -105,7 +106,7 @@ func TestService_UpdateUserInfo(t *testing.T) {
 		require.Error(t, err)
 
 		assert.Equal(t, firstNameIsBlank, util.GetErrorMessage(err))
-		assert.Equal(t, model.ErrInvalidRequestData, errors.Cause(err))
+		assert.Equal(t, common.ErrInvalidRequestData, errors.Cause(err))
 	})
 
 	t.Run("returns error if the surname is blank", func(t *testing.T) {
@@ -121,7 +122,7 @@ func TestService_UpdateUserInfo(t *testing.T) {
 		require.Error(t, err)
 
 		assert.Equal(t, surnameIsBlank, util.GetErrorMessage(err))
-		assert.Equal(t, model.ErrInvalidRequestData, errors.Cause(err))
+		assert.Equal(t, common.ErrInvalidRequestData, errors.Cause(err))
 	})
 
 	t.Run("returns error if details cannot be updated", func(t *testing.T) {
@@ -194,7 +195,7 @@ func TestService_UpdatePassword(t *testing.T) {
 		require.Error(t, err)
 
 		assert.Equal(t, oldPasswordDoesNotMatch, util.GetErrorMessage(err))
-		assert.Equal(t, model.ErrInvalidRequestData, errors.Cause(err))
+		assert.Equal(t, common.ErrInvalidRequestData, errors.Cause(err))
 	})
 
 	t.Run("returns error if new password does not match the confirmation", func(t *testing.T) {
@@ -216,7 +217,7 @@ func TestService_UpdatePassword(t *testing.T) {
 		require.Error(t, err)
 
 		assert.Equal(t, confirmationDoesNotMatch, util.GetErrorMessage(err))
-		assert.Equal(t, model.ErrInvalidRequestData, errors.Cause(err))
+		assert.Equal(t, common.ErrInvalidRequestData, errors.Cause(err))
 	})
 
 	t.Run("returns error if new password is not valid", func(t *testing.T) {
@@ -238,7 +239,7 @@ func TestService_UpdatePassword(t *testing.T) {
 		require.Error(t, err)
 
 		assert.Equal(t, invalidPassword, util.GetErrorMessage(err))
-		assert.Equal(t, model.ErrInvalidRequestData, errors.Cause(err))
+		assert.Equal(t, common.ErrInvalidRequestData, errors.Cause(err))
 	})
 
 	t.Run("returns error if password cannot be updated", func(t *testing.T) {
@@ -365,7 +366,7 @@ func TestService_GetAllUsers(t *testing.T) {
 	})
 }
 
-func TestService_GetLeagueUsers(t *testing.T) {
+func TestService_GetAllUsersByIds(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -379,7 +380,7 @@ func TestService_GetLeagueUsers(t *testing.T) {
 	t.Run("returns error if users cannot be retrieved", func(t *testing.T) {
 		repository.EXPECT().GetAllUsersByIds(ids).Return(nil, e)
 
-		result, err := service.GetLeagueUsers(ids)
+		result, err := service.GetAllUsersByIds(ids)
 
 		require.Error(t, err)
 		assert.Equal(t, e, err)
@@ -395,10 +396,99 @@ func TestService_GetLeagueUsers(t *testing.T) {
 
 		repository.EXPECT().GetAllUsersByIds(ids).Return(users, nil)
 
-		result, err := service.GetLeagueUsers(ids)
+		result, err := service.GetAllUsersByIds(ids)
 
 		require.NoError(t, err)
 
 		assert.Equal(t, users, result)
+	})
+}
+
+func TestService_GetRankForGroup(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := usermocks.NewMockRepository(ctrl)
+
+	service, err := NewService(repository)
+	require.NoError(t, err)
+
+	ids := []string{userId}
+
+	t.Run("Returns error if there is a problem", func(t *testing.T) {
+		repository.EXPECT().GetRankForGroup(userId, ids).Return(int64(0), e)
+
+		result, err := service.GetRankForGroup(userId, ids)
+
+		require.Error(t, err)
+		assert.Equal(t, e, err)
+		assert.Empty(t, result)
+	})
+
+	t.Run("Gets rank for group", func(t *testing.T) {
+		repository.EXPECT().GetRankForGroup(userId, ids).Return(int64(1), nil)
+
+		result, err := service.GetRankForGroup(userId, ids)
+
+		require.NoError(t, err)
+		assert.Equal(t, int64(1), result)
+	})
+}
+
+func TestService_GetOverallRank(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := usermocks.NewMockRepository(ctrl)
+
+	service, err := NewService(repository)
+	require.NoError(t, err)
+
+	t.Run("Returns error if there is a problem", func(t *testing.T) {
+		repository.EXPECT().GetOverallRank(userId).Return(int64(0), e)
+
+		result, err := service.GetOverallRank(userId)
+
+		require.Error(t, err)
+		assert.Equal(t, e, err)
+		assert.Empty(t, result)
+	})
+
+	t.Run("Gets overall rank", func(t *testing.T) {
+		repository.EXPECT().GetOverallRank(userId).Return(int64(1), nil)
+
+		result, err := service.GetOverallRank(userId)
+
+		require.NoError(t, err)
+		assert.Equal(t, int64(1), result)
+	})
+}
+
+func TestService_GetUserCount(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := usermocks.NewMockRepository(ctrl)
+
+	service, err := NewService(repository)
+	require.NoError(t, err)
+
+	t.Run("Returns error if there is a problem", func(t *testing.T) {
+		repository.EXPECT().GetUserCount().Return(int64(0), e)
+
+		result, err := service.GetUserCount()
+
+		require.Error(t, err)
+		assert.Equal(t, e, err)
+		assert.Empty(t, result)
+	})
+
+	t.Run("Gets user count", func(t *testing.T) {
+		repository.EXPECT().GetUserCount().Return(int64(1), nil)
+
+		result, err := service.GetUserCount()
+
+		require.NoError(t, err)
+		assert.Equal(t, int64(1), result)
 	})
 }

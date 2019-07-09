@@ -1,0 +1,76 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: leagueservice-app
+  namespace: default
+  labels:
+    k8s-app: leagueservice-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: leagueservice-app
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: leagueservice-app
+          image: leagueservice
+          ports:
+            - containerPort: 3009
+              name: grpc
+          env:
+            - name: PORT
+              value: "3009"
+            - name: HTTP_PORT
+              value: "8089"
+            - name: USER_ADDR
+              value: "userservice:3005"
+            - name: MONGO_SCHEME
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbScheme
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbUser
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbPassword
+            - name: MONGO_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbHost
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8089
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8089
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leagueservice
+  namespace: default
+spec:
+  selector:
+    k8s-app: leagueservice-app
+  ports:
+    - port: 3009
+      targetPort: 3009
+      name: grpc

@@ -6,5 +6,5 @@ import (
 
 var (
 	ErrUserNotFound       = errors.New("user not found")
-	ErrInvalidRequestData = errors.New("invalid request data")
+	ErrUserNotInGroup     = errors.New("user not in group")
 )

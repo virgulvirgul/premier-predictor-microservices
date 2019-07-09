@@ -83,13 +83,15 @@ func (s *service) GetMatchFacts(id string) (*common.MatchFacts, error) {
 	return s.repository.GetMatchFacts(id)
 }
 
-func (s *service) GetUpcomingMatches() (upcomingMatches map[time.Time][]*common.MatchFacts, err error) {
+func (s *service) GetUpcomingMatches() (map[time.Time][]common.MatchFacts, error) {
 	matches, err := s.repository.GetUpcomingMatches()
 	if err != nil {
 		return nil, err
 	}
 
 	sort.Sort(common.MatchFactsSlice(matches))
+
+	upcomingMatches := make(map[time.Time][]common.MatchFacts)
 
 	underscore.Chain(matches).
 		Group(s.groupByMatchDate).
@@ -102,10 +104,6 @@ func (s *service) GetUpcomingMatches() (upcomingMatches map[time.Time][]*common.
 	return upcomingMatches, nil
 }
 
-func (s *service) sortByMatchDateTime(m *common.MatchFacts, _ int) time.Time {
-	return m.GetDateTime()
-}
-
-func (s *service) groupByMatchDate(m *common.MatchFacts, _ int) time.Time {
+func (s *service) groupByMatchDate(m common.MatchFacts, _ int) time.Time {
 	return m.MatchDate
 }
