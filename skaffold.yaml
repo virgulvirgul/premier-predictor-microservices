@@ -36,6 +36,10 @@ build:
     context: src/notificationservice
   - image: predictionservice
     context: src/predictionservice
+  - image: leagueservice
+    context: src/leagueservice
+  - image: userservice
+    context: src/userservice
   tagPolicy:
     gitCommit: {}
 deploy:
