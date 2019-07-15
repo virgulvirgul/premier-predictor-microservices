@@ -74,3 +74,16 @@ spec:
     - port: 3009
       targetPort: 3009
       name: grpc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leagueservice-service
+spec:
+  ports:
+    - port: 8089
+      targetPort: 8089
+      name: http
+  selector:
+    app: leagueservice-app
+  type: NodePort

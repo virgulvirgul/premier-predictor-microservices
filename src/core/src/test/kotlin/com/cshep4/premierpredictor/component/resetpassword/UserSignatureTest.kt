@@ -2,7 +2,7 @@ package com.cshep4.premierpredictor.component.resetpassword
 
 import com.cshep4.premierpredictor.constant.SecurityConstants
 import com.cshep4.premierpredictor.constant.SecurityConstants.SECRET
-import com.cshep4.premierpredictor.repository.sql.UserRepository
+import com.cshep4.premierpredictor.repository.mongo.UserRepository
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever

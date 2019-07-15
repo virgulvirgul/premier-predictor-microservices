@@ -5,16 +5,14 @@ import com.cshep4.premierpredictor.component.resetpassword.UserSignature
 import com.cshep4.premierpredictor.constant.SecurityConstants.SECRET
 import com.cshep4.premierpredictor.data.ResetPassword
 import com.cshep4.premierpredictor.extension.isValidPassword
-import com.cshep4.premierpredictor.repository.sql.UserRepository
+import com.cshep4.premierpredictor.repository.mongo.UserRepository
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
-@Transactional
 class ResetPasswordService {
     companion object {
         const val PASSWORD_NOT_VALID = "Could not reset password, password is not valid. Please try again"
@@ -58,7 +56,7 @@ class ResetPasswordService {
             isTokenExpired -> SIGNATURE_EXPIRED
             !resetPassword.password.isValidPassword() -> PASSWORD_NOT_VALID
             resetPassword.password != resetPassword.conf -> PASSWORDS_DONT_MATCH
-            !userRepository.findByEmail(resetPassword.email).isPresent -> COULD_NOT_RESET
+            userRepository.findByEmail(resetPassword.email) == null -> COULD_NOT_RESET
             else -> {
                 val hashedPassword = bCryptPasswordEncoder.encode(resetPassword.password)
                 if (userRepository.resetUserPassword(hashedPassword, resetPassword.email, resetPassword.signature) == 0) {

@@ -2,7 +2,7 @@ package com.cshep4.premierpredictor.component.resetpassword
 
 import com.cshep4.premierpredictor.constant.SecurityConstants.PASSWORD_RESET_EXPIRATION_TIME
 import com.cshep4.premierpredictor.constant.SecurityConstants.SECRET
-import com.cshep4.premierpredictor.repository.sql.UserRepository
+import com.cshep4.premierpredictor.repository.mongo.UserRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Autowired

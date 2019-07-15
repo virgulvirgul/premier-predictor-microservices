@@ -4,7 +4,7 @@ import com.cshep4.premierpredictor.constant.SecurityConstants.ADMIN_ROLE
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import java.time.LocalDateTime
 
-data class User (val id: Long? = 0,
+data class User (val id: String? = "",
                  var firstName: String = "",
                  var surname: String = "",
                  var email: String? = null,

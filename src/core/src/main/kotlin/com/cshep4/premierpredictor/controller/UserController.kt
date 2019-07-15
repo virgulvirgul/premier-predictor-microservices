@@ -19,16 +19,14 @@ class UserController {
 
     @PostMapping("/sign-up")
     fun signUp(@RequestBody signUpUser: SignUpUser) : ResponseEntity<User> {
-        val savedUser = userService.createUser(signUpUser)
-
-        return when (savedUser) {
+        return when (val savedUser = userService.createUser(signUpUser)) {
             null -> ResponseEntity.status(BAD_REQUEST).build()
             else -> ResponseEntity.status(CREATED).body(savedUser)
         }
     }
 
     @GetMapping("/{id}")
-    fun getUserInfo(@PathVariable(value = "id") id: Long) : ResponseEntity<User> {
+    fun getUserInfo(@PathVariable(value = "id") id: String) : ResponseEntity<User> {
         val user = userService.retrieveUserById(id)
 
         return when (user) {
@@ -39,9 +37,7 @@ class UserController {
 
     @GetMapping("/email/{email}")
     fun getUserByEmail(@PathVariable(value = "email") email: String) : ResponseEntity<User> {
-        val user = userService.retrieveUserByEmail(email)
-
-        return when (user) {
+        return when (val user = userService.retrieveUserByEmail(email)) {
             null -> ResponseEntity.status(NOT_FOUND).build()
             else -> ResponseEntity.status(OK).body(user)
         }
@@ -54,9 +50,7 @@ class UserController {
 
     @PutMapping("/update")
     fun updateUserDetails(@RequestBody userDetails: UserDetails) : ResponseEntity<User> {
-        val user = userService.updateUserDetails(userDetails)
-
-        return when (user) {
+        return when (userService.updateUserDetails(userDetails)) {
             null -> ResponseEntity.badRequest().build()
             else -> ResponseEntity.noContent().build()
         }
@@ -64,9 +58,7 @@ class UserController {
 
     @PutMapping("/updatePassword")
     fun updateUserPassword(@RequestBody userPasswords: UserPasswords) : ResponseEntity<User> {
-        val user = userService.updateUserPassword(userPasswords)
-
-        return when (user) {
+        return when (userService.updateUserPassword(userPasswords)) {
             null -> ResponseEntity.badRequest().build()
             else -> ResponseEntity.noContent().build()
         }

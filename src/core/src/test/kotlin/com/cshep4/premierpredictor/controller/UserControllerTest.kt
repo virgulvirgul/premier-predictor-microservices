@@ -51,9 +51,9 @@ internal class UserControllerTest {
 
     @Test
     fun `'getUserInfo' returns user info in the request body when user is found with id`() {
-        whenever(userService.retrieveUserById(1)).thenReturn(user)
+        whenever(userService.retrieveUserById("1")).thenReturn(user)
 
-        val result = userController.getUserInfo(1)
+        val result = userController.getUserInfo("1")
 
         assertThat(result.statusCode, Is(OK))
         assertThat(result.body, Is(user))
@@ -61,9 +61,9 @@ internal class UserControllerTest {
 
     @Test
     fun `'getUserInfo' returns NOT_FOUND when no user is found`() {
-        whenever(userService.retrieveUserById(1)).thenReturn(null)
+        whenever(userService.retrieveUserById("1")).thenReturn(null)
 
-        val result = userController.getUserInfo(1)
+        val result = userController.getUserInfo("1")
 
         assertThat(result.statusCode, Is(NOT_FOUND))
         assertThat(result.body, Is(nullValue()))

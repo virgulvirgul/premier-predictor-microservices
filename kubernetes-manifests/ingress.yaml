@@ -13,12 +13,34 @@ spec:
   tls:
     - secretName: pp-secret
   rules:
-    - host: chat.premierpredictor.xyz
+    - host: chat.premierpredictor.uk
       http:
         paths:
-        - backend:
-            serviceName: chatservice
-            servicePort: 3003
+          - backend:
+              serviceName: chatservice
+              servicePort: 3003
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/secure-backends: "true"
+    nginx.ingress.kubernetes.io/grpc-backend: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  name: notification-ingress
+  namespace: default
+spec:
+  tls:
+    - secretName: pp-secret
+  rules:
+    - host: notification.premierpredictor.uk
+      http:
+        paths:
+          - backend:
+              serviceName: notificationservice
+              servicePort: 3004
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -35,7 +57,7 @@ spec:
   tls:
     - secretName: pp-secret
   rules:
-    - host: livematch.premierpredictor.xyz
+    - host: livematch.premierpredictor.uk
       http:
         paths:
           - backend:
@@ -54,9 +76,85 @@ spec:
   tls:
     - secretName: pp-secret
   rules:
-    - host: app.premierpredictor.xyz
+    - host: app.premierpredictor.uk
       http:
         paths:
           - backend:
               serviceName: premierpredictor-service
               servicePort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: fixture-ingress
+  namespace: default
+spec:
+  tls:
+    - secretName: pp-secret
+  rules:
+    - host: fixture.premierpredictor.uk
+      http:
+        paths:
+          - backend:
+              serviceName: fixtureservice-service
+              servicePort: 8086
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: league-ingress
+  namespace: default
+spec:
+  tls:
+    - secretName: pp-secret
+  rules:
+    - host: league.premierpredictor.uk
+      http:
+        paths:
+          - backend:
+              serviceName: leagueservice-service
+              servicePort: 8089
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: prediction-ingress
+  namespace: default
+spec:
+  tls:
+    - secretName: pp-secret
+  rules:
+    - host: prediction.premierpredictor.uk
+      http:
+        paths:
+          - backend:
+              serviceName: predictionservice-service
+              servicePort: 8087
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: user-ingress
+  namespace: default
+spec:
+  tls:
+    - secretName: pp-secret
+  rules:
+    - host: user.premierpredictor.uk
+      http:
+        paths:
+          - backend:
+              serviceName: userservice-service
+              servicePort: 8085

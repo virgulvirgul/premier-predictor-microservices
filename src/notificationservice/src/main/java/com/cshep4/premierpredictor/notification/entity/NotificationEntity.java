@@ -32,7 +32,7 @@ public class NotificationEntity {
     }
 
     public static NotificationEntity fromDto(Notification notification) {
-        if (isValid(notification.getId())) {
+        if (!isValid(notification.getId())) {
             throw new IllegalArgumentException("Invalid id");
         }
 

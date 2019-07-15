@@ -24,11 +24,26 @@ spec:
               value: "3006"
             - name: HTTP_PORT
               value: "8086"
-            - name: JWT_SECRET
+            - name: MONGO_SCHEME
               valueFrom:
                 secretKeyRef:
                   name: pp-secrets
-                  key: jwtSecret
+                  key: dbScheme
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbUser
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbPassword
+            - name: MONGO_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbHost
           readinessProbe:
             httpGet:
               path: /health
@@ -57,3 +72,16 @@ spec:
     - port: 3006
       targetPort: 3006
       name: grpc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fixtureservice-service
+spec:
+  ports:
+    - port: 8086
+      targetPort: 8086
+      name: http
+  selector:
+    app: fixtureservice-app
+  type: NodePort

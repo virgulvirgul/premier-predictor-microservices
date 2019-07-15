@@ -50,21 +50,26 @@ spec:
                 secretKeyRef:
                   name: premierpredictor-secrets
                   key: dbPassword
-            - name: DYNAMO_DB_ACCESS_KEY
+            - name: MONGO_SCHEME
               valueFrom:
                 secretKeyRef:
-                  name: premierpredictor-secrets
-                  key: dynamoDbAccessKey
-            - name: DYNAMODB_ENDPOINT
+                  name: pp-secrets
+                  key: dbScheme
+            - name: MONGO_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: premierpredictor-secrets
-                  key: dynamoDbEndpoint
-            - name: DYNAMO_DB_SECRET_KEY
+                  name: pp-secrets
+                  key: dbUser
+            - name: MONGO_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: premierpredictor-secrets
-                  key: dynamoDbSecretKey
+                  name: pp-secrets
+                  key: dbPassword
+            - name: MONGO_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pp-secrets
+                  key: dbHost
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -80,10 +85,10 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 500Mi
+              memory: 180Mi
             limits:
               cpu: 100m
-              memory: 600Mi
+              memory: 300Mi
           readinessProbe:
             httpGet:
               path: /_health

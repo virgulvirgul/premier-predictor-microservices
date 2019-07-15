@@ -4,8 +4,9 @@ import com.cshep4.premierpredictor.component.resetpassword.ResetEmail
 import com.cshep4.premierpredictor.component.resetpassword.UserSignature
 import com.cshep4.premierpredictor.constant.SecurityConstants
 import com.cshep4.premierpredictor.data.ResetPassword
+import com.cshep4.premierpredictor.data.User
 import com.cshep4.premierpredictor.entity.UserEntity
-import com.cshep4.premierpredictor.repository.sql.UserRepository
+import com.cshep4.premierpredictor.repository.mongo.UserRepository
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -56,7 +57,7 @@ internal class ResetPasswordServiceTest {
     @Before
     fun init() {
         whenever(bCryptPasswordEncoder.encode(any())).thenReturn("pass")
-        whenever(userRepository.findByEmail(any())).thenReturn(Optional.of(UserEntity()))
+        whenever(userRepository.findByEmail(any())).thenReturn(User())
     }
 
     @Test
@@ -96,7 +97,7 @@ internal class ResetPasswordServiceTest {
     fun `'resetPassword' returns error message and does not update password if user does not exist`() {
         val resetPassword = ResetPassword(email = "email", signature = signature, password = "Pass123", conf = "Pass123")
 
-        whenever(userRepository.findByEmail(resetPassword.email)).thenReturn(Optional.empty())
+        whenever(userRepository.findByEmail(resetPassword.email)).thenReturn(null)
 
         val result = resetPasswordService.resetPassword(resetPassword)
 

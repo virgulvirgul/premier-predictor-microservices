@@ -72,3 +72,16 @@ spec:
     - port: 3005
       targetPort: 3005
       name: grpc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userservice-service
+spec:
+  ports:
+    - port: 8085
+      targetPort: 8085
+      name: http
+  selector:
+    app: userservice-app
+  type: NodePort
