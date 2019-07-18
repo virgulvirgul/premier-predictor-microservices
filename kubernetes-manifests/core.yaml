@@ -75,6 +75,8 @@ spec:
                 secretKeyRef:
                   name: premierpredictor-secrets
                   key: jwtSecret
+            - name: MONGO_PORT
+              value: ""
             - name: SEND_GRIP_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -82,13 +84,6 @@ spec:
                   key: sendGridApiKey
             - name: JAVA_OPTS
               value: -Xmx125m -Xms125m -Xss256k -XX:+UseCompressedOops -XX:+UseContainerSupport -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark
-          resources:
-            requests:
-              cpu: 100m
-              memory: 180Mi
-            limits:
-              cpu: 100m
-              memory: 300Mi
           readinessProbe:
             httpGet:
               path: /_health
@@ -99,6 +94,11 @@ spec:
               path: /_health
               port: 8080
             initialDelaySeconds: 60
+          resources:
+            requests:
+              memory: "500Mi"
+            limits:
+              memory: "600Mi"
 ---
 apiVersion: v1
 kind: Service
@@ -112,3 +112,25 @@ spec:
   selector:
     app: premierpredictor-app
   type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+#    kubernetes.io/ingress.allow-http: "false"
+#    ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: app-ingress
+  namespace: default
+spec:
+  tls:
+    - hosts:
+      - app.premierpredictor.uk
+    - secretName: pp-secret
+  rules:
+    - host: app.premierpredictor.uk
+      http:
+        paths:
+          - backend:
+              serviceName: premierpredictor-service
+              servicePort: 8080
+            path: /

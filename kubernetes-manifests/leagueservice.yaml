@@ -24,6 +24,8 @@ spec:
               value: "3009"
             - name: HTTP_PORT
               value: "8089"
+            - name: AUTH_ADDR
+              value: "authservice:3001"
             - name: USER_ADDR
               value: "userservice:3005"
             - name: MONGO_SCHEME
@@ -59,21 +61,21 @@ spec:
               cpu: 100m
               memory: 64Mi
             limits:
-              cpu: 200m
+              cpu: 100m
               memory: 128Mi
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: leagueservice
-  namespace: default
-spec:
-  selector:
-    k8s-app: leagueservice-app
-  ports:
-    - port: 3009
-      targetPort: 3009
-      name: grpc
+ apiVersion: v1
+ kind: Service
+ metadata:
+   name: leagueservice
+   namespace: default
+ spec:
+   selector:
+     k8s-app: leagueservice-app
+   ports:
+     - port: 3009
+       targetPort: 3009
+       name: grpc
 ---
 apiVersion: v1
 kind: Service
@@ -85,5 +87,27 @@ spec:
       targetPort: 8089
       name: http
   selector:
-    app: leagueservice-app
+    k8s-app: leagueservice-app
   type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+#    kubernetes.io/ingress.allow-http: "false"
+#    ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: league-ingress
+  namespace: default
+spec:
+  tls:
+    - hosts:
+      - league.premierpredictor.uk
+    - secretName: pp-secret
+  rules:
+    - host: league.premierpredictor.uk
+      http:
+        paths:
+          - backend:
+              serviceName: leagueservice-service
+              servicePort: 8089
+            path: /

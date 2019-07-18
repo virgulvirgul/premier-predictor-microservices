@@ -207,9 +207,9 @@ func (r *repository) GetPreviousMessages(chatId, messageId string) ([]model.Mess
 		chatId,
 		bson.D{
 			bson.E{
-				Key:  "_id", Value: bson.D{
+				Key: "_id", Value: bson.D{
 					bson.E{
-						Key:  "$lt", Value: id,
+						Key: "$lt", Value: id,
 					},
 				},
 			},
@@ -341,7 +341,7 @@ func (r *repository) SaveMessage(message model.Message) (string, error) {
 }
 
 func (r *repository) Ping() error {
-	ctx, _ := context.WithTimeout(context.Background(), time.Duration(500*time.Millisecond))
+	ctx, _ := context.WithTimeout(context.Background(), time.Duration(5000*time.Millisecond))
 	return r.client.Ping(ctx, nil)
 }
 

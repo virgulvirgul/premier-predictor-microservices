@@ -40,7 +40,7 @@ func main() {
 	case os.Interrupt, syscall.SIGINT, syscall.SIGQUIT:
 		log.Print("Shutting down")
 
-		for i := range  clientConnCloseFunc{
+		for i := range clientConnCloseFunc {
 			err := clientConnCloseFunc[i]()
 			if err != nil {
 				log.Printf("Error closing client connection: %v\n", err)
@@ -64,7 +64,7 @@ func main() {
 var clientConnCloseFunc []func() error
 
 func startGrpcServer() *grpc.Server {
-	cer, err := tls.LoadX509KeyPair("certs/cert.pem", "certs/privkey.pem")
+	cer, err := tls.LoadX509KeyPair("certs/tls.crt", "certs/tls.key")
 	if err != nil {
 		log.Fatalf("Failed to load key pair: %v\n", err)
 	}

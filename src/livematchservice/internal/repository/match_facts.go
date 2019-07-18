@@ -16,7 +16,7 @@ type matchFactsEntity struct {
 	VenueCity        string      `bson:"venueCity,omitempty"`
 	Status           string      `bson:"status,omitempty"`
 	Timer            string      `bson:"timer,omitempty"`
-	Time             string      `bson:"timer,omitempty"`
+	Time             string      `bson:"time,omitempty"`
 	LocalTeamId      string      `bson:"localTeamId,omitempty"`
 	LocalTeamName    string      `bson:"localTeamName,omitempty"`
 	LocalTeamScore   string      `bson:"localTeamScore,omitempty"`

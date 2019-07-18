@@ -3,9 +3,8 @@ import {NextFunction, Request, response, Response} from "express";
 export class Middleware {
     private client;
 
-    constructor() {
+    constructor(grpc: any) {
         const PROTO_PATH = __dirname + '/../../protodefs/auth.proto';
-        const grpc = require('grpc');
         const protoLoader = require('@grpc/proto-loader');
         const packageDefinition = protoLoader.loadSync(
             PROTO_PATH,

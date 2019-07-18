@@ -246,7 +246,7 @@ func (r *repository) GetMatchPredictionSummary(id string) (homeWins int, draw in
 }
 
 func (r *repository) Ping() error {
-	ctx, _ := context.WithTimeout(context.Background(), time.Duration(500*time.Millisecond))
+	ctx, _ := context.WithTimeout(context.Background(), time.Duration(5000*time.Millisecond))
 	return r.client.Ping(ctx, nil)
 }
 

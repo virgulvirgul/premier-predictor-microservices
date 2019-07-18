@@ -2,8 +2,16 @@
 
 
 [[projects]]
+  digest = "1:10df833445d1ce15cb3bb4277b9252f3fc5664f4675b40e2236540ccbdd2d1a1"
+  name = "github.com/ahl5esoft/golang-underscore"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "2d8e3d58ac101d8ad2f2ff6ca6defb0809b250af"
+  version = "v2.0.0"
+
+[[projects]]
   branch = "master"
-  digest = "1:a109e19064ef07575d701cf3fe52370bd3cef58a527ac2a8d982475cce9a06f3"
+  digest = "1:51d8ed9a6e50b9a319433620cc32732e4b7d94de016746bbe044ac8fddbdbedc"
   name = "github.com/cshep4/premier-predictor-microservices"
   packages = [
     "proto-gen/model/gen",
@@ -12,11 +20,10 @@
     "src/common/health",
     "src/common/interfaces",
     "src/common/model",
-    "src/common/notification",
-    "src/common/notification/mocks",
+    "src/common/util",
   ]
   pruneopts = "UT"
-  revision = "083c3f2abf9c84a75b42d60322c24ad4cf554ad3"
+  revision = "bb02f332c216c8a49fcbd2dee29124dfd89ba3ba"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -157,10 +164,9 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:d9403fe14e9ea0436e59be99b24c76517720c524d5649c3359224364e70252cd"
+  digest = "1:e275b703ab8e3a4f8cd62893c888867a411f4854436b7d4f3ebf3e9180424847"
   name = "golang.org/x/net"
   packages = [
-    "context",
     "http/httpguts",
     "http2",
     "http2/hpack",
@@ -263,27 +269,26 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/ahl5esoft/golang-underscore",
     "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen",
     "github.com/cshep4/premier-predictor-microservices/src/common/auth",
     "github.com/cshep4/premier-predictor-microservices/src/common/factory",
     "github.com/cshep4/premier-predictor-microservices/src/common/health",
-    "github.com/cshep4/premier-predictor-microservices/src/common/interfaces",
     "github.com/cshep4/premier-predictor-microservices/src/common/model",
-    "github.com/cshep4/premier-predictor-microservices/src/common/notification",
-    "github.com/cshep4/premier-predictor-microservices/src/common/notification/mocks",
+    "github.com/cshep4/premier-predictor-microservices/src/common/util",
     "github.com/golang/mock/gomock",
     "github.com/golang/protobuf/proto",
-    "github.com/golang/protobuf/ptypes",
     "github.com/golang/protobuf/ptypes/empty",
     "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/require",
     "go.mongodb.org/mongo-driver/bson",
-    "go.mongodb.org/mongo-driver/bson/primitive",
     "go.mongodb.org/mongo-driver/mongo",
     "go.mongodb.org/mongo-driver/mongo/options",
     "go.mongodb.org/mongo-driver/x/bsonx",
+    "google.golang.org/genproto/googleapis/rpc/status",
     "google.golang.org/grpc",
     "google.golang.org/grpc/codes",
+    "google.golang.org/grpc/metadata",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

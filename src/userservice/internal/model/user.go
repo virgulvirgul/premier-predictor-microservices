@@ -54,5 +54,5 @@ type UpdatePassword struct {
 }
 
 type UserScore struct {
-	Score int `json:"score,omitempty"`
+	Score int `json:"score"`
 }

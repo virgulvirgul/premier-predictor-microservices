@@ -20,5 +20,5 @@ RUN GRPC_HEALTH_PROBE_VERSION=v0.2.0 && \
     chmod +x /bin/grpc_health_probe
 COPY --from=builder /predictionservice /predictionservice
 
-EXPOSE 3008
+EXPOSE 3007 8087
 ENTRYPOINT ["/predictionservice"]

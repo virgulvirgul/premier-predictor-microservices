@@ -32,6 +32,10 @@ type Prediction struct {
 }
 
 func PredictionFromGrpc(prediction *model.Prediction) *Prediction {
+	if prediction == nil {
+		return nil
+	}
+
 	return &Prediction{
 		UserId:    prediction.UserId,
 		MatchId:   prediction.MatchId,
@@ -41,6 +45,10 @@ func PredictionFromGrpc(prediction *model.Prediction) *Prediction {
 }
 
 func PredictionToGrpc(prediction *Prediction) *model.Prediction {
+	if prediction == nil {
+		return nil
+	}
+
 	return &model.Prediction{
 		UserId:  prediction.UserId,
 		MatchId: prediction.MatchId,

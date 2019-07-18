@@ -12,13 +12,13 @@ import (
 )
 
 const (
-	invalidEmail      = "Invalid Email Address"
-	emailAlreadyTaken = "Email Address is Already Taken"
-	firstNameIsBlank  = "First Name Cannot be Blank"
-	surnameIsBlank    = "Surname Cannot be Blank"
-	oldPasswordDoesNotMatch = "Old Password does not Match"
+	invalidEmail             = "Invalid Email Address"
+	emailAlreadyTaken        = "Email Address is Already Taken"
+	firstNameIsBlank         = "First Name Cannot be Blank"
+	surnameIsBlank           = "Surname Cannot be Blank"
+	oldPasswordDoesNotMatch  = "Old Password does not Match"
 	confirmationDoesNotMatch = "New Password does not Match Confirmation"
-	invalidPassword = "Invalid Password"
+	invalidPassword          = "Invalid Password"
 
 	emailRegex = "^([_a-zA-Z0-9-]+(\\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*(\\.[a-zA-Z]{1,6}))?$"
 )
@@ -69,7 +69,9 @@ func (s *service) UpdatePassword(updatePassword model.UpdatePassword) error {
 		return errors.Wrap(common.ErrInvalidRequestData, invalidPassword)
 	}
 
-	return s.repository.UpdatePassword(updatePassword.Id, updatePassword.NewPassword)
+	newPassword, _ := bcrypt.GenerateFromPassword([]byte(updatePassword.NewPassword), 10)
+
+	return s.repository.UpdatePassword(updatePassword.Id, string(newPassword))
 }
 
 func (s *service) GetUserScore(id string) (int, error) {

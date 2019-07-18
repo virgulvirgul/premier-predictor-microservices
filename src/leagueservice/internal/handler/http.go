@@ -21,7 +21,7 @@ type ServerError struct {
 
 const (
 	invalidRequestBody = "Invalid Request Body"
-	invalidPin = "Invalid Pin"
+	invalidPin         = "Invalid Pin"
 )
 
 type httpHandler struct {
@@ -42,8 +42,9 @@ func (h *httpHandler) Route() http.Handler {
 	router := mux.NewRouter()
 	router.Use(h.authenticator.HttpMiddleware)
 
-	router.HandleFunc("/{id}", h.getUsersLeagueList).
+	router.HandleFunc("/health", health.Health).
 		Methods(http.MethodGet)
+
 	router.HandleFunc("/", h.addLeague).
 		Methods(http.MethodPost)
 	router.HandleFunc("/join", h.joinLeague).
@@ -56,8 +57,7 @@ func (h *httpHandler) Route() http.Handler {
 		Methods(http.MethodGet)
 	router.HandleFunc("/standings", h.getOverallTable).
 		Methods(http.MethodGet)
-
-	router.HandleFunc("/health", health.Health).
+	router.HandleFunc("/{id}", h.getUsersLeagueList).
 		Methods(http.MethodGet)
 
 	return router

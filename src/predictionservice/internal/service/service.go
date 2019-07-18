@@ -35,7 +35,7 @@ func (s *service) GetFixturesWithPredictions(id string) ([]model.FixturePredicti
 	}
 	predictions := pResult.result
 
-	var fixturePredictions []model.FixturePrediction
+	fixturePredictions := []model.FixturePrediction{}
 	for _, f := range fixtures {
 		fp := model.FixturePrediction{
 			UserId:     id,

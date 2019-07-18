@@ -26,8 +26,8 @@ build:
     context: src/chatservice
   - image: premierpredictor
     context: src/core
-  - image: emailservice
-    context: src/emailservice
+#  - image: emailservice
+#    context: src/emailservice
   - image: fixtureservice
     context: src/fixtureservice
   - image: livematchservice

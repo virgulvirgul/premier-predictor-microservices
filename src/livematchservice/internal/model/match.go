@@ -33,7 +33,8 @@ func ToUpcomingMatchesResponse(upcomingMatches map[time.Time][]model.MatchFacts)
 	matches := make(map[string]*gen.MatchFactsList)
 
 	for k, v := range upcomingMatches {
-		date := k.Format("01-02-2006")
+		date := k.Format("02-01-2006")
+		matches[date] = &gen.MatchFactsList{}
 
 		var matchFacts []*gen.MatchFacts
 		for i := range v {

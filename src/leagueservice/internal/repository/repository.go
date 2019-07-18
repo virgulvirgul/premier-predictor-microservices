@@ -27,13 +27,13 @@ type repository struct {
 }
 
 func NewRepository() (*repository, error) {
-	leaguename := os.Getenv("MONGO_LEAGUENAME")
+	username := os.Getenv("MONGO_USERNAME")
 	password := os.Getenv("MONGO_PASSWORD")
 	port := os.Getenv("MONGO_PORT")
 
 	mongoUri := fmt.Sprintf("%s://", os.Getenv("MONGO_SCHEME"))
-	if leaguename != "" && password != "" {
-		mongoUri = fmt.Sprintf("%s%s:%s@", mongoUri, leaguename, password)
+	if username != "" && password != "" {
+		mongoUri = fmt.Sprintf("%s%s:%s@", mongoUri, username, password)
 	}
 	mongoUri = mongoUri + os.Getenv("MONGO_HOST")
 	if port != "" {
@@ -261,7 +261,7 @@ func (r *repository) editLeague(pin int64, update bson.D) error {
 }
 
 func (r *repository) Ping() error {
-	ctx, _ := context.WithTimeout(context.Background(), time.Duration(500*time.Millisecond))
+	ctx, _ := context.WithTimeout(context.Background(), time.Duration(5000*time.Millisecond))
 	return r.client.Ping(ctx, nil)
 }
 

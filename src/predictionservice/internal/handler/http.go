@@ -29,13 +29,14 @@ func NewHttpHandler(service interfaces.Service, authenticator common.Authenticat
 
 func (h *httpHandler) Route() http.Handler {
 	router := mux.NewRouter()
+
 	router.Use(h.authenticator.HttpMiddleware)
 
 	router.HandleFunc("/fixtures/predicted/{id}", h.getFixturesWithPredictions).
 		Methods(http.MethodGet)
 	router.HandleFunc("/predictions/{id}", h.getPredictorData).
 		Methods(http.MethodGet)
-	router.HandleFunc("/predictions", h.getFixturesWithPredictions).
+	router.HandleFunc("/predictions", h.updatePredictions).
 		Methods(http.MethodPost)
 	router.HandleFunc("/predictions/summary/{id}", h.getUsersPastPredictions).
 		Methods(http.MethodGet)

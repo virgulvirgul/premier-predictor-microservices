@@ -7,6 +7,7 @@ import (
 	common "github.com/cshep4/premier-predictor-microservices/src/common/model"
 	"github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/interfaces"
 	"github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/model"
+	. "github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/prediction"
 	"sort"
 	"time"
 )
@@ -58,7 +59,7 @@ func (s *service) GetMatchSummary(ctx context.Context, req model.PredictionReque
 	}()
 
 	prediction := <-predictionChan
-	if prediction.err != nil {
+	if prediction.err != nil && prediction.err != ErrPredictionNotFound {
 		return nil, prediction.err
 	}
 

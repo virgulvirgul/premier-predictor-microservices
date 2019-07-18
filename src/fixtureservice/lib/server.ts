@@ -9,11 +9,13 @@ import {Handler} from "./grpc/handler";
 import {FormFormatter} from "./component/form-formatter";
 import {FixtureFormatter} from "./component/fixture-formatter";
 
+export const grpc = require('grpc');
+
 const repository = new Repository();
 const fixtureFormatter = new FixtureFormatter();
 const formFormatter = new FormFormatter();
 const service = new Service(repository, fixtureFormatter, formFormatter);
-const middleware = new Middleware();
+const middleware = new Middleware(grpc);
 
 const controller = new Controller(service);
 const router = new Router(controller, middleware);
@@ -23,4 +25,4 @@ const handler = new Handler(service);
 const grpcServer = new Grpc(handler);
 
 httpServer.start();
-grpcServer.start();
+grpcServer.start(grpc);

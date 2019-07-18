@@ -24,6 +24,8 @@ spec:
               value: "3006"
             - name: HTTP_PORT
               value: "8086"
+            - name: AUTH_ADDR
+              value: "authservice:3001"
             - name: MONGO_SCHEME
               valueFrom:
                 secretKeyRef:
@@ -60,18 +62,18 @@ spec:
               cpu: 100m
               memory: 128Mi
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: fixtureservice
-  namespace: default
-spec:
-  selector:
-    k8s-app: fixtureservice-app
-  ports:
-    - port: 3006
-      targetPort: 3006
-      name: grpc
+ apiVersion: v1
+ kind: Service
+ metadata:
+   name: fixtureservice
+   namespace: default
+ spec:
+   selector:
+     k8s-app: fixtureservice-app
+   ports:
+     - port: 3006
+       targetPort: 3006
+       name: grpc
 ---
 apiVersion: v1
 kind: Service
@@ -83,5 +85,27 @@ spec:
       targetPort: 8086
       name: http
   selector:
-    app: fixtureservice-app
+    k8s-app: fixtureservice-app
   type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+#    kubernetes.io/ingress.allow-http: "false"
+#    ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: fixture-ingress
+  namespace: default
+spec:
+  tls:
+    - hosts:
+      - fixture.premierpredictor.uk
+    - secretName: pp-secret
+  rules:
+    - host: fixture.premierpredictor.uk
+      http:
+        paths:
+          - backend:
+              serviceName: fixtureservice-service
+              servicePort: 8086
+            path: /
