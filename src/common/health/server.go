@@ -1,6 +1,7 @@
 package health
 
 import (
+	"github.com/gorilla/handlers"
 	"log"
 	"net/http"
 	"os"
@@ -20,7 +21,7 @@ func StartHealthServer() *http.Server {
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
-		Handler:      r,
+		Handler:      handlers.CORS()(r),
 	}
 
 	log.Printf("Health server listening on %s", path)

@@ -12,6 +12,7 @@ import (
 	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/interfaces"
 	repo "github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/repository"
 	svc "github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/service"
+	"github.com/gorilla/handlers"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"log"
@@ -117,7 +118,7 @@ func startHttpServer(service interfaces.Service, authenticator common.Authentica
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
-		Handler:      h.Route(),
+		Handler:      handlers.CORS()(h.Route()),
 	}
 
 	log.Printf("Http server listening on %s", path)

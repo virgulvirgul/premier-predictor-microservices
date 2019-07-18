@@ -64,6 +64,14 @@
   revision = "2a8bb927dd31d8daada140a5d09578521ce5c36a"
 
 [[projects]]
+  digest = "1:bf3f2edc757b0fcee5946f9c88c3531b3766cde4195f9c5956fc4a84b72b0699"
+  name = "github.com/gorilla/handlers"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "415c4810185c26aa35ca0315470d77697000794b"
+  version = "v1.4.1"
+
+[[projects]]
   digest = "1:cbec35fe4d5a4fba369a656a8cd65e244ea2c743007d8f6c1ccb132acf9d1296"
   name = "github.com/gorilla/mux"
   packages = ["."]
@@ -273,6 +281,7 @@
     "github.com/golang/mock/gomock",
     "github.com/golang/protobuf/proto",
     "github.com/golang/protobuf/ptypes/empty",
+    "github.com/gorilla/handlers",
     "github.com/gorilla/mux",
     "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/require",
