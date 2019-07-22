@@ -1,3 +1,5 @@
+import * as t from 'google-protobuf/google/protobuf/timestamp_pb.js';
+
 export class Fixture {
     id : string;
     played : number;
@@ -10,12 +12,14 @@ export class Fixture {
 }
 
 export const fixtureToGrpc = (fixture: Fixture) => {
+    let dateTime = t.Timestamp.fromDate(fixture.dateTime);
+
     return {
         id : fixture.id,
         played : fixture.played,
         dateTime : {
-            seconds: fixture.dateTime.getTime(),
-            nanos: (fixture.dateTime.getTime() % 1000) * 1e6,
+            seconds: dateTime.getSeconds(),
+            nanos: dateTime.getNanos()
         },
         matchday : fixture.matchday,
         hTeam : fixture.hTeam,

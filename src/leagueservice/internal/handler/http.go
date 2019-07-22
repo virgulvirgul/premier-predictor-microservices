@@ -40,7 +40,6 @@ func NewHttpHandler(service interfaces.Service, authenticator common.Authenticat
 
 func (h *httpHandler) Route() http.Handler {
 	router := mux.NewRouter()
-	router.Handler.AllowedOrigins([]string{"*"})
 	router.Use(h.authenticator.HttpMiddleware)
 
 	router.HandleFunc("/health", health.Health).

@@ -5,9 +5,9 @@ import (
 )
 
 type leagueEntity struct {
-	Pin   int64    `bson:"_id,omitempty"`
-	Name  string   `bson:"name,omitempty"`
-	Users []string `bson:"users,omitempty"`
+	Pin   int64    `bson:"_id"`
+	Name  string   `bson:"name"`
+	Users []string `bson:"users"`
 }
 
 func fromLeague(league model.League) *leagueEntity {

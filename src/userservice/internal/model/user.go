@@ -7,16 +7,16 @@ import (
 )
 
 type User struct {
-	Id              string    `json:"id,omitempty"`
-	FirstName       string    `json:"firstName,omitempty"`
-	Surname         string    `json:"surname,omitempty"`
-	Email           string    `json:"email,omitempty"`
-	Password        string    `json:"password,omitempty"`
-	PredictedWinner string    `json:"predictedWinner,omitempty"`
-	Score           int       `json:"score,omitempty"`
-	Joined          time.Time `json:"joined,omitempty"`
-	Admin           bool      `json:"admin,omitempty"`
-	AdFree          bool      `json:"adFree,omitempty"`
+	Id              string    `json:"id"`
+	FirstName       string    `json:"firstName"`
+	Surname         string    `json:"surname"`
+	Email           string    `json:"email"`
+	Password        string    `json:"password"`
+	PredictedWinner string    `json:"predictedWinner"`
+	Score           int       `json:"score"`
+	Joined          time.Time `json:"joined"`
+	Admin           bool      `json:"admin"`
+	AdFree          bool      `json:"adFree"`
 }
 
 func UserToGrpc(user *User) *gen.User {
@@ -40,17 +40,17 @@ func UserFromGrpc(user *gen.User) *User {
 }
 
 type UserInfo struct {
-	Id        string `json:"id,omitempty"`
-	FirstName string `json:"firstName,omitempty"`
-	Surname   string `json:"surname,omitempty"`
-	Email     string `json:"email,omitempty"`
+	Id        string `json:"id"`
+	FirstName string `json:"firstName"`
+	Surname   string `json:"surname"`
+	Email     string `json:"email"`
 }
 
 type UpdatePassword struct {
-	Id              string `json:"id,omitempty"`
-	OldPassword     string `json:"oldPassword,omitempty"`
-	NewPassword     string `json:"newPassword,omitempty"`
-	ConfirmPassword string `json:"confirmPassword,omitempty"`
+	Id              string `json:"id"`
+	OldPassword     string `json:"oldPassword"`
+	NewPassword     string `json:"newPassword"`
+	ConfirmPassword string `json:"confirmPassword"`
 }
 
 type UserScore struct {

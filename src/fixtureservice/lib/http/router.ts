@@ -1,6 +1,7 @@
 import {Request, Response, NextFunction} from "express";
 import {Controller} from "./controller";
 import {Middleware} from "../middleware/middleware";
+import * as cors from "cors";
 
 export class Router {
 
@@ -9,6 +10,8 @@ export class Router {
     }
 
     public route(app): void {
+        app.use(cors());
+
         app.get('/health', (req, res) => res.send('Service is healthy!'));
 
         app.get('/*', (req: Request, res: Response, next: NextFunction) =>

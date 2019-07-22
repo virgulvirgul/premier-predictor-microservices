@@ -6,11 +6,11 @@ import (
 )
 
 type LeagueUser struct {
-	Id              string `json:"id,omitempty"`
-	FirstName       string `json:"firstName,omitempty"`
-	Surname         string `json:"surname,omitempty"`
-	PredictedWinner string `json:"predictedWinner,omitempty"`
-	Score           int    `json:"score,omitempty"`
+	Id              string `json:"id"`
+	FirstName       string `json:"firstName"`
+	Surname         string `json:"surname"`
+	PredictedWinner string `json:"predictedWinner"`
+	Score           int    `json:"score"`
 }
 
 func LeagueUserFromGrpc(user *gen.User) *LeagueUser {
@@ -39,23 +39,23 @@ func (l LeagueUserSlice) Swap(i, j int) {
 
 
 type League struct {
-	Pin   int64    `json:"pin,omitempty"`
-	Name  string   `json:"name,omitempty"`
-	Users []string `json:"users,omitempty"`
+	Pin   int64    `json:"pin"`
+	Name  string   `json:"name"`
+	Users []string `json:"users"`
 }
 
 type LeagueOverview struct {
-	LeagueName string `json:"leagueName,omitempty"`
-	Pin        int64 `json:"pin,omitempty"`
-	Rank       int64  `json:"rank,omitempty"`
+	LeagueName string `json:"leagueName"`
+	Pin        int64 `json:"pin"`
+	Rank       int64  `json:"rank"`
 }
 
 type OverallLeagueOverview struct {
-	Rank      int64 `json:"rank,omitempty"`
-	UserCount int64 `json:"userCount,omitempty"`
+	Rank      int64 `json:"rank"`
+	UserCount int64 `json:"userCount"`
 }
 
 type StandingsOverview struct {
-	OverallLeagueOverview OverallLeagueOverview `json:"overallLeagueOverview,omitempty"`
-	UserLeagues           []LeagueOverview      `json:"userLeagues,omitempty"`
+	OverallLeagueOverview OverallLeagueOverview `json:"overallLeagueOverview"`
+	UserLeagues           []LeagueOverview      `json:"userLeagues"`
 }

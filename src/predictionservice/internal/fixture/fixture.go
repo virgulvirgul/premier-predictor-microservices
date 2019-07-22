@@ -8,6 +8,7 @@ import (
 	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/interfaces"
 	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/model"
 	"github.com/golang/protobuf/ptypes/empty"
+	"log"
 )
 
 type fixtureService struct {
@@ -28,6 +29,7 @@ func (f *fixtureService) GetMatches() ([]common.Fixture, error) {
 
 	var fixtures []common.Fixture
 	for _, m := range resp.Matches {
+		log.Println(m.DateTime)
 		fixtures = append(fixtures, common.FixtureFromGrpc(m))
 	}
 

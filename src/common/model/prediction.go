@@ -25,10 +25,10 @@ func MatchPredictionSummaryToGrpc(predictionSummary *MatchPredictionSummary) *mo
 }
 
 type Prediction struct {
-	UserId    string `json:"userId,omitempty"`
-	MatchId   string `json:"matchId,omitempty"`
-	HomeGoals int    `json:"hGoals,omitempty"`
-	AwayGoals int    `json:"aGoals,omitempty"`
+	UserId    string `json:"userId"`
+	MatchId   string `json:"matchId"`
+	HomeGoals int    `json:"hGoals"`
+	AwayGoals int    `json:"aGoals"`
 }
 
 func PredictionFromGrpc(prediction *model.Prediction) *Prediction {

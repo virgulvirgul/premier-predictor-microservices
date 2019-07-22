@@ -12,7 +12,7 @@ import (
 	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/interfaces"
 	repo "github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/repository"
 	svc "github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/service"
-	"github.com/gorilla/handlers"
+	"github.com/rs/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"log"
@@ -113,12 +113,30 @@ func startHttpServer(service interfaces.Service, authenticator common.Authentica
 
 	path := ":" + os.Getenv("HTTP_PORT")
 
+	corsOpts := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"}, //you service is available and allowed for this base url
+		AllowedMethods: []string{
+			http.MethodGet,//http methods for your app
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+			http.MethodHead,
+		},
+
+		AllowedHeaders: []string{
+			"*",//or you can your header key values which you are using in your application
+
+		},
+	})
+
 	http := &http.Server{
 		Addr:         path,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
-		Handler:      handlers.CORS()(h.Route()),
+		Handler:      corsOpts.Handler(h.Route()),
 	}
 
 	log.Printf("Http server listening on %s", path)

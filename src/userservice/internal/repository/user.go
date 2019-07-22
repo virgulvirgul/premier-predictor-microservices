@@ -8,16 +8,16 @@ import (
 )
 
 type userEntity struct {
-	Id              *primitive.ObjectID `bson:"_id,omitempty"`
-	FirstName       string              `bson:"firstName,omitempty"`
-	Surname         string              `bson:"surname,omitempty"`
-	Email           string              `bson:"email,omitempty"`
-	Password        string              `bson:"password,omitempty"`
-	PredictedWinner string              `bson:"predictedWinner,omitempty"`
-	Score           int                 `bson:"score,omitempty"`
-	Joined          time.Time           `bson:"joined,omitempty"`
-	Admin           bool                `bson:"admin,omitempty"`
-	AdFree          bool                `bson:"adFree,omitempty"`
+	Id              *primitive.ObjectID `bson:"_id"`
+	FirstName       string              `bson:"firstName"`
+	Surname         string              `bson:"surname"`
+	Email           string              `bson:"email"`
+	Password        string              `bson:"password"`
+	PredictedWinner string              `bson:"predictedWinner"`
+	Score           int                 `bson:"score"`
+	Joined          time.Time           `bson:"joined"`
+	Admin           bool                `bson:"admin"`
+	AdFree          bool                `bson:"adFree"`
 }
 
 func fromUser(user model.User) (*userEntity, error) {
