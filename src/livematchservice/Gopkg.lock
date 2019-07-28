@@ -11,19 +11,22 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:51d8ed9a6e50b9a319433620cc32732e4b7d94de016746bbe044ac8fddbdbedc"
+  digest = "1:d94f50497e5787dac76fae2cab569dcc63c32d9393cbe21241b45854ff347f65"
   name = "github.com/cshep4/premier-predictor-microservices"
   packages = [
     "proto-gen/model/gen",
     "src/common/auth",
+    "src/common/auth/mocks",
     "src/common/factory",
     "src/common/health",
     "src/common/interfaces",
     "src/common/model",
     "src/common/util",
+    "src/leagueservice/internal/model",
+    "src/leagueservice/internal/service/mocks",
   ]
   pruneopts = "UT"
-  revision = "bb02f332c216c8a49fcbd2dee29124dfd89ba3ba"
+  revision = "a7c696908c9d23aa9e6e6ed5fd41cf3ac66c768f"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -73,6 +76,14 @@
   revision = "2a8bb927dd31d8daada140a5d09578521ce5c36a"
 
 [[projects]]
+  digest = "1:b117faf01abdbdadd7b8ceeae74cd1369c1b073fef41aee8b674c9d704a54c16"
+  name = "github.com/gorilla/handlers"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "8a3748addc242fc560bd6d4ff28b0374c010b1b4"
+  version = "v1.4.2"
+
+[[projects]]
   digest = "1:d5f97fc268267ec1b61c3453058c738246fc3e746f14b1ae25161513b7367b0c"
   name = "github.com/gorilla/mux"
   packages = ["."]
@@ -81,12 +92,28 @@
   version = "v1.7.1"
 
 [[projects]]
+  digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
+  version = "v0.8.1"
+
+[[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
   pruneopts = "UT"
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
+
+[[projects]]
+  digest = "1:b0c25f00bad20d783d259af2af8666969e2fc343fa0dc9efe52936bbd67fb758"
+  name = "github.com/rs/cors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "9a47f48565a795472d43519dd49aac781f3034fb"
+  version = "v1.6.0"
 
 [[projects]]
   digest = "1:5da8ce674952566deae4dbc23d07c85caafc6cfa815b0b3e03e41979cedb8750"
@@ -164,9 +191,10 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e275b703ab8e3a4f8cd62893c888867a411f4854436b7d4f3ebf3e9180424847"
+  digest = "1:d9403fe14e9ea0436e59be99b24c76517720c524d5649c3359224364e70252cd"
   name = "golang.org/x/net"
   packages = [
+    "context",
     "http/httpguts",
     "http2",
     "http2/hpack",
@@ -272,23 +300,30 @@
     "github.com/ahl5esoft/golang-underscore",
     "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen",
     "github.com/cshep4/premier-predictor-microservices/src/common/auth",
+    "github.com/cshep4/premier-predictor-microservices/src/common/auth/mocks",
     "github.com/cshep4/premier-predictor-microservices/src/common/factory",
     "github.com/cshep4/premier-predictor-microservices/src/common/health",
+    "github.com/cshep4/premier-predictor-microservices/src/common/interfaces",
     "github.com/cshep4/premier-predictor-microservices/src/common/model",
     "github.com/cshep4/premier-predictor-microservices/src/common/util",
+    "github.com/cshep4/premier-predictor-microservices/src/leagueservice/internal/model",
+    "github.com/cshep4/premier-predictor-microservices/src/leagueservice/internal/service/mocks",
     "github.com/golang/mock/gomock",
     "github.com/golang/protobuf/proto",
     "github.com/golang/protobuf/ptypes/empty",
+    "github.com/gorilla/mux",
+    "github.com/pkg/errors",
+    "github.com/rs/cors",
     "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/require",
     "go.mongodb.org/mongo-driver/bson",
     "go.mongodb.org/mongo-driver/mongo",
     "go.mongodb.org/mongo-driver/mongo/options",
     "go.mongodb.org/mongo-driver/x/bsonx",
-    "google.golang.org/genproto/googleapis/rpc/status",
     "google.golang.org/grpc",
     "google.golang.org/grpc/codes",
     "google.golang.org/grpc/metadata",
+    "google.golang.org/grpc/status",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

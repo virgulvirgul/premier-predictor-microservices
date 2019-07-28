@@ -32,10 +32,19 @@ export class Service {
 
     public getTeamForms(): Promise<Forms> {
         return new Promise<Forms>((resolve, reject) => {
-            this.repository.getAllPastFixtures().then((fixtures: Fixture[]) => {
+            this.repository.getAllPastFixtures().then(async (fixtures: Fixture[]) => {
                 this.fixtureFormatter.groupIntoTeams(fixtures).then((teamFixtures: Map<string, Fixture[]>) => {
                     this.formFormatter.formatLastFiveGames(teamFixtures).then((teamForms: Map<string, TeamForm>) => {
-                        resolve({teams: teamForms});
+                        const forms = function* (){ yield* teamForms; }();
+
+                        let res: Map<string, TeamForm> = new Map<string, TeamForm>();
+                        for (let value of forms) {
+                            const k = value[0];
+                            const v = value[1];
+                            res[k] = v;
+                        }
+
+                        resolve({teams: res});
                     }, err => {
                         reject(err);
                     });

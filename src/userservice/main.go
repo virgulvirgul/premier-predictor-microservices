@@ -10,7 +10,7 @@ import (
 	"github.com/cshep4/premier-predictor-microservices/src/userservice/internal/interfaces"
 	repo "github.com/cshep4/premier-predictor-microservices/src/userservice/internal/repository"
 	svc "github.com/cshep4/premier-predictor-microservices/src/userservice/internal/service"
-	"github.com/gorilla/handlers"
+	"github.com/rs/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"log"
@@ -97,12 +97,26 @@ func startHttpServer(service interfaces.Service, authenticator common.Authentica
 
 	path := ":" + os.Getenv("HTTP_PORT")
 
+	corsOpts := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+			http.MethodHead,
+		},
+		AllowedHeaders: []string{"*"},
+	})
+
 	http := &http.Server{
 		Addr:         path,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
-		Handler:      handlers.CORS()(h.Route()),
+		Handler:      corsOpts.Handler(h.Route()),
 	}
 
 	log.Printf("Http server listening on %s", path)
@@ -131,7 +145,7 @@ func startGrpcServer(service interfaces.Service, authenticator common.Authentica
 	}
 
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(authenticator.GrpcUnaryInterceptor),
+	//grpc.UnaryInterceptor(authenticator.GrpcUnaryInterceptor),
 	)
 
 	gen.RegisterUserServiceServer(grpcServer, server)

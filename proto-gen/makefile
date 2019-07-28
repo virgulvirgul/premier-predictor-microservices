@@ -8,6 +8,11 @@ _gengo:
 	@mkdir -p model/gen
 	@protoc -I=model/protodefs --go_out=plugins=grpc:model/gen model/protodefs/*.proto
 
+_genjs:
+	@mkdir -p model/gen/js
+	@mkdir -p model/gen/ts
+	@protoc -I=model/protodefs --js_out=import_style=commonjs:model/gen/js --grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:model/gen/ts model/protodefs/*.proto google/protobuf/empty.proto google/protobuf/timestamp.proto
+
 _copyjava:
 	@cp -R model/protodefs/auth.proto model/protodefs/notification.proto model/protodefs/request.proto ../src/notificationservice/protodefs
 
@@ -17,7 +22,7 @@ _copyjs:
 _copyts:
 	@cp -R model/protodefs/auth.proto model/protodefs/request.proto model/protodefs/fixture.proto ../src/fixtureservice/protodefs
 
-gen: _gengo _copyjava _copyjs _copyts
+gen: _gengo _copyjava _copyjs _copyts _genjs
 
 build: get gen
 	@env CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -ldflags '-w -extldflags "-static"' -o build/${PROJECT_NAME}_linux_amd64 .

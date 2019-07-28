@@ -2,7 +2,7 @@ package com.cshep4.premierpredictor.constant
 
 object SecurityConstants {
     var SECRET: String = System.getenv("JWT_SECRET")
-    const val EXPIRATION_TIME: Long = 8640000000 // 100 days
+    const val EXPIRATION_TIME: Long = 86400000000 // 100 days
     const val TOKEN_PREFIX = "Bearer "
     const val HEADER_STRING = "X-Auth-Token"
     const val PASSWORD_RESET_EXPIRATION_TIME: Long = 86400000 // 24 hours

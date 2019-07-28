@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:41569b455d0e242846b9109a82fe1bccc54bb9c5967421f329b3d9ff9058df57"
+  digest = "1:d40e70e49535f53bb461f8b6e4a17bda6027fbff602f0833725e45216e54abca"
   name = "github.com/cshep4/premier-predictor-microservices"
   packages = [
     "proto-gen/model/gen",
@@ -18,7 +18,7 @@
     "src/common/util",
   ]
   pruneopts = "UT"
-  revision = "7f79324c93e078c51237406cca49ab63c51276f8"
+  revision = "a7c696908c9d23aa9e6e6ed5fd41cf3ac66c768f"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -98,6 +98,14 @@
   pruneopts = "UT"
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
+
+[[projects]]
+  digest = "1:b0c25f00bad20d783d259af2af8666969e2fc343fa0dc9efe52936bbd67fb758"
+  name = "github.com/rs/cors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "9a47f48565a795472d43519dd49aac781f3034fb"
+  version = "v1.6.0"
 
 [[projects]]
   digest = "1:5da8ce674952566deae4dbc23d07c85caafc6cfa815b0b3e03e41979cedb8750"
@@ -297,9 +305,9 @@
     "github.com/golang/mock/gomock",
     "github.com/golang/protobuf/proto",
     "github.com/golang/protobuf/ptypes/empty",
-    "github.com/gorilla/handlers",
     "github.com/gorilla/mux",
     "github.com/pkg/errors",
+    "github.com/rs/cors",
     "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/require",
     "go.mongodb.org/mongo-driver/bson",

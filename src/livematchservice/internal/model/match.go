@@ -8,9 +8,9 @@ import (
 )
 
 type MatchSummary struct {
-	Match             *model.MatchFacts
-	PredictionSummary *model.MatchPredictionSummary
-	Prediction        *model.Prediction
+	Match             *model.MatchFacts             `json:"match"`
+	PredictionSummary *model.MatchPredictionSummary `json:"predictionSummary"`
+	Prediction        *model.Prediction             `json:"prediction"`
 }
 
 func MatchSummaryFromGrpc(matchFacts *gen.MatchSummary) *MatchSummary {

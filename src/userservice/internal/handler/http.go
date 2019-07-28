@@ -102,6 +102,7 @@ func (h *httpHandler) sendResponse(data interface{}, err error, w http.ResponseW
 	case err == nil:
 		if data != nil {
 			_ = json.NewEncoder(w).Encode(data)
+			return
 		}
 		w.WriteHeader(http.StatusOK)
 		return

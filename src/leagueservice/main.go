@@ -12,7 +12,7 @@ import (
 	repo "github.com/cshep4/premier-predictor-microservices/src/leagueservice/internal/repository"
 	svc "github.com/cshep4/premier-predictor-microservices/src/leagueservice/internal/service"
 	"github.com/cshep4/premier-predictor-microservices/src/leagueservice/internal/user"
-	"github.com/gorilla/handlers"
+	"github.com/rs/cors"
 	"google.golang.org/grpc/codes"
 	"log"
 	"net/http"
@@ -104,12 +104,26 @@ func startHttpServer(service interfaces.Service, authenticator common.Authentica
 
 	path := ":" + os.Getenv("HTTP_PORT")
 
+	corsOpts := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+			http.MethodHead,
+		},
+		AllowedHeaders: []string{"*"},
+	})
+
 	http := &http.Server{
 		Addr:         path,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
-		Handler:      handlers.CORS()(h.Route()),
+		Handler:      corsOpts.Handler(h.Route()),
 	}
 
 	log.Printf("Http server listening on %s", path)

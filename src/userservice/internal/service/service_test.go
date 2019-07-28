@@ -14,10 +14,10 @@ import (
 )
 
 const (
-	userId       = "1"
-	emailAddress = "example@test.com"
-	oldPassword = "old password"
-	newPassword = "new password"
+	userId           = "1"
+	emailAddress     = "example@test.com"
+	oldPassword      = "old password"
+	newPassword      = "new password"
 	newValidPassword = "Qwerty123"
 )
 
@@ -169,6 +169,8 @@ func TestService_UpdatePassword(t *testing.T) {
 	service, err := NewService(repository)
 	require.NoError(t, err)
 
+	//newHashedPassword, _ := bcrypt.GenerateFromPassword([]byte(newValidPassword), 10)
+
 	t.Run("returns error if the user cannot be retrieved", func(t *testing.T) {
 		repository.EXPECT().GetUserById(userId).Return(nil, e)
 
@@ -180,14 +182,14 @@ func TestService_UpdatePassword(t *testing.T) {
 
 	t.Run("returns error if old password does not match what is currently stored", func(t *testing.T) {
 		user := &model.User{
-			Id: userId,
+			Id:       userId,
 			Password: hashPassword(oldPassword),
 		}
 
 		repository.EXPECT().GetUserById(userId).Return(user, nil)
 
 		updatePassword := model.UpdatePassword{
-			Id: userId,
+			Id:          userId,
 			OldPassword: "different old password",
 		}
 
@@ -200,16 +202,16 @@ func TestService_UpdatePassword(t *testing.T) {
 
 	t.Run("returns error if new password does not match the confirmation", func(t *testing.T) {
 		user := &model.User{
-			Id: userId,
+			Id:       userId,
 			Password: hashPassword(oldPassword),
 		}
 
 		repository.EXPECT().GetUserById(userId).Return(user, nil)
 
 		updatePassword := model.UpdatePassword{
-			Id: userId,
-			OldPassword: oldPassword,
-			NewPassword: newPassword,
+			Id:              userId,
+			OldPassword:     oldPassword,
+			NewPassword:     newPassword,
 			ConfirmPassword: "different confirmation password",
 		}
 
@@ -222,16 +224,16 @@ func TestService_UpdatePassword(t *testing.T) {
 
 	t.Run("returns error if new password is not valid", func(t *testing.T) {
 		user := &model.User{
-			Id: userId,
+			Id:       userId,
 			Password: hashPassword(oldPassword),
 		}
 
 		repository.EXPECT().GetUserById(userId).Return(user, nil)
 
 		updatePassword := model.UpdatePassword{
-			Id: userId,
-			OldPassword: oldPassword,
-			NewPassword: newPassword,
+			Id:              userId,
+			OldPassword:     oldPassword,
+			NewPassword:     newPassword,
 			ConfirmPassword: newPassword,
 		}
 
@@ -244,20 +246,20 @@ func TestService_UpdatePassword(t *testing.T) {
 
 	t.Run("returns error if password cannot be updated", func(t *testing.T) {
 		user := &model.User{
-			Id: userId,
+			Id:       userId,
 			Password: hashPassword(oldPassword),
 		}
 
 		repository.EXPECT().GetUserById(userId).Return(user, nil)
 
 		updatePassword := model.UpdatePassword{
-			Id: userId,
-			OldPassword: oldPassword,
-			NewPassword: newValidPassword,
+			Id:              userId,
+			OldPassword:     oldPassword,
+			NewPassword:     newValidPassword,
 			ConfirmPassword: newValidPassword,
 		}
 
-		repository.EXPECT().UpdatePassword(userId, newValidPassword).Return(e)
+		repository.EXPECT().UpdatePassword(userId, gomock.Any()).Return(e)
 
 		err := service.UpdatePassword(updatePassword)
 		require.Error(t, err)
@@ -267,20 +269,20 @@ func TestService_UpdatePassword(t *testing.T) {
 
 	t.Run("returns nil if password is updated successfully", func(t *testing.T) {
 		user := &model.User{
-			Id: userId,
+			Id:       userId,
 			Password: hashPassword(oldPassword),
 		}
 
 		repository.EXPECT().GetUserById(userId).Return(user, nil)
 
 		updatePassword := model.UpdatePassword{
-			Id: userId,
-			OldPassword: oldPassword,
-			NewPassword: newValidPassword,
+			Id:              userId,
+			OldPassword:     oldPassword,
+			NewPassword:     newValidPassword,
 			ConfirmPassword: newValidPassword,
 		}
 
-		repository.EXPECT().UpdatePassword(userId, newValidPassword).Return(nil)
+		repository.EXPECT().UpdatePassword(userId, gomock.Any()).Return(nil)
 
 		err := service.UpdatePassword(updatePassword)
 		require.NoError(t, err)
@@ -352,7 +354,7 @@ func TestService_GetAllUsers(t *testing.T) {
 	t.Run("returns all users", func(t *testing.T) {
 		users := []*model.User{
 			{
-				Id:    userId,
+				Id: userId,
 			},
 		}
 
@@ -390,7 +392,7 @@ func TestService_GetAllUsersByIds(t *testing.T) {
 	t.Run("returns all users", func(t *testing.T) {
 		users := []*model.User{
 			{
-				Id:    userId,
+				Id: userId,
 			},
 		}
 

@@ -64,7 +64,7 @@ func (s *service) GetUsersLeagueList(id string) (*model.StandingsOverview, error
 
 	leagueOverviewChans := make(chan leagueOverviewResult, len(userLeagues.result))
 
-	var leagueOverviews []model.LeagueOverview
+	leagueOverviews := []model.LeagueOverview{}
 	for _, l := range userLeagues.result {
 		go func(league *model.League) {
 			leagueOverview := model.LeagueOverview{

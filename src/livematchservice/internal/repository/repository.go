@@ -2,9 +2,9 @@ package live
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"github.com/cshep4/premier-predictor-microservices/src/common/model"
+	model2 "github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -17,8 +17,6 @@ const (
 	db         = "liveMatch"
 	collection = "liveMatch"
 )
-
-var ErrMatchNotFound = errors.New("match not found")
 
 var limit = int64(20)
 
@@ -166,7 +164,7 @@ func (r *repository) GetMatchFacts(id string) (*model.MatchFacts, error) {
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, ErrMatchNotFound
+			return nil, model2.ErrMatchNotFound
 		}
 
 		return nil, err

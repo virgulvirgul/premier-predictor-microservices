@@ -127,6 +127,4 @@ func (h *httpHandler) sendResponse(data interface{}, err error, w http.ResponseW
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
 }

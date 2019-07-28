@@ -24,6 +24,8 @@ const (
 var (
 	now = time.Now()
 	e   = errors.New("error")
+	one = 1
+	two = 2
 )
 
 func TestService_GetFixturesWithPredictions(t *testing.T) {
@@ -42,8 +44,8 @@ func TestService_GetFixturesWithPredictions(t *testing.T) {
 				Id:        matchId,
 				HomeTeam:  teamOne,
 				AwayTeam:  teamTwo,
-				HomeGoals: 1,
-				AwayGoals: 1,
+				HomeGoals: &one,
+				AwayGoals: &one,
 				Played:    1,
 				DateTime:  now,
 				Matchday:  1,
@@ -52,8 +54,8 @@ func TestService_GetFixturesWithPredictions(t *testing.T) {
 				Id:        matchId2,
 				HomeTeam:  teamTwo,
 				AwayTeam:  teamOne,
-				HomeGoals: 1,
-				AwayGoals: 2,
+				HomeGoals: &one,
+				AwayGoals: &two,
 				Played:    1,
 				DateTime:  now,
 				Matchday:  2,
@@ -81,8 +83,8 @@ func TestService_GetFixturesWithPredictions(t *testing.T) {
 		assert.Equal(t, teamTwo, result[0].AwayTeam)
 		assert.Equal(t, 1, *result[0].HomeGoals)
 		assert.Equal(t, 1, *result[0].AwayGoals)
-		assert.Equal(t, 1, result[0].HomeResult)
-		assert.Equal(t, 1, result[0].AwayResult)
+		assert.Equal(t, 1, *result[0].HomeResult)
+		assert.Equal(t, 1, *result[0].AwayResult)
 		assert.Equal(t, 1, result[0].Played)
 		assert.Equal(t, now, result[0].DateTime)
 		assert.Equal(t, 1, result[0].Matchday)
@@ -92,8 +94,8 @@ func TestService_GetFixturesWithPredictions(t *testing.T) {
 		assert.Equal(t, teamOne, result[1].AwayTeam)
 		assert.Nil(t, result[1].HomeGoals)
 		assert.Nil(t, result[1].AwayGoals)
-		assert.Equal(t, 1, result[1].HomeResult)
-		assert.Equal(t, 2, result[1].AwayResult)
+		assert.Equal(t, 1, *result[1].HomeResult)
+		assert.Equal(t, 2, *result[1].AwayResult)
 		assert.Equal(t, 1, result[1].Played)
 		assert.Equal(t, now, result[1].DateTime)
 		assert.Equal(t, 2, result[1].Matchday)
@@ -142,8 +144,8 @@ func TestService_GetPredictorData(t *testing.T) {
 				Id:        matchId,
 				HomeTeam:  teamOne,
 				AwayTeam:  teamTwo,
-				HomeGoals: 1,
-				AwayGoals: 1,
+				HomeGoals: &one,
+				AwayGoals: &one,
 				Played:    1,
 				DateTime:  now,
 				Matchday:  1,
@@ -152,8 +154,8 @@ func TestService_GetPredictorData(t *testing.T) {
 				Id:        matchId2,
 				HomeTeam:  teamTwo,
 				AwayTeam:  teamOne,
-				HomeGoals: 1,
-				AwayGoals: 2,
+				HomeGoals: &one,
+				AwayGoals: &two,
 				Played:    1,
 				DateTime:  now,
 				Matchday:  2,
@@ -184,8 +186,8 @@ func TestService_GetPredictorData(t *testing.T) {
 		assert.Equal(t, teamTwo, result.Predictions[0].AwayTeam)
 		assert.Equal(t, 1, *result.Predictions[0].HomeGoals)
 		assert.Equal(t, 1, *result.Predictions[0].AwayGoals)
-		assert.Equal(t, 1, result.Predictions[0].HomeResult)
-		assert.Equal(t, 1, result.Predictions[0].AwayResult)
+		assert.Equal(t, 1, *result.Predictions[0].HomeResult)
+		assert.Equal(t, 1, *result.Predictions[0].AwayResult)
 		assert.Equal(t, 1, result.Predictions[0].Played)
 		assert.Equal(t, now, result.Predictions[0].DateTime)
 		assert.Equal(t, 1, result.Predictions[0].Matchday)
@@ -195,8 +197,8 @@ func TestService_GetPredictorData(t *testing.T) {
 		assert.Equal(t, teamOne, result.Predictions[1].AwayTeam)
 		assert.Nil(t, result.Predictions[1].HomeGoals)
 		assert.Nil(t, result.Predictions[1].AwayGoals)
-		assert.Equal(t, 1, result.Predictions[1].HomeResult)
-		assert.Equal(t, 2, result.Predictions[1].AwayResult)
+		assert.Equal(t, 1, *result.Predictions[1].HomeResult)
+		assert.Equal(t, 2, *result.Predictions[1].AwayResult)
 		assert.Equal(t, 1, result.Predictions[1].Played)
 		assert.Equal(t, now, result.Predictions[1].DateTime)
 		assert.Equal(t, 2, result.Predictions[1].Matchday)
@@ -265,8 +267,8 @@ func TestService_GetUsersPastPredictions(t *testing.T) {
 				Id:        matchId,
 				HomeTeam:  teamOne,
 				AwayTeam:  teamTwo,
-				HomeGoals: 1,
-				AwayGoals: 1,
+				HomeGoals: &one,
+				AwayGoals: &one,
 				Played:    1,
 				DateTime:  now,
 				Matchday:  1,
@@ -275,8 +277,8 @@ func TestService_GetUsersPastPredictions(t *testing.T) {
 				Id:        matchId2,
 				HomeTeam:  teamTwo,
 				AwayTeam:  teamOne,
-				HomeGoals: 1,
-				AwayGoals: 2,
+				HomeGoals: &one,
+				AwayGoals: &two,
 				Played:    1,
 				DateTime:  now.AddDate(0, 0, 1),
 				Matchday:  2,
@@ -304,8 +306,8 @@ func TestService_GetUsersPastPredictions(t *testing.T) {
 		assert.Equal(t, teamTwo, result[0].AwayTeam)
 		assert.Equal(t, 1, *result[0].HomeGoals)
 		assert.Equal(t, 1, *result[0].AwayGoals)
-		assert.Equal(t, 1, result[0].HomeResult)
-		assert.Equal(t, 1, result[0].AwayResult)
+		assert.Equal(t, 1, *result[0].HomeResult)
+		assert.Equal(t, 1, *result[0].AwayResult)
 		assert.Equal(t, 1, result[0].Played)
 		assert.Equal(t, now, result[0].DateTime)
 		assert.Equal(t, 1, result[0].Matchday)

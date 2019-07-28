@@ -2,6 +2,7 @@ package live
 
 import (
 	"context"
+	"github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
@@ -135,7 +136,7 @@ func Test_Repository(t *testing.T) {
 			require.Error(t, err)
 
 			assert.Nil(t, match)
-			assert.Equal(t, ErrMatchNotFound, err)
+			assert.Equal(t, model.ErrMatchNotFound, err)
 		})
 	})
 }

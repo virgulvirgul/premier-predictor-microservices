@@ -114,9 +114,9 @@ func startHttpServer(service interfaces.Service, authenticator common.Authentica
 	path := ":" + os.Getenv("HTTP_PORT")
 
 	corsOpts := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"}, //you service is available and allowed for this base url
+		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{
-			http.MethodGet,//http methods for your app
+			http.MethodGet,
 			http.MethodPost,
 			http.MethodPut,
 			http.MethodPatch,
@@ -124,11 +124,7 @@ func startHttpServer(service interfaces.Service, authenticator common.Authentica
 			http.MethodOptions,
 			http.MethodHead,
 		},
-
-		AllowedHeaders: []string{
-			"*",//or you can your header key values which you are using in your application
-
-		},
+		AllowedHeaders: []string{"*"},
 	})
 
 	http := &http.Server{
