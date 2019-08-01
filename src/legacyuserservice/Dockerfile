@@ -11,14 +11,14 @@ COPY Gopkg.* ./
 RUN dep ensure --vendor-only -v
 
 COPY . .
-RUN go build -gcflags='-N -l' -o /legacyUserservice .
+RUN go build -gcflags='-N -l' -o /legacyuserservice .
 
 FROM alpine as release
 RUN apk add --no-cache ca-certificates
 RUN GRPC_HEALTH_PROBE_VERSION=v0.2.0 && \
     wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
     chmod +x /bin/grpc_health_probe
-COPY --from=builder /legacyUserservice /legacyUserservice
+COPY --from=builder /legacyuserservice /legacyuserservice
 
-EXPOSE 8089
-ENTRYPOINT ["/legacyUserservice"]
+EXPOSE 8082
+ENTRYPOINT ["/legacyuserservice"]

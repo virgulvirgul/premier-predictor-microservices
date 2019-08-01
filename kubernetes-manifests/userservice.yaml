@@ -79,6 +79,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: userservice-service
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind: Mapping
+      name: user_mapping
+      prefix: /user/
+      service: userservice-service:8085
 spec:
   ports:
     - port: 8085
@@ -86,26 +94,26 @@ spec:
       name: http
   selector:
     k8s-app: userservice-app
-  type: NodePort
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-#    kubernetes.io/ingress.allow-http: "false"
-#    ingress.kubernetes.io/force-ssl-redirect: "true"
-  name: user-ingress
-  namespace: default
-spec:
-  tls:
-    - hosts:
-      - user.premierpredictor.uk
-    - secretName: pp-secret
-  rules:
-    - host: user.premierpredictor.uk
-      http:
-        paths:
-          - backend:
-              serviceName: userservice-service
-              servicePort: 8085
-            path: /
+  type: ClusterIP
+#---
+#apiVersion: extensions/v1beta1
+#kind: Ingress
+#metadata:
+#  annotations:
+##    kubernetes.io/ingress.allow-http: "false"
+##    ingress.kubernetes.io/force-ssl-redirect: "true"
+#  name: user-ingress
+#  namespace: default
+#spec:
+#  tls:
+#    - hosts:
+#      - user.premierpredictor.uk
+#    - secretName: pp-secret
+#  rules:
+#    - host: user.premierpredictor.uk
+#      http:
+#        paths:
+#          - backend:
+#              serviceName: userservice-service
+#              servicePort: 8085
+#            path: /

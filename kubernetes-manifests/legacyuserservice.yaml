@@ -27,8 +27,8 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: pp-secrets
-                  key: legacyDbUrl
+                  name: premierpredictor-secrets
+                  key: dbUrl
           readinessProbe:
             httpGet:
               path: /health
@@ -62,6 +62,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: legacyuserservice-service
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind: Mapping
+      name: legacy_mapping
+      prefix: /legacy/
+      service: legacyuserservice-service:8082
 spec:
   ports:
     - port: 8082
@@ -70,25 +78,3 @@ spec:
   selector:
     k8s-app: legacyuserservice-app
   type: NodePort
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-#    kubernetes.io/ingress.allow-http: "false"
-#    ingress.kubernetes.io/force-ssl-redirect: "true"
-  name: legacyuser-ingress
-  namespace: default
-spec:
-  tls:
-    - hosts:
-      - legacyuser.premierpredictor.uk
-    - secretName: pp-secret
-  rules:
-    - host: legacyuser.premierpredictor.uk
-      http:
-        paths:
-          - backend:
-              serviceName: legacyuserservice-service
-              servicePort: 8082
-            path: /

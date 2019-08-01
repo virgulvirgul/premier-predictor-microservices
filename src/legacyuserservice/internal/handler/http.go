@@ -43,7 +43,7 @@ func (h *httpHandler) Route() http.Handler {
 
 	router.HandleFunc("/{id}", h.getLegacyUserById).
 		Methods(http.MethodGet)
-	router.HandleFunc("/", h.legacyLogin).
+	router.HandleFunc("/login", h.legacyLogin).
 		Methods(http.MethodPost)
 
 	return router
