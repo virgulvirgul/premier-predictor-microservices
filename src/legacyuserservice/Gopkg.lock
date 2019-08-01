@@ -3,21 +3,13 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:dabe8e71beab95e35228d416c8d43c9d5926d732af7f9786a58ebf1e35bbf5b6"
+  digest = "1:8f0a3dd5fb701b8931e4aff481ef69f6e7127175bf786b854ee87a773cd5e4fd"
   name = "github.com/cshep4/premier-predictor-microservices"
   packages = [
     "proto-gen/model/gen",
-    "src/common/auth",
-    "src/common/auth/mocks",
-    "src/common/factory",
     "src/common/health",
-    "src/common/interfaces",
     "src/common/model",
-    "src/common/timer",
-    "src/common/timer/mocks",
     "src/common/util",
-    "src/userservice/internal/model",
-    "src/userservice/internal/service/mocks",
   ]
   pruneopts = "UT"
   revision = "a7c696908c9d23aa9e6e6ed5fd41cf3ac66c768f"
@@ -29,14 +21,6 @@
   pruneopts = "UT"
   revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
   version = "v1.1.1"
-
-[[projects]]
-  digest = "1:586ea76dbd0374d6fb649a91d70d652b7fe0ccffb8910a77468e7702e7901f3d"
-  name = "github.com/go-stack/stack"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "2fee6af1a9795aafbe0253a0cfbdf668e1fb8a9a"
-  version = "v1.8.0"
 
 [[projects]]
   digest = "1:be408f349cae090a7c17a279633d6e62b00068e64af66a582cae0983de8890ea"
@@ -125,19 +109,15 @@
   version = "v1.3.0"
 
 [[projects]]
-  digest = "1:549a140c6c3742fe0df432e860fbf636f71d7589ba1e75acdc33a36346010ddc"
-  name = "go.mongodb.org/mongo-driver"
+  branch = "master"
+  digest = "1:9d5b5d543996dd584da1db1e0de1926f3e4c3a8dba0fa2f8db70f3ebee2342e0"
+  name = "golang.org/x/crypto"
   packages = [
-    "bson",
-    "bson/bsoncodec",
-    "bson/bsonrw",
-    "bson/bsontype",
-    "bson/primitive",
-    "x/bsonx/bsoncore",
+    "bcrypt",
+    "blowfish",
   ]
   pruneopts = "UT"
-  revision = "0d1270edf53072da4da781b76d2e1db58831152f"
-  version = "v1.0.4"
+  revision = "4def268fd1a49955bfb3dda92fe3db4f924f2285"
 
 [[projects]]
   branch = "master"
@@ -187,6 +167,14 @@
   pruneopts = "UT"
   revision = "342b2e1fbaa52c93f31447ad2c6abc048c63e475"
   version = "v0.3.2"
+
+[[projects]]
+  branch = "master"
+  digest = "1:ae9e73c17ed92e005ef887f2e5fe3e04714facb6ed17d930139dca567e83518e"
+  name = "golang.org/x/tools"
+  packages = ["go/ssa/interp/testdata/src/errors"]
+  pruneopts = "UT"
+  revision = "5f95ed5921efa3338dc38833ce4ce39317f8b6e9"
 
 [[projects]]
   branch = "master"
@@ -243,30 +231,23 @@
   analyzer-version = 1
   input-imports = [
     "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen",
-    "github.com/cshep4/premier-predictor-microservices/src/common/auth",
-    "github.com/cshep4/premier-predictor-microservices/src/common/auth/mocks",
-    "github.com/cshep4/premier-predictor-microservices/src/common/factory",
     "github.com/cshep4/premier-predictor-microservices/src/common/health",
-    "github.com/cshep4/premier-predictor-microservices/src/common/interfaces",
     "github.com/cshep4/premier-predictor-microservices/src/common/model",
-    "github.com/cshep4/premier-predictor-microservices/src/common/timer",
-    "github.com/cshep4/premier-predictor-microservices/src/common/timer/mocks",
     "github.com/cshep4/premier-predictor-microservices/src/common/util",
-    "github.com/cshep4/premier-predictor-microservices/src/userservice/internal/model",
-    "github.com/cshep4/premier-predictor-microservices/src/userservice/internal/service/mocks",
     "github.com/golang/mock/gomock",
     "github.com/golang/protobuf/proto",
-    "github.com/golang/protobuf/ptypes/empty",
     "github.com/gorilla/mux",
     "github.com/lib/pq",
     "github.com/pkg/errors",
     "github.com/rs/cors",
     "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/require",
-    "go.mongodb.org/mongo-driver/bson",
+    "golang.org/x/crypto/bcrypt",
     "golang.org/x/net/context",
+    "golang.org/x/tools/go/ssa/interp/testdata/src/errors",
     "google.golang.org/grpc",
     "google.golang.org/grpc/codes",
+    "google.golang.org/grpc/status",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
