@@ -4,6 +4,7 @@ import (
 	"github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/interfaces"
 	"github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/model"
 	"golang.org/x/crypto/bcrypt"
+	"strings"
 )
 
 type service struct {
@@ -21,6 +22,8 @@ func (s *service) GetUserById(id int) (*model.User, error) {
 }
 
 func (s *service) LegacyLogin(email, password string) (*model.User, error) {
+	email = strings.ToLower(email)
+
 	user, err := s.repository.GetUserByEmail(email)
 	if err == model.ErrLegacyUserNotFound {
 		return nil, model.ErrLegacyLoginFailed

@@ -14,4 +14,5 @@ type Service interface {
 	GetRankForGroup(id string, ids []string) (int64, error)
 	GetOverallRank(id string) (int64, error)
 	GetUserCount() (int64, error)
+	StoreLegacyUser(user model.User) error
 }

@@ -102,3 +102,7 @@ func (s *service) GetOverallRank(id string) (int64, error) {
 func (s *service) GetUserCount() (int64, error) {
 	return s.repository.GetUserCount()
 }
+
+func (s *service) StoreLegacyUser(user model.User) error {
+	return s.repository.StoreUser(user)
+}

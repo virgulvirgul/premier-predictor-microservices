@@ -14,4 +14,5 @@ type Repository interface {
 	GetOverallRank(id string) (int64, error)
 	GetRankForGroup(id string, ids []string) (int64, error)
 	GetUserCount() (int64, error)
+	StoreUser(user model.User) error
 }

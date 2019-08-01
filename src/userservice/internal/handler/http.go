@@ -46,6 +46,9 @@ func (h *httpHandler) Route() http.Handler {
 		Methods(http.MethodPut)
 	router.HandleFunc("/users/score/{id}", h.getUserScore).
 		Methods(http.MethodGet)
+	//TODO - add tests, fix middleware
+	router.HandleFunc("/legacy", h.storeLegacyUser).
+		Methods(http.MethodPost)
 
 	router.HandleFunc("/health", health.Health).
 		Methods(http.MethodGet)
@@ -95,6 +98,19 @@ func (h *httpHandler) getUserScore(w http.ResponseWriter, r *http.Request) {
 	h.sendResponse(model.UserScore{
 		Score: score,
 	}, err, w)
+}
+
+func (h *httpHandler) storeLegacyUser(w http.ResponseWriter, r *http.Request) {
+	var user model.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		h.sendResponse(nil, errors.Wrap(m.ErrInvalidRequestData, invalidRequestBody), w)
+		return
+	}
+
+	err = h.service.StoreLegacyUser(user)
+
+	h.sendResponse(nil, err, w)
 }
 
 func (h *httpHandler) sendResponse(data interface{}, err error, w http.ResponseWriter) {

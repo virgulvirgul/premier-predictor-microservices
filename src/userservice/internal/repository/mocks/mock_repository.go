@@ -137,6 +137,20 @@ func (mr *MockRepositoryMockRecorder) IsEmailTakenByADifferentUser(arg0, arg1 in
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsEmailTakenByADifferentUser", reflect.TypeOf((*MockRepository)(nil).IsEmailTakenByADifferentUser), arg0, arg1)
 }
 
+// StoreUser mocks base method
+func (m *MockRepository) StoreUser(arg0 model.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StoreUser", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// StoreUser indicates an expected call of StoreUser
+func (mr *MockRepositoryMockRecorder) StoreUser(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreUser", reflect.TypeOf((*MockRepository)(nil).StoreUser), arg0)
+}
+
 // UpdatePassword mocks base method
 func (m *MockRepository) UpdatePassword(arg0, arg1 string) error {
 	m.ctrl.T.Helper()

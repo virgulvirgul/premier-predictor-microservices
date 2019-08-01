@@ -27,8 +27,8 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: premierpredictor-secrets
-                  key: dbUrl
+                  name: pp-secrets
+                  key: legacyDbUrl
           readinessProbe:
             httpGet:
               path: /health

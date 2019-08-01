@@ -138,6 +138,20 @@ func (mr *MockServiceMockRecorder) GetUserScore(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserScore", reflect.TypeOf((*MockService)(nil).GetUserScore), arg0)
 }
 
+// StoreLegacyUser mocks base method
+func (m *MockService) StoreLegacyUser(arg0 model.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StoreLegacyUser", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// StoreLegacyUser indicates an expected call of StoreLegacyUser
+func (mr *MockServiceMockRecorder) StoreLegacyUser(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreLegacyUser", reflect.TypeOf((*MockService)(nil).StoreLegacyUser), arg0)
+}
+
 // UpdatePassword mocks base method
 func (m *MockService) UpdatePassword(arg0 model.UpdatePassword) error {
 	m.ctrl.T.Helper()

@@ -441,6 +441,25 @@ func (r *repository) GetUserCount() (int64, error) {
 		)
 }
 
+func (r *repository) StoreUser(user model.User) error {
+	user.Id = primitive.NewObjectID().Hex()
+
+	entity, err := fromUser(user)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
+		Database(db).
+		Collection(collection).
+		InsertOne(
+			context.Background(),
+			entity,
+		)
+
+	return err
+}
+
 func (r *repository) Ping() error {
 	ctx, _ := context.WithTimeout(context.Background(), time.Duration(5000*time.Millisecond))
 	return r.client.Ping(ctx, nil)
