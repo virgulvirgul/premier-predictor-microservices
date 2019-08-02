@@ -93,6 +93,21 @@ func (mr *MockRepositoryMockRecorder) GetRankForGroup(arg0, arg1 interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRankForGroup", reflect.TypeOf((*MockRepository)(nil).GetRankForGroup), arg0, arg1)
 }
 
+// GetUserByEmail mocks base method
+func (m *MockRepository) GetUserByEmail(arg0 string) (*model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserByEmail", arg0)
+	ret0, _ := ret[0].(*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserByEmail indicates an expected call of GetUserByEmail
+func (mr *MockRepositoryMockRecorder) GetUserByEmail(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByEmail", reflect.TypeOf((*MockRepository)(nil).GetUserByEmail), arg0)
+}
+
 // GetUserById mocks base method
 func (m *MockRepository) GetUserById(arg0 string) (*model.User, error) {
 	m.ctrl.T.Helper()

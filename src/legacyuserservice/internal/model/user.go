@@ -36,3 +36,10 @@ func LegacyUserToGrpc(user *User) *gen.LegacyUserResponse {
 		Admin:     user.Admin,
 	}
 }
+
+func UserFromGrpc(user *gen.User) *User {
+	return &User{
+		FirstName: user.FirstName,
+		Surname:   user.Surname,
+	}
+}

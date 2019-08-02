@@ -33,7 +33,7 @@ func NewService(repository interfaces.Repository) (interfaces.Service, error) {
 	}, nil
 }
 
-func (s *service) GetUser(id string) (*model.User, error) {
+func (s *service) GetUserById(id string) (*model.User, error) {
 	return s.repository.GetUserById(id)
 }
 
@@ -105,4 +105,8 @@ func (s *service) GetUserCount() (int64, error) {
 
 func (s *service) StoreLegacyUser(user model.User) error {
 	return s.repository.StoreUser(user)
+}
+
+func (s *service) GetUserByEmail(email string) (*model.User, error) {
+	return s.repository.GetUserByEmail(email)
 }

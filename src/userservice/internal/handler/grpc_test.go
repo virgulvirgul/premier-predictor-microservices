@@ -152,7 +152,7 @@ func TestUserServiceServer_GetRankForGroup(t *testing.T) {
 	ids := []string{id1, id2}
 
 	req := &gen.GroupRankRequest{
-		Id: id1,
+		Id:  id1,
 		Ids: ids,
 	}
 
@@ -208,5 +208,47 @@ func TestUserServiceServer_GetUserCount(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Equal(t, count, resp.Count)
+	})
+}
+
+func TestUserServiceServer_GetUserByEmail(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	service := usermocks.NewMockService(ctrl)
+
+	userService, err := NewUserServiceServer(service)
+	require.NoError(t, err)
+
+	email := "📧"
+
+	req := &gen.EmailRequest{
+		Email: email,
+	}
+
+	t.Run("returns error if user cannot be retrieved", func(t *testing.T) {
+		e := errors.New("error")
+
+		service.EXPECT().GetUserByEmail(email).Return(nil, e)
+
+		resp, err := userService.GetUserByEmail(context.Background(), req)
+		require.Error(t, err)
+
+		assert.Equal(t, e, err)
+		assert.Nil(t, resp)
+	})
+
+	t.Run("returns user", func(t *testing.T) {
+		users := []*model.User{
+			{
+				Id: id1,
+			},
+		}
+		service.EXPECT().GetUserByEmail(email).Return(users, nil)
+
+		resp, err := userService.GetUserByEmail(context.Background(), req)
+		require.NoError(t, err)
+
+		assert.Equal(t, id1, resp.Id)
 	})
 }

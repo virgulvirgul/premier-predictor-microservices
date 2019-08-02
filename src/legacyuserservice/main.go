@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	uFactory "github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/factory"
 	"github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/handler"
 	"github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/interfaces"
 	repo "github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/repository"
 	svc "github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/service"
+	"github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/user"
 	"github.com/rs/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -18,13 +20,29 @@ import (
 	"time"
 )
 
+var clientConnCloseFunc []func() error
+
 func main() {
+	userAddress, ok := os.LookupEnv("USER_ADDR")
+	if !ok {
+		log.Fatalf("failed to get userservice address")
+	}
+
+	userFactory := uFactory.NewUserClientFactory(userAddress)
+	userClient, err := userFactory.NewUserClient()
+	clientConnCloseFunc = append(clientConnCloseFunc, userFactory.CloseConnection)
+
+	userService, err := user.NewUserService(userClient)
+	if err != nil {
+		log.Fatalf("failed to create userService: %v", err)
+	}
+
 	repository, err := repo.NewRepository()
 	if err != nil {
 		log.Fatalf("failed to create repository: %v", err)
 	}
 
-	service, err := svc.NewService(repository)
+	service, err := svc.NewService(repository, userService)
 	if err != nil {
 		log.Fatalf("failed to create service: %v", err)
 	}
@@ -48,6 +66,13 @@ func main() {
 	switch sig := <-sigs; sig {
 	case os.Interrupt, syscall.SIGINT, syscall.SIGQUIT:
 		log.Print("Shutting down")
+
+		for i := range clientConnCloseFunc {
+			err := clientConnCloseFunc[i]()
+			if err != nil {
+				log.Printf("Error closing client connection: %v\n", err)
+			}
+		}
 
 		grpcServer.GracefulStop()
 		err := httpServer.Shutdown(context.Background())

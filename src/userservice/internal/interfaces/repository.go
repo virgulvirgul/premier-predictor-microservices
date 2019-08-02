@@ -6,6 +6,7 @@ import "github.com/cshep4/premier-predictor-microservices/src/userservice/intern
 
 type Repository interface {
 	GetUserById(id string) (*model.User, error)
+	GetUserByEmail(email string) (*model.User, error)
 	UpdateUserInfo(userInfo model.UserInfo) error
 	UpdatePassword(id, password string) error
 	GetAllUsers() ([]*model.User, error)

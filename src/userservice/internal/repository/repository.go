@@ -460,6 +460,34 @@ func (r *repository) StoreUser(user model.User) error {
 	return err
 }
 
+func (r *repository) GetUserByEmail(email string) (*model.User, error) {
+	var u userEntity
+
+	err := r.client.
+		Database(db).
+		Collection(collection).
+		FindOne(
+			context.Background(),
+			bson.D{
+				{
+					Key:   "email",
+					Value: email,
+				},
+			},
+		).
+		Decode(&u)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, model.ErrUserNotFound
+		}
+
+		return nil, err
+	}
+
+	return toUser(u), nil
+}
+
 func (r *repository) Ping() error {
 	ctx, _ := context.WithTimeout(context.Background(), time.Duration(5000*time.Millisecond))
 	return r.client.Ping(ctx, nil)

@@ -59,7 +59,7 @@ func (h *httpHandler) Route() http.Handler {
 func (h *httpHandler) getUser(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	user, err := h.service.GetUser(id)
+	user, err := h.service.GetUserById(id)
 
 	h.sendResponse(user, err, w)
 }

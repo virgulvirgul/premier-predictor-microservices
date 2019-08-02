@@ -14,6 +14,7 @@ service UserService {
     rpc GetOverallRank (IdRequest) returns (RankResponse);
     rpc GetRankForGroup (GroupRankRequest) returns (RankResponse);
     rpc GetUserCount (google.protobuf.Empty) returns (CountResponse);
+    rpc GetUserByEmail (EmailRequest) returns (User);
 }
 
 message GroupIdRequest {

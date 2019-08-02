@@ -28,9 +28,9 @@ var (
 )
 
 const (
-	email1 = "📧1";
-	email2 = "📧2";
-	email3 = "📧3";
+	email1 = "📧1"
+	email2 = "📧2"
+	email3 = "📧3"
 	email4 = "📧4"
 )
 
@@ -507,6 +507,42 @@ func TestRepository_GetUserCount(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Equal(t, int64(userCount), count)
+	})
+}
+
+func TestRepository_GetUserByEmail(t *testing.T) {
+	repository := newTestRepository(t)
+	defer repository.Close()
+
+	t.Run("returns not found if user cannot be found", func(t *testing.T) {
+		cleanupDb(repository)
+
+		user, err := repository.GetUserByEmail(email1)
+		require.Error(t, err)
+
+		assert.Equal(t, model.ErrUserNotFound, err)
+		assert.Nil(t, user)
+	})
+
+	t.Run("gets the specified user", func(t *testing.T) {
+		defer cleanupDb(repository)
+
+		user := model.User{
+			Id:        id,
+			Email:     email1,
+			FirstName: "Chris",
+			Surname:   "Shepherd",
+		}
+
+		entity, err := fromUser(user)
+		require.NoError(t, err)
+
+		createUser(entity, repository, t)
+
+		result, err := repository.GetUserByEmail(email1)
+		require.NoError(t, err)
+
+		assert.Equal(t, &user, result)
 	})
 }
 

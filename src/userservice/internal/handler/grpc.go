@@ -82,3 +82,12 @@ func (u *userServiceServer) GetUserCount(context.Context, *empty.Empty) (*gen.Co
 		Count: count,
 	}, nil
 }
+
+func (u *userServiceServer) GetUserByEmail(ctx context.Context, req *gen.EmailRequest) (*gen.User, error) {
+	user, err := u.service.GetUserByEmail(req.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	return model.UserToGrpc(user), nil
+}

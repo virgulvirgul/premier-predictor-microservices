@@ -25,7 +25,7 @@ var (
 	e = errors.New("error")
 )
 
-func TestService_GetUser(t *testing.T) {
+func TestService_GetUserById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -37,7 +37,7 @@ func TestService_GetUser(t *testing.T) {
 	t.Run("Returns error if there is a problem", func(t *testing.T) {
 		repository.EXPECT().GetUserById(userId).Return(nil, e)
 
-		result, err := service.GetUser(userId)
+		result, err := service.GetUserById(userId)
 
 		require.Error(t, err)
 		assert.Equal(t, e, err)
@@ -51,7 +51,7 @@ func TestService_GetUser(t *testing.T) {
 
 		repository.EXPECT().GetUserById(userId).Return(user, nil)
 
-		result, err := service.GetUser(userId)
+		result, err := service.GetUserById(userId)
 
 		require.NoError(t, err)
 		assert.Equal(t, user, result)
@@ -492,5 +492,39 @@ func TestService_GetUserCount(t *testing.T) {
 
 		require.NoError(t, err)
 		assert.Equal(t, int64(1), result)
+	})
+}
+
+func TestService_GetUserByEmail(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := usermocks.NewMockRepository(ctrl)
+
+	service, err := NewService(repository)
+	require.NoError(t, err)
+
+	t.Run("Returns error if there is a problem", func(t *testing.T) {
+		repository.EXPECT().GetUserByEmail(emailAddress).Return(nil, e)
+
+		result, err := service.GetUserByEmail(emailAddress)
+
+		require.Error(t, err)
+		assert.Equal(t, e, err)
+		assert.Nil(t, result)
+	})
+
+	t.Run("Gets user from db", func(t *testing.T) {
+		user := &model.User{
+			Id:    userId,
+			Email: emailAddress,
+		}
+
+		repository.EXPECT().GetUserByEmail(emailAddress).Return(user, nil)
+
+		result, err := service.GetUserByEmail(emailAddress)
+
+		require.NoError(t, err)
+		assert.Equal(t, user, result)
 	})
 }

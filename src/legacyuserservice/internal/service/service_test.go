@@ -3,6 +3,7 @@ package legacy
 import (
 	"github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/model"
 	legacyusermocks "github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/repository/mocks"
+	usermocks "github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/user/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -22,8 +23,9 @@ func TestService_GetUserById(t *testing.T) {
 	defer ctrl.Finish()
 
 	repository := legacyusermocks.NewMockRepository(ctrl)
+	userService := usermocks.NewMockUserService(ctrl)
 
-	service, err := NewService(repository)
+	service, err := NewService(repository, userService)
 	require.NoError(t, err)
 
 	t.Run("returns error if user cannot be retrieved", func(t *testing.T) {
@@ -57,8 +59,9 @@ func TestService_LegacyLogin(t *testing.T) {
 	defer ctrl.Finish()
 
 	repository := legacyusermocks.NewMockRepository(ctrl)
+	userService := usermocks.NewMockUserService(ctrl)
 
-	service, err := NewService(repository)
+	service, err := NewService(repository, userService)
 	require.NoError(t, err)
 
 	hashedPassword := hashPassword(password)
@@ -100,6 +103,22 @@ func TestService_LegacyLogin(t *testing.T) {
 		assert.Equal(t, model.ErrLegacyLoginFailed, err)
 	})
 
+	t.Run("returns error if user already exists in userService", func(t *testing.T) {
+		user := &model.User{
+			FirstName: "first",
+			Password:  hashedPassword,
+		}
+
+		repository.EXPECT().GetUserByEmailAndPassword(email, hashedPassword).Return(user, nil)
+		userService.EXPECT().GetUserByEmail(email).Return(user, nil)
+
+		result, err := service.LegacyLogin(email, password)
+		require.Error(t, err)
+
+		assert.Empty(t, result)
+		assert.Equal(t, model.ErrLegacyLoginFailed, err)
+	})
+
 	t.Run("gets the user and checks the password", func(t *testing.T) {
 		user := &model.User{
 			FirstName: "first",
@@ -107,6 +126,7 @@ func TestService_LegacyLogin(t *testing.T) {
 		}
 
 		repository.EXPECT().GetUserByEmailAndPassword(email, hashedPassword).Return(user, nil)
+		userService.EXPECT().GetUserByEmail(email).Return(nil, errors.New("user exists"))
 
 		result, err := service.LegacyLogin(email, password)
 		require.NoError(t, err)
