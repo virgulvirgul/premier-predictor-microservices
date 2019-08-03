@@ -96,9 +96,11 @@ spec:
             initialDelaySeconds: 60
           resources:
             requests:
-              memory: "500Mi"
+              cpu: 200m
+              memory: 180Mi
             limits:
-              memory: "600Mi"
+              cpu: 300m
+              memory: 300Mi
 ---
 apiVersion: v1
 kind: Service

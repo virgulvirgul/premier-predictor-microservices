@@ -31,8 +31,8 @@ func (s *service) GetUserById(id int) (*model.User, error) {
 func (s *service) LegacyLogin(email, password string) (*model.User, error) {
 	email = strings.ToLower(email)
 
-	legacyLoginChan := s.doLegacyLogin(email, password)
 	isExistingUserChan := s.isUserAlreadyRegistered(email)
+	legacyLoginChan := s.doLegacyLogin(email, password)
 
 	loginResult := <-legacyLoginChan
 	if loginResult.err != nil {

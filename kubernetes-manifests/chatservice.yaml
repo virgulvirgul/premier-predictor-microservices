@@ -1,78 +1,78 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: chatservice-app
-  namespace: default
-  labels:
-    k8s-app: chatservice-app
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        k8s-app: chatservice-app
-    spec:
-      terminationGracePeriodSeconds: 5
-      containers:
-        - name: chatservice-app
-          image: chatservice
-          ports:
-            - containerPort: 3003
-              name: grpc
-          env:
-            - name: PORT
-              value: "3003"
-            - name: HEALTH_PORT
-              value: "8083"
-            - name: AUTH_ADDR
-              value: "authservice:3001"
-            - name: NOTIFICATION_ADDR
-              value: "notificationservice:3004"
-            - name: MONGO_SCHEME
-              valueFrom:
-                secretKeyRef:
-                  name: pp-secrets
-                  key: dbScheme
-            - name: MONGO_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: pp-secrets
-                  key: dbUser
-            - name: MONGO_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pp-secrets
-                  key: dbPassword
-            - name: MONGO_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: pp-secrets
-                  key: dbHost
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8083
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8083
-          resources:
-            requests:
-              cpu: 100m
-              memory: 64Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: chatservice
-  namespace: default
-spec:
-  selector:
-    k8s-app: chatservice-app
-  ports:
-    - port: 3003
-      targetPort: 3003
-      name: grpc
+#apiVersion: extensions/v1beta1
+#kind: Deployment
+#metadata:
+#  name: chatservice-app
+#  namespace: default
+#  labels:
+#    k8s-app: chatservice-app
+#spec:
+#  replicas: 1
+#  template:
+#    metadata:
+#      labels:
+#        k8s-app: chatservice-app
+#    spec:
+#      terminationGracePeriodSeconds: 5
+#      containers:
+#        - name: chatservice-app
+#          image: chatservice
+#          ports:
+#            - containerPort: 3003
+#              name: grpc
+#          env:
+#            - name: PORT
+#              value: "3003"
+#            - name: HEALTH_PORT
+#              value: "8083"
+#            - name: AUTH_ADDR
+#              value: "authservice:3001"
+#            - name: NOTIFICATION_ADDR
+#              value: "notificationservice:3004"
+#            - name: MONGO_SCHEME
+#              valueFrom:
+#                secretKeyRef:
+#                  name: pp-secrets
+#                  key: dbScheme
+#            - name: MONGO_USERNAME
+#              valueFrom:
+#                secretKeyRef:
+#                  name: pp-secrets
+#                  key: dbUser
+#            - name: MONGO_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: pp-secrets
+#                  key: dbPassword
+#            - name: MONGO_HOST
+#              valueFrom:
+#                secretKeyRef:
+#                  name: pp-secrets
+#                  key: dbHost
+#          readinessProbe:
+#            httpGet:
+#              path: /health
+#              port: 8083
+#          livenessProbe:
+#            httpGet:
+#              path: /health
+#              port: 8083
+#          resources:
+#            requests:
+#              cpu: 100m
+#              memory: 64Mi
+#            limits:
+#              cpu: 200m
+#              memory: 128Mi
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: chatservice
+#  namespace: default
+#spec:
+#  selector:
+#    k8s-app: chatservice-app
+#  ports:
+#    - port: 3003
+#      targetPort: 3003
+#      name: grpc

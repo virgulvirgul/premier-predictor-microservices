@@ -24,6 +24,8 @@ spec:
               value: "3002"
             - name: HTTP_PORT
               value: "8082"
+            - name: USER_ADDR
+              value: "userservice:3005"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:

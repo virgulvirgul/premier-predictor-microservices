@@ -7,7 +7,8 @@ import (
 
 func (a *authenticator) HttpMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if p, _ := mux.CurrentRoute(r).GetPathTemplate(); p == "/health" {
+		p, _ := mux.CurrentRoute(r).GetPathTemplate()
+		if p == "/health" || p == "/legacy" {
 			next.ServeHTTP(w, r)
 			return
 		}

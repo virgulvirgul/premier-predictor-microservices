@@ -22,6 +22,9 @@ func (u *userService) GetUserByEmail(email string) (*model.User, error) {
 		Email: email,
 	}
 	user, err := u.userClient.GetUserByEmail(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
 
-	return model.UserFromGrpc(user), err
+	return model.UserFromGrpc(user), nil
 }

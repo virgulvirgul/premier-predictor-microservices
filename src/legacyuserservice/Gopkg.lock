@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:52771a02c22488ebee6c4d066908556f089099d7de9ec0e51d070b951b6c49e8"
+  digest = "1:814f3a2c318e5f842745740403021b1039c1a87a295262a1e42e2eea5cdc8968"
   name = "github.com/cshep4/premier-predictor-microservices"
   packages = [
     "proto-gen/model/gen",
@@ -12,7 +12,7 @@
     "src/common/util",
   ]
   pruneopts = "UT"
-  revision = "baacbc8db15030f679589e1f9a9a2f542d9b2ec8"
+  revision = "6fbd495dd8271df2d64471108aa6af55ac0e869b"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -236,6 +236,7 @@
     "github.com/cshep4/premier-predictor-microservices/src/common/util",
     "github.com/golang/mock/gomock",
     "github.com/golang/protobuf/proto",
+    "github.com/golang/protobuf/ptypes/empty",
     "github.com/gorilla/mux",
     "github.com/lib/pq",
     "github.com/pkg/errors",
