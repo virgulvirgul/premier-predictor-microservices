@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:d40e70e49535f53bb461f8b6e4a17bda6027fbff602f0833725e45216e54abca"
+  digest = "1:028fe7889d79810812460e798fe5ae73534d6f87fc68b70efa186d31e335b575"
   name = "github.com/cshep4/premier-predictor-microservices"
   packages = [
     "proto-gen/model/gen",
@@ -18,7 +18,7 @@
     "src/common/util",
   ]
   pruneopts = "UT"
-  revision = "a7c696908c9d23aa9e6e6ed5fd41cf3ac66c768f"
+  revision = "ddaf8d2f34beb81fddd8d69c971851bf88922031"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"

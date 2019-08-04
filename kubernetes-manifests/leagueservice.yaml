@@ -6,7 +6,6 @@ metadata:
   labels:
     k8s-app: leagueservice-app
 spec:
-  replicas: 1
   template:
     metadata:
       labels:

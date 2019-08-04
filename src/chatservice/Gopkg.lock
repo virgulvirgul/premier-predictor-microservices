@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:a109e19064ef07575d701cf3fe52370bd3cef58a527ac2a8d982475cce9a06f3"
+  digest = "1:3779e0cad59abb2d6e2ad8e93b3bcde42400a7f7e7290545e6c971bb326d521f"
   name = "github.com/cshep4/premier-predictor-microservices"
   packages = [
     "proto-gen/model/gen",
@@ -14,9 +14,10 @@
     "src/common/model",
     "src/common/notification",
     "src/common/notification/mocks",
+    "src/common/util",
   ]
   pruneopts = "UT"
-  revision = "083c3f2abf9c84a75b42d60322c24ad4cf554ad3"
+  revision = "ddaf8d2f34beb81fddd8d69c971851bf88922031"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -64,6 +65,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "2a8bb927dd31d8daada140a5d09578521ce5c36a"
+
+[[projects]]
+  digest = "1:b117faf01abdbdadd7b8ceeae74cd1369c1b073fef41aee8b674c9d704a54c16"
+  name = "github.com/gorilla/handlers"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "8a3748addc242fc560bd6d4ff28b0374c010b1b4"
+  version = "v1.4.2"
 
 [[projects]]
   digest = "1:d5f97fc268267ec1b61c3453058c738246fc3e746f14b1ae25161513b7367b0c"

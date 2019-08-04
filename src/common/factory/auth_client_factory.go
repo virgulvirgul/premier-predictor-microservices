@@ -1,9 +1,12 @@
 package factory
 
 import (
+	"context"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
 	"github.com/cshep4/premier-predictor-microservices/src/common/interfaces"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/connectivity"
+	"log"
 )
 
 type authClientFactory struct {
@@ -17,16 +20,48 @@ func NewAuthClientFactory(addr string) interfaces.AuthClientFactory {
 	}
 }
 
-func (n *authClientFactory) NewAuthClient() (gen.AuthServiceClient, error) {
-	conn, err := grpc.Dial(n.addr, grpc.WithInsecure())
+func (a *authClientFactory) NewAuthClient() (gen.AuthServiceClient, error) {
+	err := a.connect()
 	if err != nil {
 		return nil, err
 	}
-	n.conn = conn
+	a.connectionOnState()
 
-	return gen.NewAuthServiceClient(conn), nil
+	return gen.NewAuthServiceClient(a.conn), nil
 }
 
-func (n *authClientFactory) CloseConnection() error {
-	return n.conn.Close()
+func (a *authClientFactory) connect() error {
+	conn, err := grpc.Dial(a.addr, grpc.WithInsecure())
+	if err != nil {
+		return err
+	}
+	a.conn = conn
+
+	return nil
+}
+
+func (a *authClientFactory) connectionOnState() {
+	go func() {
+		for {
+			a.conn.WaitForStateChange(context.Background(), a.conn.GetState())
+
+			currentState := a.conn.GetState()
+			log.Printf("connection state change, currentState: %s", currentState)
+			if currentState != connectivity.Ready {
+				log.Println("reconnecting authservice connection")
+
+				err := a.connect()
+				if err != nil {
+					log.Println("failed to reconnect authservice connection")
+					continue
+				}
+
+				log.Println("reconnected authservice connection!")
+			}
+		}
+	}()
+}
+
+func (a *authClientFactory) CloseConnection() error {
+	return a.conn.Close()
 }

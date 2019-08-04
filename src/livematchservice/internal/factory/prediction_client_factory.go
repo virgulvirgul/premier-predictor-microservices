@@ -1,9 +1,12 @@
 package factory
 
 import (
+	"context"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
 	"github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/interfaces"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/connectivity"
+	"log"
 )
 
 type predictionClientFactory struct {
@@ -17,16 +20,48 @@ func NewPredictionClientFactory(addr string) interfaces.PredictionClientFactory 
 	}
 }
 
-func (n *predictionClientFactory) NewPredictionClient() (gen.PredictionServiceClient, error) {
-	conn, err := grpc.Dial(n.addr, grpc.WithInsecure())
+func (p *predictionClientFactory) NewPredictionClient() (gen.PredictionServiceClient, error) {
+	err := p.connect()
 	if err != nil {
 		return nil, err
 	}
-	n.conn = conn
+	p.connectionOnState()
 
-	return gen.NewPredictionServiceClient(conn), nil
+	return gen.NewPredictionServiceClient(p.conn), nil
 }
 
-func (n *predictionClientFactory) CloseConnection() error {
-	return n.conn.Close()
+func (p *predictionClientFactory) connect() error {
+	conn, err := grpc.Dial(p.addr, grpc.WithInsecure())
+	if err != nil {
+		return err
+	}
+	p.conn = conn
+
+	return nil
+}
+
+func (p *predictionClientFactory) connectionOnState() {
+	go func() {
+		for {
+			p.conn.WaitForStateChange(context.Background(), p.conn.GetState())
+
+			currentState := p.conn.GetState()
+			log.Printf("connection state change, currentState: %s", currentState)
+			if currentState != connectivity.Ready {
+				log.Println("reconnecting predictionservice connection")
+
+				err := p.connect()
+				if err != nil {
+					log.Println("failed to reconnect predictionservice connection")
+					continue
+				}
+
+				log.Println("reconnected predictionservice connection!")
+			}
+		}
+	}()
+}
+
+func (p *predictionClientFactory) CloseConnection() error {
+	return p.conn.Close()
 }

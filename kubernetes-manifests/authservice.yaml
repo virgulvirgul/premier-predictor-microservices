@@ -6,7 +6,7 @@ metadata:
   labels:
     k8s-app: authservice-app
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:

@@ -148,6 +148,7 @@ func (h *httpHandler) sendResponse(data interface{}, err error, w http.ResponseW
 	case err == nil && leagueCreated:
 		w.WriteHeader(http.StatusCreated)
 		if data != nil {
+			log.Printf("status: %d, body: %s", http.StatusCreated, data)
 			_ = json.NewEncoder(w).Encode(data)
 		}
 		return
@@ -155,29 +156,32 @@ func (h *httpHandler) sendResponse(data interface{}, err error, w http.ResponseW
 	case err == nil:
 		w.WriteHeader(http.StatusOK)
 		if data != nil {
+			log.Printf("status: %d, body: %s", http.StatusOK, data)
 			_ = json.NewEncoder(w).Encode(data)
 			return
 		}
+		log.Printf("status: %d", http.StatusOK)
 		return
 
 	case err == model.ErrLeagueNotFound:
 		w.WriteHeader(http.StatusNotFound)
+		log.Printf("status: %d, error: %s", http.StatusNotFound, err)
 		_ = json.NewEncoder(w).Encode(ServerError{
 			Message: err.Error(),
 		})
 
 	case errors.Cause(err) == m.ErrInvalidRequestData:
 		w.WriteHeader(http.StatusBadRequest)
+		log.Printf("status: %d, error: %s", http.StatusBadRequest, err)
 		_ = json.NewEncoder(w).Encode(ServerError{
 			Message: util.GetErrorMessage(err),
 		})
 
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("status: %d, error: %s", http.StatusInternalServerError, err)
 		_ = json.NewEncoder(w).Encode(ServerError{
 			Message: err.Error(),
 		})
 	}
-
-	log.Println(err.Error())
 }

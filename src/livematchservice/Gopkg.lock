@@ -11,7 +11,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:d94f50497e5787dac76fae2cab569dcc63c32d9393cbe21241b45854ff347f65"
+  digest = "1:3c36935da8fce5903c34c59a77bf9712c26d6950384198497ba2d50ed8d86b45"
   name = "github.com/cshep4/premier-predictor-microservices"
   packages = [
     "proto-gen/model/gen",
@@ -26,7 +26,7 @@
     "src/leagueservice/internal/service/mocks",
   ]
   pruneopts = "UT"
-  revision = "a7c696908c9d23aa9e6e6ed5fd41cf3ac66c768f"
+  revision = "ddaf8d2f34beb81fddd8d69c971851bf88922031"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
