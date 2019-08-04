@@ -7,16 +7,19 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"log"
 )
 
 func (a *authenticator) GrpcUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	token, err := a.getTokenFromGrpcMetadata(ctx)
 	if err != nil {
+		log.Printf("auth error: %s", err)
 		return nil, status.Error(codes.Unauthenticated, err.Error())
 	}
 
 	err = a.doAuth(token)
 	if err != nil {
+		log.Printf("auth error: %s", err)
 		return nil, status.Error(codes.Unauthenticated, err.Error())
 	}
 
@@ -26,11 +29,13 @@ func (a *authenticator) GrpcUnaryInterceptor(ctx context.Context, req interface{
 func (a *authenticator) GrpcStreamInterceptor(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 	token, err := a.getTokenFromGrpcMetadata(stream.Context())
 	if err != nil {
+		log.Printf("auth error: %s", err)
 		return status.Error(codes.Unauthenticated, err.Error())
 	}
 
 	err = a.doAuth(token)
 	if err != nil {
+		log.Printf("auth error: %s", err)
 		return status.Error(codes.Unauthenticated, err.Error())
 	}
 

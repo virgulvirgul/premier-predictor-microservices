@@ -2,6 +2,7 @@ package auth
 
 import (
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 )
 
@@ -17,6 +18,7 @@ func (a *authenticator) HttpMiddleware(next http.Handler) http.Handler {
 
 		err := a.doAuth(token)
 		if err != nil {
+			log.Printf("auth error: %s", err)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
