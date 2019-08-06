@@ -3,6 +3,7 @@ package factory
 import (
 	"context"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	"github.com/cshep4/premier-predictor-microservices/src/common/grpc/options"
 	"github.com/cshep4/premier-predictor-microservices/src/predictionservice/internal/interfaces"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
@@ -31,7 +32,7 @@ func (f *fixtureClientFactory) NewFixtureClient() (gen.FixtureServiceClient, err
 }
 
 func (f *fixtureClientFactory) connect() error {
-	conn, err := grpc.Dial(f.addr, grpc.WithInsecure())
+	conn, err := grpc.Dial(f.addr, grpc.WithInsecure(), options.ClientKeepAlive)
 	if err != nil {
 		return err
 	}
@@ -46,7 +47,12 @@ func (f *fixtureClientFactory) connectionOnState() {
 			f.conn.WaitForStateChange(context.Background(), f.conn.GetState())
 
 			currentState := f.conn.GetState()
-			log.Printf("connection state change, currentState: %s", currentState)
+			log.Printf("fixtureservice - connection state change - currentState: %s", currentState)
+
+			if currentState == connectivity.Connecting {
+				continue
+			}
+
 			if currentState != connectivity.Ready {
 				log.Println("reconnecting fixtureservice connection")
 

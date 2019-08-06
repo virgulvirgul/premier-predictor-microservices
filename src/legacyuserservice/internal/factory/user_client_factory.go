@@ -3,6 +3,7 @@ package factory
 import (
 	"context"
 	"github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	"github.com/cshep4/premier-predictor-microservices/src/common/grpc/options"
 	"github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/interfaces"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
@@ -31,7 +32,7 @@ func (u *userClientFactory) NewUserClient() (model.UserServiceClient, error) {
 }
 
 func (u *userClientFactory) connect() error {
-	conn, err := grpc.Dial(u.addr, grpc.WithInsecure())
+	conn, err := grpc.Dial(u.addr, grpc.WithInsecure(), options.ClientKeepAlive)
 	if err != nil {
 		return err
 	}
@@ -46,7 +47,12 @@ func (u *userClientFactory) connectionOnState() {
 			u.conn.WaitForStateChange(context.Background(), u.conn.GetState())
 
 			currentState := u.conn.GetState()
-			log.Printf("connection state change, currentState: %s", currentState)
+			log.Printf("userservice - connection state change - currentState: %s", currentState)
+
+			if currentState == connectivity.Connecting {
+				continue
+			}
+
 			if currentState != connectivity.Ready {
 				log.Println("reconnecting userservice connection")
 

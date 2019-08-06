@@ -9,6 +9,7 @@ import (
 	svc "github.com/cshep4/premier-predictor-microservices/src/chatservice/internal/service"
 	"github.com/cshep4/premier-predictor-microservices/src/common/auth"
 	"github.com/cshep4/premier-predictor-microservices/src/common/factory"
+	"github.com/cshep4/premier-predictor-microservices/src/common/grpc/options"
 	"github.com/cshep4/premier-predictor-microservices/src/common/health"
 	"github.com/cshep4/premier-predictor-microservices/src/common/notification"
 	"google.golang.org/grpc"
@@ -130,6 +131,7 @@ func startGrpcServer() *grpc.Server {
 	}
 
 	grpcServer := grpc.NewServer(
+		options.ServerKeepAlive,
 		grpc.UnaryInterceptor(authenticator.GrpcUnaryInterceptor),
 		grpc.StreamInterceptor(authenticator.GrpcStreamInterceptor),
 	)

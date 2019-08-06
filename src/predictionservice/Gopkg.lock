@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:4a4d12e2ad42656d3f9ff1d5b0b4f3985a12eba01d6374e08d6973af1974c45f"
+  digest = "1:f540fdd0d5c5639caa528d589aed11cac64daabeb09efb3453f1d82dadf888d1"
   name = "github.com/cshep4/premier-predictor-microservices"
   packages = [
     "proto-gen/model/gen",
@@ -14,7 +14,7 @@
     "src/common/model",
   ]
   pruneopts = "UT"
-  revision = "ddaf8d2f34beb81fddd8d69c971851bf88922031"
+  revision = "e03f2db05cb56f8276dd7a17efd1c5a92d1725c9"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -299,6 +299,7 @@
     "go.mongodb.org/mongo-driver/x/bsonx",
     "google.golang.org/grpc",
     "google.golang.org/grpc/codes",
+    "google.golang.org/grpc/connectivity",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

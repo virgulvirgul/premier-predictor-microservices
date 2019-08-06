@@ -3,6 +3,8 @@ package factory
 import (
 	"context"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	"github.com/cshep4/premier-predictor-microservices/src/common/grpc/options"
+
 	"github.com/cshep4/premier-predictor-microservices/src/common/interfaces"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
@@ -31,7 +33,8 @@ func (n *notificationClientFactory) NewNotificationClient() (gen.NotificationSer
 }
 
 func (n *notificationClientFactory) connect() error {
-	conn, err := grpc.Dial(n.addr, grpc.WithInsecure())
+
+	conn, err := grpc.Dial(n.addr, grpc.WithInsecure(), options.ClientKeepAlive)
 	if err != nil {
 		return err
 	}
@@ -46,7 +49,12 @@ func (n *notificationClientFactory) connectionOnState() {
 			n.conn.WaitForStateChange(context.Background(), n.conn.GetState())
 
 			currentState := n.conn.GetState()
-			log.Printf("connection state change, currentState: %s", currentState)
+			log.Printf("notificationservice - connection state change - currentState: %s", currentState)
+
+			if currentState == connectivity.Connecting {
+				continue
+			}
+
 			if currentState != connectivity.Ready {
 				log.Println("reconnecting notificationservice connection")
 

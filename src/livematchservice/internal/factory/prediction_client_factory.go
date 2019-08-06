@@ -3,6 +3,7 @@ package factory
 import (
 	"context"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	"github.com/cshep4/premier-predictor-microservices/src/common/grpc/options"
 	"github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/interfaces"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
@@ -31,7 +32,7 @@ func (p *predictionClientFactory) NewPredictionClient() (gen.PredictionServiceCl
 }
 
 func (p *predictionClientFactory) connect() error {
-	conn, err := grpc.Dial(p.addr, grpc.WithInsecure())
+	conn, err := grpc.Dial(p.addr, grpc.WithInsecure(), options.ClientKeepAlive)
 	if err != nil {
 		return err
 	}
@@ -46,7 +47,12 @@ func (p *predictionClientFactory) connectionOnState() {
 			p.conn.WaitForStateChange(context.Background(), p.conn.GetState())
 
 			currentState := p.conn.GetState()
-			log.Printf("connection state change, currentState: %s", currentState)
+			log.Printf("predictionservice - connection state change - currentState: %s", currentState)
+
+			if currentState == connectivity.Connecting {
+				continue
+			}
+
 			if currentState != connectivity.Ready {
 				log.Println("reconnecting predictionservice connection")
 

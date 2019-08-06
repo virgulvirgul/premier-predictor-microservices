@@ -5,6 +5,7 @@ import (
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
 	"github.com/cshep4/premier-predictor-microservices/src/common/auth"
 	"github.com/cshep4/premier-predictor-microservices/src/common/factory"
+	"github.com/cshep4/premier-predictor-microservices/src/common/grpc/options"
 	common "github.com/cshep4/premier-predictor-microservices/src/common/interfaces"
 	pFactory "github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/factory"
 	"github.com/cshep4/premier-predictor-microservices/src/livematchservice/internal/handler"
@@ -134,6 +135,7 @@ func startGrpcServer(service interfaces.Service, authenticator common.Authentica
 	}
 
 	grpcServer := grpc.NewServer(
+		options.ServerKeepAlive,
 		grpc.UnaryInterceptor(authenticator.GrpcUnaryInterceptor),
 		grpc.StreamInterceptor(authenticator.GrpcStreamInterceptor),
 	)

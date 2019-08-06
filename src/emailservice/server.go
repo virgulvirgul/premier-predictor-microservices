@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	. "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	"github.com/cshep4/premier-predictor-microservices/src/common/grpc/options"
 	"github.com/cshep4/premier-predictor-microservices/src/common/health"
 	"github.com/cshep4/premier-predictor-microservices/src/emailservice/internal/server"
 	"google.golang.org/grpc"
@@ -59,7 +60,7 @@ func startGrpcServer() *grpc.Server {
 
 	log.Printf("Listening on %s", path)
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(options.ServerKeepAlive)
 
 	svc := server.NewEmailServiceServer()
 	RegisterEmailServiceServer(grpcServer, svc)

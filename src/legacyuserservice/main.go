@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	"github.com/cshep4/premier-predictor-microservices/src/common/grpc/options"
 	uFactory "github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/factory"
 	"github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/handler"
 	"github.com/cshep4/premier-predictor-microservices/src/legacyuserservice/internal/interfaces"
@@ -143,7 +144,7 @@ func startGrpcServer(service interfaces.Service) *grpc.Server {
 		log.Fatalf("failed to create grpc handler: %v", err)
 	}
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(options.ServerKeepAlive)
 
 	gen.RegisterLegacyUserServiceServer(grpcServer, server)
 

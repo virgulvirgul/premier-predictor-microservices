@@ -3,6 +3,7 @@ package factory
 import (
 	"context"
 	gen "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen"
+	"github.com/cshep4/premier-predictor-microservices/src/common/grpc/options"
 	"github.com/cshep4/premier-predictor-microservices/src/common/interfaces"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
@@ -31,7 +32,7 @@ func (a *authClientFactory) NewAuthClient() (gen.AuthServiceClient, error) {
 }
 
 func (a *authClientFactory) connect() error {
-	conn, err := grpc.Dial(a.addr, grpc.WithInsecure())
+	conn, err := grpc.Dial(a.addr, grpc.WithInsecure(), options.ClientKeepAlive)
 	if err != nil {
 		return err
 	}
@@ -46,7 +47,12 @@ func (a *authClientFactory) connectionOnState() {
 			a.conn.WaitForStateChange(context.Background(), a.conn.GetState())
 
 			currentState := a.conn.GetState()
-			log.Printf("connection state change, currentState: %s", currentState)
+			log.Printf("authservice - connection state change - currentState: %s", currentState)
+
+			if currentState == connectivity.Connecting {
+				continue
+			}
+
 			if currentState != connectivity.Ready {
 				log.Println("reconnecting authservice connection")
 
