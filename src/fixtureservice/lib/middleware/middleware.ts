@@ -19,7 +19,12 @@ export class Middleware {
 
         const authAddr = process.env.AUTH_ADDR;
 
-        this.client = new authProto.AuthService(authAddr, grpc.credentials.createInsecure());
+        const opts = {
+            "grpc.keepalive_time_ms": 60000,
+            "grpc.keepalive_timeout_ms": 20000,
+            "grpc.keepalive_permit_without_calls" : 1
+        };
+        this.client = new authProto.AuthService(authAddr, grpc.credentials.createInsecure(), opts);
     }
 
     public validateHttp(req: Request, res: Response, next: NextFunction) {

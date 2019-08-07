@@ -11,13 +11,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:087a30c6ba14969b2a1c39919ee6fd1265329386988d1042074ff8903c43d89f"
+  digest = "1:241d9a0928aa6d48b7b60cec7f50d814a30d7c70c91abd37f171a203ac15ba59"
   name = "github.com/cshep4/premier-predictor-microservices"
   packages = [
     "proto-gen/model/gen",
     "src/common/auth",
     "src/common/auth/mocks",
     "src/common/factory",
+    "src/common/grpc/options",
     "src/common/health",
     "src/common/interfaces",
     "src/common/model",
@@ -26,7 +27,7 @@
     "src/leagueservice/internal/service/mocks",
   ]
   pruneopts = "UT"
-  revision = "e03f2db05cb56f8276dd7a17efd1c5a92d1725c9"
+  revision = "89bea28133af0f4150423973c37d10814743bdf1"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -302,6 +303,7 @@
     "github.com/cshep4/premier-predictor-microservices/src/common/auth",
     "github.com/cshep4/premier-predictor-microservices/src/common/auth/mocks",
     "github.com/cshep4/premier-predictor-microservices/src/common/factory",
+    "github.com/cshep4/premier-predictor-microservices/src/common/grpc/options",
     "github.com/cshep4/premier-predictor-microservices/src/common/health",
     "github.com/cshep4/premier-predictor-microservices/src/common/interfaces",
     "github.com/cshep4/premier-predictor-microservices/src/common/model",

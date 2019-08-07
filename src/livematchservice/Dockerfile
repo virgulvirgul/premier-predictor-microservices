@@ -20,8 +20,5 @@ RUN GRPC_HEALTH_PROBE_VERSION=v0.2.0 && \
     chmod +x /bin/grpc_health_probe
 COPY --from=builder /livematchservice /livematchservice
 
-ADD ./certs ./certs
-ADD ./certs ./certs
-
 EXPOSE 3008
 ENTRYPOINT ["/livematchservice"]

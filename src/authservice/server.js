@@ -16,7 +16,11 @@ const startHealthServer = require('./health/server').startHealthServer;
 
 function main() {
     logger.info(`Starting gRPC server on port ${PORT}...`);
-    const server = new grpc.Server();
+    const opts = {
+        "grpc.keepalive_time_ms": 60000,
+        "grpc.keepalive_permit_without_calls" : 1
+    };
+    const server = new grpc.Server(opts);
 
     const authProto = loadProto(MAIN_PROTO_PATH).model;
 

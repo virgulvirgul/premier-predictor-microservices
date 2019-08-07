@@ -3,16 +3,17 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:814f3a2c318e5f842745740403021b1039c1a87a295262a1e42e2eea5cdc8968"
+  digest = "1:5e9f1bdceb8be1e5274fa2ad92cd6bca4b1a89315361d3067d84f8c789fb3d6d"
   name = "github.com/cshep4/premier-predictor-microservices"
   packages = [
     "proto-gen/model/gen",
+    "src/common/grpc/options",
     "src/common/health",
     "src/common/model",
     "src/common/util",
   ]
   pruneopts = "UT"
-  revision = "6fbd495dd8271df2d64471108aa6af55ac0e869b"
+  revision = "89bea28133af0f4150423973c37d10814743bdf1"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -231,6 +232,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/cshep4/premier-predictor-microservices/proto-gen/model/gen",
+    "github.com/cshep4/premier-predictor-microservices/src/common/grpc/options",
     "github.com/cshep4/premier-predictor-microservices/src/common/health",
     "github.com/cshep4/premier-predictor-microservices/src/common/model",
     "github.com/cshep4/premier-predictor-microservices/src/common/util",
@@ -248,6 +250,7 @@
     "golang.org/x/tools/go/ssa/interp/testdata/src/errors",
     "google.golang.org/grpc",
     "google.golang.org/grpc/codes",
+    "google.golang.org/grpc/connectivity",
     "google.golang.org/grpc/status",
   ]
   solver-name = "gps-cdcl"

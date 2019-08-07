@@ -107,19 +107,6 @@ func main() {
 var clientConnCloseFunc []func() error
 
 func startGrpcServer(service interfaces.Service, authenticator common.Authenticator) *grpc.Server {
-	//cer, err := tls.LoadX509KeyPair("certs/tls.crt", "certs/tls.key")
-	//if err != nil {
-	//	log.Fatalf("Failed to load key pair: %v\n", err)
-	//}
-	//
-	//path := ":" + os.Getenv("PORT")
-	//config := &tls.Config{Certificates: []tls.Certificate{cer}}
-	//
-	//lis, err := tls.Listen("tcp", path, config)
-	//if err != nil {
-	//	log.Fatalf("Failed to listen: %v\n", err)
-	//}
-
 	path := ":" + os.Getenv("PORT")
 
 	lis, err := net.Listen("tcp", path)

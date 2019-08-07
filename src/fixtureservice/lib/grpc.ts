@@ -21,7 +21,11 @@ export class Grpc {
             });
         const fixtureProto = grpc.loadPackageDefinition(packageDefinition).model;
 
-        const server = new grpc.Server();
+        const opts = {
+            "grpc.keepalive_time_ms": 60000,
+            "grpc.keepalive_permit_without_calls" : 1
+        };
+        const server = new grpc.Server(opts);
 
         server.addService(fixtureProto.FixtureService.service, {
             getTeamForm: (call, callback) => this.handler.getTeamForms(call, callback),
