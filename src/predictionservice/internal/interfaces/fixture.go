@@ -10,4 +10,5 @@ import (
 type FixtureService interface {
 	GetMatches() ([]common.Fixture, error)
 	GetTeamForm() (map[string]model.TeamForm, error)
+	GetFutureFixtures() (map[string]string, error)
 }

@@ -90,6 +90,32 @@ export class Repository {
         });
     }
 
+    public getAllFutureFixtures(): Promise<Fixture[]> {
+        return new Promise<Fixture[]>((resolve, reject) => {
+            const filter = {
+                'dateTime': {
+                    '$gte': new Date()
+                },
+            };
+            FixtureModel.find(filter).then(fixtures => {
+                resolve(
+                    fixtures.map(f => ({
+                        id: f._doc._id,
+                        played: f._doc.played,
+                        dateTime: f._doc.dateTime,
+                        matchday: f._doc.matchday,
+                        hTeam: f._doc.hTeam,
+                        aTeam: f._doc.aTeam,
+                        hGoals: f._doc.hGoals,
+                        aGoals: f._doc.aGoals,
+                    }))
+                );
+            }, err => {
+                reject(err);
+            });
+        });
+    }
+
     public getFixtureById(id: string): Promise<Fixture> {
         return new Promise<Fixture>((resolve, reject) => {
             FixtureModel.findById(id).then(f => {

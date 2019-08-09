@@ -34,6 +34,21 @@ func (m *MockFixtureService) EXPECT() *MockFixtureServiceMockRecorder {
 	return m.recorder
 }
 
+// GetFutureFixtures mocks base method
+func (m *MockFixtureService) GetFutureFixtures() (map[string]string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFutureFixtures")
+	ret0, _ := ret[0].(map[string]string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFutureFixtures indicates an expected call of GetFutureFixtures
+func (mr *MockFixtureServiceMockRecorder) GetFutureFixtures() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFutureFixtures", reflect.TypeOf((*MockFixtureService)(nil).GetFutureFixtures))
+}
+
 // GetMatches mocks base method
 func (m *MockFixtureService) GetMatches() ([]model.Fixture, error) {
 	m.ctrl.T.Helper()

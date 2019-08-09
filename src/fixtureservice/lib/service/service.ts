@@ -56,4 +56,16 @@ export class Service {
             });
         });
     }
+
+    public getFutureFixtures(): Promise<Map<string, string>> {
+        return new Promise<Map<string, string>>((resolve, reject) => {
+        this.repository.getAllFutureFixtures().then((fixtures: Fixture[]) => {
+            const futureFixtures = new Map<string, string>();
+            fixtures.forEach(f => futureFixtures.set(f.id, f.dateTime.toDateString()));
+            resolve(futureFixtures);
+        }, err => {
+            reject(err);
+        });
+        });
+    }
 }

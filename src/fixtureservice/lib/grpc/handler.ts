@@ -28,6 +28,16 @@ export class Handler {
         });
     }
 
+    public getFutureFixtures(call, callback) {
+        this.service.getFutureFixtures().then((fixtures: Map<string, string>) => {
+            this.log("getFutureFixtures", true, fixtures);
+            callback(null, {matches: fixtures});
+        }, err => {
+            this.log("getFutureFixtures", false, err);
+            callback(err);
+        });
+    }
+
     private log(method: string, successful: boolean, response: any = null) {
         if (successful) {
             logger.info({

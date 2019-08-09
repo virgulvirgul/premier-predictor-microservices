@@ -10,6 +10,7 @@ package model;
 service FixtureService {
     rpc GetMatches (google.protobuf.Empty) returns (Matches) {}
     rpc GetTeamForm (google.protobuf.Empty) returns (Forms) {}
+    rpc GetFutureFixtures (google.protobuf.Empty) returns (FutureMatches) {}
 }
 
 message Matches {
@@ -49,4 +50,8 @@ message TeamMatchResult {
     string score = 2;
     string opponent = 3;
     Location location = 4;
+}
+
+message FutureMatches {
+    map<string, string> matches = 1;
 }

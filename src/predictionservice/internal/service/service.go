@@ -146,7 +146,19 @@ func (s *service) GetUsersPastPredictions(id string) ([]model.FixturePrediction,
 }
 
 func (s *service) UpdatePredictions(predictions []common.Prediction) error {
-	return s.repository.UpdatePredictions(predictions)
+	futureFixtures, err := s.fixtureService.GetFutureFixtures()
+	if err != nil {
+		return err
+	}
+
+	var validPredictions []common.Prediction
+	for _, p := range predictions {
+		if _, ok := futureFixtures[p.MatchId]; ok {
+			validPredictions = append(validPredictions, p)
+		}
+	}
+
+	return s.repository.UpdatePredictions(validPredictions)
 }
 
 func (s *service) GetPrediction(userId, matchId string) (*common.Prediction, error) {

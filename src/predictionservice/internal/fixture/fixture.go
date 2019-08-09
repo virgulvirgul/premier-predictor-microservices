@@ -47,3 +47,12 @@ func (f *fixtureService) GetTeamForm() (map[string]model.TeamForm, error) {
 
 	return forms, nil
 }
+
+func (f *fixtureService) GetFutureFixtures() (map[string]string, error) {
+	resp, err := f.fixtureClient.GetFutureFixtures(context.Background(), &empty.Empty{})
+	if err != nil {
+		return nil, errors.New("error getting future fixtures")
+	}
+
+	return resp.Matches, nil
+}
