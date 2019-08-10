@@ -1,0 +1,12 @@
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: ClusterIssuer
+metadata:
+  name: pp-prod
+spec:
+  acme:
+    email: shepapps4@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: pp-prod
+    http01: {}

@@ -1,0 +1,19 @@
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: ambassador-certs
+  namespace: default
+spec:
+  secretName: tls-cert
+  issuerRef:
+    name: pp-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - premierpredictor.uk
+  acme:
+    config:
+      - http01:
+          ingressClass: nginx
+        domains:
+          - premierpredictor.uk
