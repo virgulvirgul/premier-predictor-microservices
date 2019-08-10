@@ -95,10 +95,10 @@ func (mr *MockServiceMockRecorder) GetPredictorData(arg0 interface{}) *gomock.Ca
 }
 
 // GetUsersPastPredictions mocks base method
-func (m *MockService) GetUsersPastPredictions(arg0 string) ([]model0.FixturePrediction, error) {
+func (m *MockService) GetUsersPastPredictions(arg0 string) (*model0.PredictionSummary, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUsersPastPredictions", arg0)
-	ret0, _ := ret[0].([]model0.FixturePrediction)
+	ret0, _ := ret[0].(*model0.PredictionSummary)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

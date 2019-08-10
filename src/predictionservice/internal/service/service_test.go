@@ -297,7 +297,9 @@ func TestService_GetUsersPastPredictions(t *testing.T) {
 		fixtureService.EXPECT().GetMatches().Return(fixtures, nil)
 		repository.EXPECT().GetPredictionsByUserId(userId).Return(predictions, nil)
 
-		result, err := service.GetUsersPastPredictions(userId)
+		predictionSummary, err := service.GetUsersPastPredictions(userId)
+
+		result := predictionSummary.Matches
 
 		require.NoError(t, err)
 		assert.Equal(t, matchId, result[0].Id)

@@ -90,26 +90,19 @@ export class Repository {
         });
     }
 
-    public getAllFutureFixtures(): Promise<Fixture[]> {
-        return new Promise<Fixture[]>((resolve, reject) => {
+    public getAllFutureFixtures(): Promise<Map<string, string>> {
+        return new Promise<Map<string, string>>((resolve, reject) => {
             const filter = {
                 'dateTime': {
                     '$gte': new Date()
                 },
             };
             FixtureModel.find(filter).then(fixtures => {
-                resolve(
-                    fixtures.map(f => ({
-                        id: f._doc._id,
-                        played: f._doc.played,
-                        dateTime: f._doc.dateTime,
-                        matchday: f._doc.matchday,
-                        hTeam: f._doc.hTeam,
-                        aTeam: f._doc.aTeam,
-                        hGoals: f._doc.hGoals,
-                        aGoals: f._doc.aGoals,
-                    }))
-                );
+                const result = fixtures.reduce(function(map, f) {
+                    map[f.id] = f.dateTime.toDateString();
+                    return map;
+                }, {});
+                resolve(result);
             }, err => {
                 reject(err);
             });

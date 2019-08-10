@@ -129,7 +129,7 @@ func (s *service) getTeamForm() formResult {
 	return formResult{result: r, err: e}
 }
 
-func (s *service) GetUsersPastPredictions(id string) ([]model.FixturePrediction, error) {
+func (s *service) GetUsersPastPredictions(id string) (*model.PredictionSummary, error) {
 	fixturePredictions, err := s.GetFixturesWithPredictions(id)
 	if err != nil {
 		return nil, err
@@ -142,7 +142,9 @@ func (s *service) GetUsersPastPredictions(id string) ([]model.FixturePrediction,
 		}
 	}
 
-	return fp, nil
+	return &model.PredictionSummary{
+		Matches: fp,
+	}, nil
 }
 
 func (s *service) UpdatePredictions(predictions []common.Prediction) error {

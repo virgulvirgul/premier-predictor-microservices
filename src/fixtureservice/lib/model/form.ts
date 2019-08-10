@@ -14,12 +14,12 @@ export class TeamMatchResult {
 }
 
 export enum Result {
-    WIN = 'win',
-    DRAW = 'draw',
-    LOSS = 'loss',
+    WIN = 0,
+    DRAW = 1,
+    LOSS = 2,
 }
 
 export enum Location {
-    HOME = 'home',
-    AWAY = 'away',
+    HOME = 0,
+    AWAY = 1,
 }

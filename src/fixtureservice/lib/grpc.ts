@@ -30,6 +30,7 @@ export class Grpc {
         server.addService(fixtureProto.FixtureService.service, {
             getTeamForm: (call, callback) => this.handler.getTeamForms(call, callback),
             getMatches: (call, callback) => this.handler.getMatches(call, callback),
+            getFutureFixtures: (call, callback) => this.handler.getFutureFixtures(call, callback),
         });
 
         server.bind(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure());

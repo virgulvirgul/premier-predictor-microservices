@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+type PredictionSummary struct {
+	Matches []FixturePrediction `json:"matches"`
+}
+
 type FixturePrediction struct {
 	Id         string    `json:"id"`
 	UserId     string    `json:"userId"`
