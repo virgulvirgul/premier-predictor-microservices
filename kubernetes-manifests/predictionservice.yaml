@@ -96,26 +96,3 @@ spec:
   selector:
     k8s-app: predictionservice-app
   type: ClusterIP
-#---
-#apiVersion: extensions/v1beta1
-#kind: Ingress
-#metadata:
-#  #  annotations:
-#  #    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-#  #    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-#  #    kubernetes.io/ingress.allow-http: "false"
-#  name: prediction-ingress
-#  namespace: default
-#spec:
-#  tls:
-#    - hosts:
-#      - prediction.premierpredictor.uk
-#    - secretName: pp-secret
-#  rules:
-#    - host: prediction.premierpredictor.uk
-#      http:
-#        paths:
-#          - backend:
-#              serviceName: predictionservice-service
-#              servicePort: 8087
-#            path: /

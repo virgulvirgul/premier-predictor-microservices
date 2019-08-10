@@ -94,25 +94,3 @@ spec:
   selector:
     k8s-app: userservice-app
   type: ClusterIP
-#---
-#apiVersion: extensions/v1beta1
-#kind: Ingress
-#metadata:
-#  annotations:
-##    kubernetes.io/ingress.allow-http: "false"
-##    ingress.kubernetes.io/force-ssl-redirect: "true"
-#  name: user-ingress
-#  namespace: default
-#spec:
-#  tls:
-#    - hosts:
-#      - user.premierpredictor.uk
-#    - secretName: pp-secret
-#  rules:
-#    - host: user.premierpredictor.uk
-#      http:
-#        paths:
-#          - backend:
-#              serviceName: userservice-service
-#              servicePort: 8085
-#            path: /

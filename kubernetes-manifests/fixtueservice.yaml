@@ -94,25 +94,3 @@ spec:
   selector:
     k8s-app: fixtureservice-app
   type: ClusterIP
-#---
-#apiVersion: extensions/v1beta1
-#kind: Ingress
-#metadata:
-#  annotations:
-##    kubernetes.io/ingress.allow-http: "false"
-##    ingress.kubernetes.io/force-ssl-redirect: "true"
-#  name: fixture-ingress
-#  namespace: default
-#spec:
-#  tls:
-#    - hosts:
-#      - fixture.premierpredictor.uk
-#    - secretName: pp-secret
-#  rules:
-#    - host: fixture.premierpredictor.uk
-#      http:
-#        paths:
-#          - backend:
-#              serviceName: fixtureservice-service
-#              servicePort: 8086
-#            path: /

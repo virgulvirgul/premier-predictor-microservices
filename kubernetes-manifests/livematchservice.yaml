@@ -96,26 +96,3 @@ spec:
   selector:
     k8s-app: livematchservice-app
   type: ClusterIP
-#---
-#apiVersion: extensions/v1beta1
-#kind: Ingress
-#metadata:
-#  #  annotations:
-#  #    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-#  #    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-#  #    kubernetes.io/ingress.allow-http: "false"
-#  name: livematch-ingress
-#  namespace: default
-#spec:
-#  tls:
-#    - hosts:
-#        - livematch.premierpredictor.uk
-#    - secretName: pp-secret
-#  rules:
-#    - host: livematch.premierpredictor.uk
-#      http:
-#        paths:
-#          - backend:
-#              serviceName: livematchservice-service
-#              servicePort: 8088
-#            path: /

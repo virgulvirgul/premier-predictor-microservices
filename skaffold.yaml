@@ -22,8 +22,8 @@ build:
   # https://github.com/GoogleContainerTools/skaffold/blob/master/docs/concepts.adoc#2-push
   - image: authservice
     context: src/authservice
-  - image: chatservice
-    context: src/chatservice
+#  - image: chatservice
+#    context: src/chatservice
   - image: premierpredictor
     context: src/core
 #  - image: emailservice
@@ -32,8 +32,8 @@ build:
     context: src/fixtureservice
   - image: livematchservice
     context: src/livematchservice
-  - image: notificationservice
-    context: src/notificationservice
+#  - image: notificationservice
+#    context: src/notificationservice
   - image: predictionservice
     context: src/predictionservice
   - image: legacyuserservice

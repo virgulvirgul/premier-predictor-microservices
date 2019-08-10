@@ -96,25 +96,3 @@ spec:
   selector:
     k8s-app: leagueservice-app
   type: ClusterIP
-#---
-#apiVersion: extensions/v1beta1
-#kind: Ingress
-#metadata:
-#  annotations:
-##    kubernetes.io/ingress.allow-http: "false"
-##    ingress.kubernetes.io/force-ssl-redirect: "true"
-#  name: league-ingress
-#  namespace: default
-#spec:
-#  tls:
-#    - hosts:
-#      - league.premierpredictor.uk
-#    - secretName: pp-secret
-#  rules:
-#    - host: league.premierpredictor.uk
-#      http:
-#        paths:
-#          - backend:
-#              serviceName: leagueservice-service
-#              servicePort: 8089
-#            path: /
