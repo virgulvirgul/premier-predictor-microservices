@@ -10,14 +10,12 @@ _gengo:
 
 _copyjava:
 	@cp -R model/protodefs/auth.proto model/protodefs/notification.proto model/protodefs/request.proto ../src/notificationservice/protodefs
-
-_copyjs:
-	@cp -R model/protodefs/auth.proto model/protodefs/request.proto ../src/authservice/protodefs
+	@cp -R model/protodefs/auth.proto model/protodefs/request.proto ../src/kauthservice/src/main/proto
 
 _copyts:
 	@cp -R model/protodefs/auth.proto model/protodefs/request.proto model/protodefs/fixture.proto ../src/fixtureservice/protodefs
 
-gen: _gengo _copyjava _copyjs _copyts
+gen: _gengo _copyjava _copyts
 
 build: get gen
 	@env CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -ldflags '-w -extldflags "-static"' -o build/${PROJECT_NAME}_linux_amd64 .
