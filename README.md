@@ -3,12 +3,13 @@
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Technical Details](#technical-details)
-3. [Functions](#functions)
-4. [Screenshots](#screenshots)
-5. [Key Features](#key-features)
-6. [Rules](#rules)
-7. [Scoring](#scoring)
-8. [App Store Presence](#app-store-presence)
+3. [Service Architecture](#service-architecture)
+4. [Functions](#functions)
+5. [Screenshots](#screenshots)
+6. [Key Features](#key-features)
+7. [Rules](#rules)
+8. [Scoring](#scoring)
+9. [App Store Presence](#app-store-presence)
 
 ## Introduction
 
@@ -24,6 +25,22 @@ Premier League 18/19 predictor app, designed for users to correctly predict all 
 - Scheduled AWS Lambda functions are used to automatically check if games are in-play and to retrieve the live data.
 - A scheduled AWS Lambda function is also used to automatically call an API to update match results, as well as user scores.
 - All match data is retrieved from an external API, the results are then used to compare against each user's predictions to assign points.
+
+## Service Architecture
+
+| Service                                              | Language      | Transport     | Connects To                      | Description                                                                                                 |
+| ---------------------------------------------------- | ------------- | ------------- | -------------                    | ----------------------------------------------------------------------------------------------------------- |
+| [authservice](./src/authservice)                     | Node.js (JS)  | gRPC          | *                                | Handles all the JWT token validation when authenticating requests.                                          |
+| [chatservice](./src/chatservice)                     | Go            | gRPC          | authservice, notificationservice | Provides functionality so users can chat to each other within their mini-leagues.                           |
+| [core](./src/core)                                   | Kotlin        | REST          | -                                | Original login and sign-up APIs. These will be redeveloped in a new micro-service.                          |
+| [emailservice](./src/emailservice)                   | Go            | gRPC          | -                                | Generic email sending functionality.                                                                        |
+| [fixtureservice](./src/fixtureservice)               | Node.js (TS)  | REST, gRPC    | authservice                      | Retrieves data about fixtures and results.                                                                  |
+| [leagueservice](./src/leagueservice)                 | Go            | REST          | authservice, userservice         | Provides functionality for mini-leagues (add, join, leave, League table etc)                                |
+| [legacyuserservice](./src/legacyuserservice)         | Go            | REST, gRPC    | userservice                      | Connects to legacy Postgres database and tries to fetch user account if the login details cannot be found.  |
+| [livematchservice](./src/livematchservice)           | Go            | REST, gRPC    | authservice, predictionservice   | Retrieves live match data, such as scores, commentary, lineups, etc.                                        |
+| [notificationservice](./src/notificationservice)     | Java          | gRPC          | authservice                      | Generic push notification sending functionality and inbox.                                                  |
+| [predictionservice](./src/predictionservice)         | Go            | REST, gRPC    | authservice, fixtureservice      | Retrieves and updates match predictions.                                                                    |
+| [userservice](./src/userservice)                     | Go            | REST, gRPC    | authservice                      | Retrieves and updates user details.                                                                         |
 
 ## Functions
 
